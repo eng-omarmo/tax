@@ -46,7 +46,7 @@ class AuthenticationController extends Controller
 
             RateLimiter::hit($this->throttleKey($request));
 
-           return back()->with('error', 'The provided credentials are incorrect.');
+            return back()->with('error', 'The provided credentials are incorrect.');
         }
         RateLimiter::clear($this->throttleKey($request));
 
@@ -74,5 +74,11 @@ class AuthenticationController extends Controller
     protected function throttleKey(Request $request): string
     {
         return strtolower($request->email) . '|' . $request->ip();
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect()->route('signin');
     }
 }

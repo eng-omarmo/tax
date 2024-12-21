@@ -335,12 +335,16 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3" href="javascript:void(0)">
+                                <button form="logout-form" class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3" href="javascript:void(0)">
                                     <iconify-icon icon="lucide:power" class="icon text-xl"></iconify-icon> Log Out
-                                </a>
+                                </button>
                             </li>
                         </ul>
                     </div>
+
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
                 </div><!-- Profile dropdown end -->
             </div>
         </div>

@@ -19,6 +19,7 @@ use App\Http\Controllers\CryptocurrencyController;
 Route::controller(AuthenticationController::class)->group(function () {
     Route::get('/', 'signin')->name('signin');
     Route::post('/', 'login')->name('signin.handler');
+    Route::post('/logout', 'logout')->name('logout');
 });
 
 Route::controller(HomeController::class)->group(function () {
@@ -100,7 +101,7 @@ Route::prefix('componentspage')->group(function () {
 });
 
 // Dashboard
-Route::prefix('dashboard')->group(function () {
+Route::prefix('dashboard')->middleware(['auth.admin'])->group(function () {
     Route::controller(DashboardController::class)->group(function () {
         Route::get('/index', 'index')->name('index');
         Route::get('/index2', 'index2')->name('index2');
