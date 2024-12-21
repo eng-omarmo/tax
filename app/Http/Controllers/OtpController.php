@@ -20,21 +20,31 @@ class OtpController extends Controller
 
     public function verifyOtp(Request $request)
     {
+
         try {
             $request->validate([
                 'otp' => 'required'
             ]);
-            $otp = Otp::where('otp', $request->otp)->first();
-            if (!$otp || $otp->otp != $request->otp || $otp->otp_expires_at < now()) {
+            $otpDetails= Otp::where('otp', $request->otp)->first();
+            if (!$otpDetails) {
                 return redirect()->route('signin')->with('error', 'Invalid OTP.');
             }
-            $otp->delete();
-            $user = User::find($otp->user_id);
+
+            if($otpDetails->expires_at < now()){
+                return redirect()->route('signin')->with('error', 'OTP has expired.');
+            }
+            if($otpDetails->otp != $request->otp){
+                return redirect()->route('signin')->with('error', 'Invalid OTP.');
+            }
+
+
+            $otpDetails->delete();
+            $user = User::find($otpDetails->user_id);
             if(!$user){
                 return redirect()->route('signin')->with('error', 'User not found.');
             }
             Auth::login($user);
-            return redirect()->route('dashboard.index2');
+            return redirect()->route('index2');
         } catch (\Throwable $th) {
             return redirect()->route('signin')->with('error', $th->getMessage());
         }
