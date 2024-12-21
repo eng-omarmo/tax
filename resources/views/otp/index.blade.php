@@ -12,9 +12,16 @@
             </div>
         </div>
 
+
         <div class="auth-right py-32 px-24 d-flex flex-column justify-content-center">
             <div class="max-w-464-px mx-auto w-100">
 
+                @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                @endif
                 <div>
                     <a href="{{ route('index') }}" class="mb-40 max-w-290-px">
                         <img src="{{ asset('assets/images/logo.png') }}" alt="">

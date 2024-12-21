@@ -24,14 +24,15 @@ class OtpController extends Controller
             $request->validate([
                 'otp' => 'required'
             ]);
-
-            $otp = $request->input('otp');
-            $otp = Otp::where('otp', $otp)->first();
-            if (!$otp || $otp->otp != $otp || $otp->otp_expires_at < now()) {
+            $otp = Otp::where('otp', $request->otp)->first();
+            if (!$otp || $otp->otp != $request->otp || $otp->otp_expires_at < now()) {
                 return redirect()->route('signin')->with('error', 'Invalid OTP.');
             }
             $otp->delete();
             $user = User::find($otp->user_id);
+            if(!$user){
+                return redirect()->route('signin')->with('error', 'User not found.');
+            }
             Auth::login($user);
             return redirect()->route('dashboard.index2');
         } catch (\Throwable $th) {

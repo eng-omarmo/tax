@@ -54,7 +54,9 @@ class AuthenticationController extends Controller
         if (!$this->generateOtp(Auth::user())) {
             return back()->with('error', 'Failed to generate OTP.');
         }
-        return redirect()->route('otp.index');
+        $maskedPhone = substr_replace(Auth::user()->phone, str_repeat('*', 4), 3, 4);
+        return redirect()->route('otp.index')->with('success', 'OTP sent successfully to your ' . $maskedPhone . '. Please check.');
+
     }
 
     /**
