@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 
 
@@ -82,15 +83,16 @@ class UsersController extends Controller
     {
         try {
             $user = User::findOrFail($id);
-            $user::update([
+            $user->update([
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
                 'role' => $request->role,
                 'status' => $request->status
             ]);
-            return redirect()->route('usersList')->with('success', 'User updated successfully!');
+            return redirect()->route('usersList')->with('success', 'User Updated successfully!');
         } catch (\Throwable $th) {
+            Log::info($th->getMessage());
             return redirect()->route('usersList')->with('error', $th->getMessage());
         }
     }
