@@ -43,10 +43,10 @@
             <div class="row gy-4">
                 <div class="col-lg-4">
                     <div class="user-grid-card position-relative border radius-16 overflow-hidden bg-base h-100">
-                        <img src="{{ asset('assets/images/user-grid/user-grid-bg1.png') }}" alt="" class="w-100 object-fit-cover">
+                        <img src="{{ asset('assets/images/logo.png') }}" alt="" class="w-100 object-fit-cover">
                         <div class="pb-24 ms-16 mb-24 me-16  mt--100">
                             <div class="text-center border border-top-0 border-start-0 border-end-0">
-                                <img src="{{ asset('assets/images/user-grid/user-grid-img14.png') }}" alt="" class="border br-white border-width-2-px w-200-px h-200-px rounded-circle object-fit-cover">
+                                <img src="{{ asset('assets/images/logo.png') }}" alt="" class="border br-white border-width-2-px w-200-px h-200-px rounded-circle object-fit-cover">
                                 <h6 class="mb-0 mt-16">Jacob Jones</h6>
                                 <span class="text-secondary-light mb-16">ifrandom@gmail.com</span>
                             </div>
@@ -55,32 +55,32 @@
                                 <ul>
                                     <li class="d-flex align-items-center gap-1 mb-12">
                                         <span class="w-30 text-md fw-semibold text-primary-light">Full Name</span>
-                                        <span class="w-70 text-secondary-light fw-medium">: Will Jonto</span>
+                                        <span class="w-70 text-secondary-light fw-medium">:{{auth()->user()->name}}</span>
                                     </li>
                                     <li class="d-flex align-items-center gap-1 mb-12">
                                         <span class="w-30 text-md fw-semibold text-primary-light"> Email</span>
-                                        <span class="w-70 text-secondary-light fw-medium">: willjontoax@gmail.com</span>
+                                        <span class="w-70 text-secondary-light fw-medium">: {{auth()->user()->email}}</span>
                                     </li>
                                     <li class="d-flex align-items-center gap-1 mb-12">
                                         <span class="w-30 text-md fw-semibold text-primary-light"> Phone Number</span>
-                                        <span class="w-70 text-secondary-light fw-medium">: (1) 2536 2561 2365</span>
+                                        <span class="w-70 text-secondary-light fw-medium">: {{auth()->user()->phone}}</span>
                                     </li>
                                     <li class="d-flex align-items-center gap-1 mb-12">
-                                        <span class="w-30 text-md fw-semibold text-primary-light"> Department</span>
-                                        <span class="w-70 text-secondary-light fw-medium">: Design</span>
+                                        <span class="w-30 text-md fw-semibold text-primary-light"> Role</span>
+                                        <span class="w-70 text-secondary-light fw-medium">: {{auth()->user()->role}}</span>
                                     </li>
                                     <li class="d-flex align-items-center gap-1 mb-12">
-                                        <span class="w-30 text-md fw-semibold text-primary-light"> Designation</span>
-                                        <span class="w-70 text-secondary-light fw-medium">: UI UX Designer</span>
+                                        <span class="w-30 text-md fw-semibold text-primary-light"> Status</span>
+                                        <span class="w-70 text-secondary-light fw-medium">: {{auth()->user()->status}}</span>
                                     </li>
                                     <li class="d-flex align-items-center gap-1 mb-12">
                                         <span class="w-30 text-md fw-semibold text-primary-light"> Languages</span>
                                         <span class="w-70 text-secondary-light fw-medium">: English</span>
                                     </li>
-                                    <li class="d-flex align-items-center gap-1">
+                                    {{-- <li class="d-flex align-items-center gap-1">
                                         <span class="w-30 text-md fw-semibold text-primary-light"> Bio</span>
                                         <span class="w-70 text-secondary-light fw-medium">: Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                    </li>
+                                    </li> --}}
                                 </ul>
                             </div>
                         </div>

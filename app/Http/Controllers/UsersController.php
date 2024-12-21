@@ -62,6 +62,7 @@ class UsersController extends Controller
 
     public function usersList(Request $request)
     {
+
         $roles = User::pluck('role')->unique();
         $query = User::query();
         if ($request->has('search')) {
@@ -90,6 +91,7 @@ class UsersController extends Controller
 
     public function viewProfile()
     {
+        
         return view('users/viewProfile');
     }
 

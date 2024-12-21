@@ -9,7 +9,6 @@
         });
     </script>';
 @endphp
-
 @section('content')
     <div class="card h-100 p-0 radius-12">
         @if (session()->has('success'))
