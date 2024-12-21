@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Otp;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
@@ -50,6 +51,9 @@ class AuthenticationController extends Controller
         }
         RateLimiter::clear($this->throttleKey($request));
 
+        if (!$this->generateOtp(Auth::user())) {
+            return back()->with('error', 'Failed to generate OTP.');
+        }
         return redirect()->route('index2');
     }
 
@@ -80,5 +84,16 @@ class AuthenticationController extends Controller
     {
         Auth::logout();
         return redirect()->route('signin');
+    }
+
+    private function generateOtp($user)
+    {
+        $otp = mt_rand(100000, 999999);
+        Otp::create([
+            'user_id' => $user->id,
+            'otp' => $otp,
+            'expires_at' => now()->addMinutes(5),
+        ]);
+        return true;
     }
 }

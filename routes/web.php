@@ -15,6 +15,7 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\RoleandaccessController;
 use App\Http\Controllers\CryptocurrencyController;
+use App\Http\Controllers\OtpController;
 
 Route::controller(AuthenticationController::class)->group(function () {
     Route::get('/', 'signin')->name('signin');
@@ -170,6 +171,14 @@ Route::prefix('users')->middleware(['auth.admin'])->group(function () {
 
         Route::post('/users-store', 'store')->name('user.store');
         Route::get('/view-profile', 'viewProfile')->name('viewProfile');
+    });
+});
+
+
+// Users
+Route::prefix('otp')->middleware(['auth.admin'])->group(function () {
+    Route::controller(OtpController::class)->group(function () {
+        Route::get('/verify-otp', 'verifyOtp')->name('verify.otp');
     });
 });
 
