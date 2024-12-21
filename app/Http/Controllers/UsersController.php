@@ -60,12 +60,29 @@ class UsersController extends Controller
         return view('users/usersGrid');
     }
 
-    public function usersList()
+    public function usersList(Request $request)
     {
-        $users = User::paginate(10);
 
-        return view('users/usersList', compact('users'));
+        $roles = User::pluck('role')->unique();
+
+        $query = User::query();
+
+        if ($request->has('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+        if ($request->has('role')) {
+            $query->where('role', $request->role);
+        }
+        if ($request->has('status')) {
+            $query->where('status', $request->status);
+        }
+
+
+        $users = $query->paginate(10);
+
+        return view('users.usersList', compact('users', 'roles'));
     }
+
 
     public function viewProfile()
     {
