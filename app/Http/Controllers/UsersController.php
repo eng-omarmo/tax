@@ -62,13 +62,17 @@ class UsersController extends Controller
 
     public function usersList(Request $request)
     {
-
         $roles = User::pluck('role')->unique();
-
         $query = User::query();
-
         if ($request->has('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where(
+                'name',
+                'like',
+                '%' . $request->search . '%'
+            )->orWhere('email', 'like', '%' . $request->search . '%')
+                ->orWhere('phone', 'like', '%' . $request->search . '%')
+                ->orWhere('role', 'like', '%' . $request->search . '%')
+                ->orWhere('status', 'like', '%' . $request->search . '%');
         }
         if ($request->has('role')) {
             $query->where('role', $request->role);
@@ -77,11 +81,11 @@ class UsersController extends Controller
             $query->where('status', $request->status);
         }
 
-
         $users = $query->paginate(10);
 
         return view('users.usersList', compact('users', 'roles'));
     }
+
 
 
     public function viewProfile()

@@ -18,23 +18,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-        <<form method="GET" action="{{ route('usersList') }}" id="filterForm">
-            <div class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <form method="GET" action="{{ route('usersList') }}" id="filterForm">
+            <div
+                class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center justify-content-between flex-wrap gap-3">
                 <!-- Filter Section (Search, Pagination, Status) -->
                 <div class="d-flex align-items-center gap-3 flex-wrap">
-                    <span class="text-md fw-medium text-secondary-light mb-0">Show</span>
-                    <select name="per_page" class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                    </select>
+
 
                     <div class="navbar-search">
                         <input type="text" class="bg-base h-40-px w-auto" name="search" placeholder="Search"
@@ -47,32 +36,44 @@
                         <option value="Active" {{ request()->status == 'Active' ? 'selected' : '' }}>Active</option>
                         <option value="Inactive" {{ request()->status == 'Inactive' ? 'selected' : '' }}>Inactive</option>
                     </select>
-                    <select name="role" class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px">
-                        @foreach ($roles as $role)
-                            <option value="{{ $role }}" {{ request()->role == $role ? 'selected' : '' }}>{{ $role }}</option>
-                        @endforeach
 
+                    <select name="role" class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px">
+                        <option value="">Role</option>
+                        @foreach ($roles as $role)
+
+                            <option value="{{ $role }}" {{ request()->role == $role ? 'selected' : '' }}>
+                                {{ $role }}</option>
+                        @endforeach
                     </select>
                 </div>
 
                 <div class="d-flex align-items-center gap-3 flex-wrap">
                     <!-- Filter User (link to submit filter form) -->
                     <a href="javascript:void(0);" id="filterLink"
-                       class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
+                        class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
                         <iconify-icon icon="ic:baseline-filter-alt" class="icon text-xl line-height-1"></iconify-icon>
-                        Filter User
+                        Filter
+                    </a>
+
+                    <!-- Reset Filter (link to reset filter form) -->
+                    <a href="javascript:void(0);" id="resetLink"
+                        class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
+                        <iconify-icon icon="ic:baseline-filter-alt-off" class="icon text-xl line-height-1"></iconify-icon>
+                        Reset
                     </a>
 
                     <!-- Add New User Button -->
                     <a href="{{ route('addUser') }}"
-                       class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
+                        class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
                         <iconify-icon icon="ic:baseline-plus" class="icon text-xl line-height-1"></iconify-icon>
                         Add New User
                     </a>
                 </div>
             </div>
         </form>
+
     </div>
+
 
     <div class="card-body p-24">
         <div class="table-responsive scroll-sm">
@@ -116,7 +117,8 @@
                                         alt=""
                                         class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
                                     <div class="flex-grow-1">
-                                        <span class="text-md mb-0 fw-normal text-secondary-light">{{ $user->name }}</span>
+                                        <span
+                                            class="text-md mb-0 fw-normal text-secondary-light">{{ $user->name }}</span>
                                     </div>
                                 </div>
                             </td>
@@ -151,49 +153,25 @@
         </div>
 
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">
-            <span>Showing 1 to 10 of {{ $users->count() }} entries</span>
-            <ul class="pagination d-flex flex-wrap align-items-center gap-2 justify-content-center">
-                <li class="page-item">
-                    <a class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md"
-                        href="javascript:void(0)">
-                        <iconify-icon icon="ep:d-arrow-left" class=""></iconify-icon>
-                    </a>
-                </li>
-                <!-- Pagination logic (you may need to implement this based on your pagination settings) -->
-                <li class="page-item">
-                    <a class="page-link text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md bg-primary-600 text-white"
-                        href="javascript:void(0)">1</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px"
-                        href="javascript:void(0)">2</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md"
-                        href="javascript:void(0)">3</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md"
-                        href="javascript:void(0)">4</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md"
-                        href="javascript:void(0)">5</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md"
-                        href="javascript:void(0)">
-                        <iconify-icon icon="ep:d-arrow-right" class=""></iconify-icon>
-                    </a>
-                </li>
-            </ul>
+            <span>Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} of {{ $users->total() }} entries</span>
+            <div class="pagination-container">
+                {{ $users->links() }}
+            </div>
         </div>
-    </div>
     </div>
     <script>
         // Attach event listener to the Filter link
         document.getElementById('filterLink').addEventListener('click', function() {
             // Submit the form when the filter link is clicked
+            document.getElementById('filterForm').submit();
+        });
+        document.getElementById('resetLink').addEventListener('click', function() {
+            const formElements = document.getElementById('filterForm').elements;
+            Array.from(formElements).forEach(element => {
+                if (element.type === 'select-one' || element.type === 'text') {
+                    element.value = '';
+                }
+            });
             document.getElementById('filterForm').submit();
         });
     </script>
