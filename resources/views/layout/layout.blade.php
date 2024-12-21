@@ -1,5 +1,4 @@
-<!-- meta tags and other links -->
-@auth
+
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 
@@ -37,10 +36,3 @@
 </body>
 
 </html>
-
-@endauth
-
-<!-- ..::  scripts  start ::.. -->
-<x-script  script='{!! isset($script) ? $script : "" !!}' />
-<!-- ..::  scripts  end ::.. -->
-@include('authentication.signin')

@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+
 
 class UsersController extends Controller
 {
@@ -10,7 +13,47 @@ class UsersController extends Controller
     {
         return view('users/addUser');
     }
-    
+
+    public function store(Request $request)
+    {
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'nullable|string|max:18',
+            'role' => 'required|string',
+            'status' => 'required|string',
+            // 'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate the image
+        ]);
+        // if ($request->hasFile('profile_image')) {
+
+        //     $image = $request->file('profile_image');
+
+        //     $imageName = time() . '.' . $image->getClientOriginalExtension();
+
+        //     $imagePath = $image->storeAs('profile_images', $imageName, 'public');
+        // } else {
+        //     $imagePath = null;
+        // }
+        User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make('password'),
+            'phone' => $validated['phone'],
+            'role' => $validated['role'],
+            'status' => $validated['status'],
+            'profile_image' => null
+        ]);
+
+        return redirect()->route('usersList')->with('success', 'User created successfully!');
+    }
+
+    public function edit($id)
+    {
+        $user = User::findOrFail($id);
+        return view('users.edit', compact('user'));
+    }
+
     public function usersGrid()
     {
         return view('users/usersGrid');
@@ -18,11 +61,37 @@ class UsersController extends Controller
 
     public function usersList()
     {
-        return view('users/usersList');
+        $users = User::paginate(10);
+
+        return view('users/usersList', compact('users'));
     }
-    
+
     public function viewProfile()
     {
         return view('users/viewProfile');
+    }
+
+    public function delete($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+        return redirect()->route('usersList')->with('success', 'User deleted successfully!');
+    }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            $user::update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'role' => $request->role,
+                'status' => $request->status
+            ]);
+            return redirect()->route('usersList')->with('success', 'User updated successfully!');
+        } catch (\Throwable $th) {
+            return redirect()->route('usersList')->with('error', $th->getMessage());
+        }
     }
 }

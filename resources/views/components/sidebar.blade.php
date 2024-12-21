@@ -50,32 +50,52 @@
                     </li> --}}
                 </ul>
             </li>
-            <li class="sidebar-menu-group-title">Application</li>
-            <li>
+            <li class="sidebar-menu-group-title">Pages</li>
+            {{-- <li>
                   <a href="{{ route('email') }}">
                     <iconify-icon icon="mage:email" class="menu-icon"></iconify-icon>
-                    <span>Email</span>
+                    <span>User</span>
                 </a>
-            </li>
-            <li>
+            </li> --}}
+            {{-- <li>
                 <a href="{{ route('chatMessage') }}">
                     <iconify-icon icon="bi:chat-dots" class="menu-icon"></iconify-icon>
-                    <span>Chat</span>
+                    <span></span>
                 </a>
-            </li>
-            <li>
+            </li> --}}
+            {{-- <li>
                 <a href="{{ route('calendar') }}">
                     <iconify-icon icon="solar:calendar-outline" class="menu-icon"></iconify-icon>
                     <span>Calendar</span>
                 </a>
-            </li>
-            <li>
+            </li> --}}
+            {{-- <li>
                 <a href="{{ route('kanban') }}">
                     <iconify-icon icon="material-symbols:map-outline" class="menu-icon"></iconify-icon>
                     <span>Kanban</span>
                 </a>
-            </li>
+            </li> --}}
             <li class="dropdown">
+                <a  href="javascript:void(0)">
+                    <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
+                    <span>Users</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li>
+                        <a  href="{{ route('usersList') }}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Users List</a>
+                    </li>
+                    {{-- <li>
+                        <a  href="{{ route('usersGrid') }}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Users Grid</a>
+                    </li> --}}
+                    <li>
+                        <a  href="{{ route('addUser') }}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add User</a>
+                    </li>
+                    {{-- <li>
+                        <a  href="{{ route('viewProfile') }}"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> View Profile</a>
+                    </li> --}}
+                </ul>
+            </li>
+            {{-- <li class="dropdown">
                 <a  href="javascript:void(0)">
                     <iconify-icon icon="hugeicons:invoice-03" class="menu-icon"></iconify-icon>
                     <span>Invoice</span>
@@ -94,8 +114,8 @@
                     <a href="{{ route('invoiceEdit') }}"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> Edit</a>
                     </li>
                 </ul>
-            </li>
-            <li class="dropdown">
+            </li> --}}
+            {{-- <li class="dropdown">
                 <a  href="javascript:void(0)">
                     <i class="ri-robot-2-line text-xl me-6 d-flex w-auto"></i>
                     <span>Ai Application</span>
@@ -117,9 +137,9 @@
                         <a href="{{ route('videoGenerator') }}"><i class="ri-circle-fill circle-icon text-success-main w-auto"></i> Video Generator</a>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
 
-            <li class="dropdown">
+            {{-- <li class="dropdown">
                 <a  href="javascript:void(0)">
                     <i class="ri-btc-line text-xl me-6 d-flex w-auto"></i>
                     <span>Crypto Currency</span>
@@ -138,7 +158,7 @@
                     <a  href="{{ route('portfolio') }}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Portfolios</a>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
 
             <li class="sidebar-menu-group-title">UI Elements</li>
 
@@ -270,28 +290,9 @@
                     <span>Widgets</span>
                 </a>
             </li>
-            <li class="dropdown">
-                <a  href="javascript:void(0)">
-                    <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
-                    <span>Users</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a  href="{{ route('usersList') }}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Users List</a>
-                    </li>
-                    <li>
-                        <a  href="{{ route('usersGrid') }}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Users Grid</a>
-                    </li>
-                    <li>
-                        <a  href="{{ route('addUser') }}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add User</a>
-                    </li>
-                    <li>
-                        <a  href="{{ route('viewProfile') }}"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> View Profile</a>
-                    </li>
-                </ul>
-            </li>
 
-            <li class="dropdown">
+
+            {{-- <li class="dropdown">
                 <a  href="javascript:void(0)">
                     <i class="ri-user-settings-line text-xl me-6 d-flex w-auto"></i>
                     <span>Role & Access</span>
@@ -304,7 +305,7 @@
                         <a  href="{{ route('assignRole') }}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Assign Role</a>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
 
             <li class="sidebar-menu-group-title">Application</li>
 

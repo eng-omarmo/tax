@@ -159,11 +159,16 @@ Route::prefix('table')->group(function () {
 });
 
 // Users
-Route::prefix('users')->group(function () {
+Route::prefix('users')->middleware(['auth.admin'])->group(function () {
     Route::controller(UsersController::class)->group(function () {
         Route::get('/add-user', 'addUser')->name('addUser');
         Route::get('/users-grid', 'usersGrid')->name('usersGrid');
         Route::get('/users-list', 'usersList')->name('usersList');
+        Route::get('/users-edit/{id}', 'edit')->name('user.edit');
+        Route::get('/users-delete/{id}', 'delete')->name('user.delete');
+        Route::put('/users-update/{id}', 'update')->name('user.update');
+
+        Route::post('/users-store', 'store')->name('user.store');
         Route::get('/view-profile', 'viewProfile')->name('viewProfile');
     });
 });

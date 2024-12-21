@@ -17,7 +17,7 @@ class AuthMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'You must log in first.');
+            return redirect()->route('signin')->with('error', 'You must log in first.');
         }
         $user = Auth::user();
 

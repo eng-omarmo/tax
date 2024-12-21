@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
                 'phone' => '123456789',
                 'role' => 'Admin',
                 'status' => 'active',
+                'profile_image' => null,
             ],
             [
                 'name' => 'Landlord User',
@@ -26,6 +27,7 @@ class UserSeeder extends Seeder
                 'phone' => '987654321',
                 'role' => 'Landlord',
                 'status' => 'active',
+                'profile_image' => null,
             ],
             [
                 'name' => 'Business Owner User',
@@ -34,6 +36,7 @@ class UserSeeder extends Seeder
                 'phone' => '456789123',
                 'role' => 'Business Owner',
                 'status' => 'active',
+                'profile_image' => null,
             ],
             [
                 'name' => 'Tax Officer User',
@@ -42,6 +45,7 @@ class UserSeeder extends Seeder
                 'phone' => '321654987',
                 'role' => 'Tax Officer',
                 'status' => 'active',
+                'profile_image' => null,
             ],
         ];
 
