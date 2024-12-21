@@ -2,11 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Otp;
+use App\Models\User;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OtpController extends Controller
 {
 
+
+
+    public function index()
+    {
+        return view('otp.index');
+    }
 
     public function verifyOtp(Request $request)
     {
@@ -16,16 +26,16 @@ class OtpController extends Controller
             ]);
 
             $otp = $request->input('otp');
-            $user = User::where('otp', $otp)->first();
-
-            if (!$user || $user->otp != $otp || $user->otp_expires_at < now()) {
-                return response()->json(['error' => 'Invalid OTP or expired'], 401);
+            $otp = Otp::where('otp', $otp)->first();
+            if (!$otp || $otp->otp != $otp || $otp->otp_expires_at < now()) {
+                return redirect()->route('signin')->with('error', 'Invalid OTP.');
             }
-
-            $user->otp = null;
-            return response()->json(['success' => 'OTP verified successfully']);
+            $otp->delete();
+            $user = User::find($otp->user_id);
+            Auth::login($user);
+            return redirect()->route('dashboard.index2');
         } catch (\Throwable $th) {
-            return response()->json(['error' => $th->getMessage()], 500);
+            return redirect()->route('signin')->with('error', $th->getMessage());
         }
     }
 }

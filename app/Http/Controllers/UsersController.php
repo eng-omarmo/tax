@@ -91,7 +91,7 @@ class UsersController extends Controller
 
     public function viewProfile()
     {
-        
+
         return view('users/viewProfile');
     }
 

@@ -178,7 +178,8 @@ Route::prefix('users')->middleware(['auth.admin'])->group(function () {
 // Users
 Route::prefix('otp')->middleware(['auth.admin'])->group(function () {
     Route::controller(OtpController::class)->group(function () {
-        Route::get('/verify-otp', 'verifyOtp')->name('verify.otp');
+        Route::get('/show-otp', 'index')->name('otp.index');
+        Route::post('/verify-otp', 'verifyOtp')->name('verify.otp');
     });
 });
 
