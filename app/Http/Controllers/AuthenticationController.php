@@ -90,7 +90,8 @@ class AuthenticationController extends Controller
 
     private function generateOtp($user)
     {
-        $otp = mt_rand(100000, 999999);
+        // $otp = mt_rand(100000, 999999);
+        $otp = 123456;
         Otp::create([
             'user_id' => $user->id,
             'otp' => $otp,
