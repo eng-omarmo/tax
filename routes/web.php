@@ -13,6 +13,7 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\changePasswordController;
 use App\Http\Controllers\RoleandaccessController;
 use App\Http\Controllers\CryptocurrencyController;
 use App\Http\Controllers\OtpController;
@@ -21,6 +22,10 @@ Route::controller(AuthenticationController::class)->group(function () {
     Route::get('/', 'signin')->name('signin');
     Route::post('/', 'login')->name('signin.handler');
     Route::post('/logout', 'logout')->name('logout');
+});
+
+Route::controller(changePasswordController::class)->group(function () {
+    Route::post('/change-password', 'changePassword')->name('change.password');
 });
 
 Route::controller(HomeController::class)->group(function () {

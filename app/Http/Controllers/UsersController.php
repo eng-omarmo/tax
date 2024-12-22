@@ -62,34 +62,42 @@ class UsersController extends Controller
 
     public function usersList(Request $request)
     {
+        $request->validate([
+            'search' => 'nullable|string|max:255',
+            'role' => 'nullable|string|max:255',
+            'status' => 'nullable|string|in:Active,Inactive',
+        ]);
 
-        $roles = User::pluck('role')->unique();
+        $roles = User::select('role')->distinct()->pluck('role');
+
         $query = User::query();
-        if ($request->has('search')) {
-            $query->where(
-                'name',
-                'like',
-                '%' . $request->search . '%'
-            )->orWhere('email', 'like', '%' . $request->search . '%')
+
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%')
+                ->orWhere('email', 'like', '%' . $request->search . '%')
                 ->orWhere('phone', 'like', '%' . $request->search . '%')
                 ->orWhere('role', 'like', '%' . $request->search . '%')
                 ->orWhere('status', 'like', '%' . $request->search . '%');
         }
-        if ($request->has('role')) {
+
+
+        if ($request->filled('role')) {
             $query->where('role', $request->role);
         }
-        if ($request->has('status')) {
-            $query->where('status', $request->status);
+
+
+        if ($request->filled('status')) {
+            $query->where('status', ucfirst($request->status));
         }
+
 
         $users = $query->paginate(10);
 
+
         return view('users.usersList', compact('users', 'roles'));
     }
-
-
-
-    public function viewProfile()
+        public function viewProfile()
     {
 
         return view('users/viewProfile');

@@ -89,29 +89,29 @@
                 <div class="col-lg-8">
                     <div class="card h-100">
                         <div class="card-body p-24">
-                            <ul class="nav border-gradient-tab nav-pills mb-20 d-inline-flex" id="pills-tab" role="tablist">
+                            {{-- <ul class="nav border-gradient-tab nav-pills mb-20 d-inline-flex" id="pills-tab" role="tablist">
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link d-flex align-items-center px-24 active" id="pills-edit-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-edit-profile" type="button" role="tab" aria-controls="pills-edit-profile" aria-selected="true">
                                         Edit Profile
                                     </button>
                                 </li>
-                                <li class="nav-item" role="presentation">
+                                {{-- <li class="nav-item" role="presentation">
                                     <button class="nav-link d-flex align-items-center px-24" id="pills-change-passwork-tab" data-bs-toggle="pill" data-bs-target="#pills-change-passwork" type="button" role="tab" aria-controls="pills-change-passwork" aria-selected="false" tabindex="-1">
                                         Change Password
                                     </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
+                                </li> --}}
+                                {{-- <li class="nav-item" role="presentation">
                                     <button class="nav-link d-flex align-items-center px-24" id="pills-notification-tab" data-bs-toggle="pill" data-bs-target="#pills-notification" type="button" role="tab" aria-controls="pills-notification" aria-selected="false" tabindex="-1">
                                         Notification Settings
                                     </button>
                                 </li>
-                            </ul>
+                                </ul>--}}
 
                             <div class="tab-content" id="pills-tabContent">
                                 <div class="tab-pane fade show active" id="pills-edit-profile" role="tabpanel" aria-labelledby="pills-edit-profile-tab" tabindex="0">
-                                    <h6 class="text-md text-primary-light mb-16">Profile Image</h6>
+                                    {{-- <h6 class="text-md text-primary-light mb-16">Profile Image</h6> --}}
                                     <!-- Upload Image Start -->
-                                    <div class="mb-24 mt-16">
+                                    {{-- <div class="mb-24 mt-16">
                                         <div class="avatar-upload">
                                             <div class="avatar-edit position-absolute bottom-0 end-0 me-24 mt-16 z-1 cursor-pointer">
                                                 <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" hidden>
@@ -124,29 +124,29 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <!-- Upload Image End -->
                                     <form action="#">
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <div class="mb-20">
                                                     <label for="name" class="form-label fw-semibold text-primary-light text-sm mb-8">Full Name <span class="text-danger-600">*</span></label>
-                                                    <input type="text" class="form-control radius-8" id="name" placeholder="Enter Full Name">
+                                                    <input type="text" name="name" class="form-control radius-8" id="name" value="{{auth()->user()->name}}">
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="mb-20">
                                                     <label for="email" class="form-label fw-semibold text-primary-light text-sm mb-8">Email <span class="text-danger-600">*</span></label>
-                                                    <input type="email" class="form-control radius-8" id="email" placeholder="Enter email address">
+                                                    <input type="email" class="form-control radius-8" id="email" name="email" value="{{auth()->user()->email}}" placeholder="Enter email address">
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="mb-20">
                                                     <label for="number" class="form-label fw-semibold text-primary-light text-sm mb-8">Phone</label>
-                                                    <input type="email" class="form-control radius-8" id="number" placeholder="Enter phone number">
+                                                    <input type="email" class="form-control radius-8" id="number"  name="number" value="{{auth()->user()->phone}}">
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6">
+                                            {{-- <div class="col-sm-6">
                                                 <div class="mb-20">
                                                     <label for="depart" class="form-label fw-semibold text-primary-light text-sm mb-8">Department <span class="text-danger-600">*</span> </label>
                                                     <select class="form-control radius-8 form-select" id="depart">
@@ -155,8 +155,8 @@
                                                         <option>Enter Event Title Two</option>
                                                     </select>
                                                 </div>
-                                            </div>
-                                            <div class="col-sm-6">
+                                            </div> --}}
+                                            {{-- <div class="col-sm-6">
                                                 <div class="mb-20">
                                                     <label for="desig" class="form-label fw-semibold text-primary-light text-sm mb-8">Designation <span class="text-danger-600">*</span> </label>
                                                     <select class="form-control radius-8 form-select" id="desig">
@@ -165,8 +165,8 @@
                                                         <option>Enter Designation Title Two</option>
                                                     </select>
                                                 </div>
-                                            </div>
-                                            <div class="col-sm-6">
+                                            </div> --}}
+                                            {{-- <div class="col-sm-6">
                                                 <div class="mb-20">
                                                     <label for="Language" class="form-label fw-semibold text-primary-light text-sm mb-8">Language <span class="text-danger-600">*</span> </label>
                                                     <select class="form-control radius-8 form-select" id="Language">
@@ -176,13 +176,13 @@
                                                         <option> Arabic</option>
                                                     </select>
                                                 </div>
-                                            </div>
-                                            <div class="col-sm-12">
+                                            </div> --}}
+                                            {{-- <div class="col-sm-12">
                                                 <div class="mb-20">
                                                     <label for="desc" class="form-label fw-semibold text-primary-light text-sm mb-8">Description</label>
                                                     <textarea name="#0" class="form-control radius-8" id="desc" placeholder="Write description..."></textarea>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                         <div class="d-flex align-items-center justify-content-center gap-3">
                                             <button type="button" class="border border-danger-600 bg-hover-danger-200 text-danger-600 text-md px-56 py-11 radius-8">
@@ -195,22 +195,44 @@
                                     </form>
                                 </div>
 
-                                <div class="tab-pane fade" id="pills-change-passwork" role="tabpanel" aria-labelledby="pills-change-passwork-tab" tabindex="0">
+                           <form action="{{ route('change.password') }}" method="POST">
+                                    @csrf
                                     <div class="mb-20">
-                                        <label for="your-password" class="form-label fw-semibold text-primary-light text-sm mb-8">New Password <span class="text-danger-600">*</span></label>
+                                        <label for="your-password" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                            New Password <span class="text-danger-600">*</span>
+                                        </label>
                                         <div class="position-relative">
-                                            <input type="password" class="form-control radius-8" id="your-password" placeholder="Enter New Password*">
-                                            <span class="toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light" data-toggle="#your-password"></span>
+                                            <input
+                                                type="password"
+                                                class="form-control radius-8"
+                                                id="your-password"
+                                                name="new_password"
+                                                placeholder="Enter New Password*"
+                                                required>
+                                            <span
+                                                class="toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light"
+                                                data-toggle="#your-password"></span>
                                         </div>
                                     </div>
                                     <div class="mb-20">
-                                        <label for="confirm-password" class="form-label fw-semibold text-primary-light text-sm mb-8">Confirmed Password <span class="text-danger-600">*</span></label>
+                                        <label for="confirm-password" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                            Confirm Password <span class="text-danger-600">*</span>
+                                        </label>
                                         <div class="position-relative">
-                                            <input type="password" class="form-control radius-8" id="confirm-password" placeholder="Confirm Password*">
-                                            <span class="toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light" data-toggle="#confirm-password"></span>
+                                            <input
+                                                type="password"
+                                                class="form-control radius-8"
+                                                id="confirm-password"
+                                                name="confirm_password"
+                                                placeholder="Confirm Password*"
+                                                required>
+                                            <span
+                                                class="toggle-password ri-eye-line cursor-pointer position-absolute end-0 top-50 translate-middle-y me-16 text-secondary-light"
+                                                data-toggle="#confirm-password"></span>
                                         </div>
                                     </div>
-                                </div>
+                                    <button type="submit" class="btn btn-primary">Change Password</button>
+                                </form>
 
                                 <div class="tab-pane fade" id="pills-notification" role="tabpanel" aria-labelledby="pills-notification-tab" tabindex="0">
                                     <div class="form-switch switch-primary py-12 px-16 border radius-8 position-relative mb-16">
@@ -255,5 +277,8 @@
                     </div>
                 </div>
             </div>
+
+
+
 
 @endsection
