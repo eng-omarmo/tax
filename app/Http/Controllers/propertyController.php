@@ -61,8 +61,8 @@ class propertyController extends Controller
             'house_rent' => 'nullable|numeric',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
-            'monitoring_status' => 'required|in:Monitoring,Approved',
-            'status' => 'required|in:active,inactive',
+            'monitoring_status' => 'required|in:Pending,Approved',
+            'status' => 'required|in:Active,Inactive',
         ]);
         $checkProperty = Property::where('property_name', $request->property_name)->first();
         if ($checkProperty) {
