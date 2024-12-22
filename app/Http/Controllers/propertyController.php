@@ -45,6 +45,7 @@ class propertyController extends Controller
 
     public function store(Request $request)
     {
+
         $request->validate([
             'property_name' => 'required|string|max:255',
             'property_phone' => 'nullable|string|max:15',
@@ -55,12 +56,16 @@ class propertyController extends Controller
             'branch' => 'nullable|string|max:255',
             'quarterly_tax_fee' => 'nullable|numeric',
             'yearly_tax_fee' => 'nullable|numeric',
-            'dalal_company_name' => 'nullable|string|max:255',
             'zone' => 'nullable|string|max:255',
             'house_type' => 'nullable|string|max:255',
             'house_rent' => 'nullable|numeric',
             'latitude' => 'required|numeric',
+            'quarterly_tax_fee' => 'required|numeric',
+            'yearly_tax_fee' => 'required|numeric',
             'longitude' => 'required|numeric',
+            'dalal_company_name' => 'nullable|string|max:255',
+            'is_owner' => 'required|in:Yes,No',
+            'designation' => 'nullable|string|max:255',
             'monitoring_status' => 'required|in:Pending,Approved',
             'status' => 'required|in:Active,Inactive',
         ]);
@@ -68,7 +73,7 @@ class propertyController extends Controller
         if ($checkProperty) {
             return back()->with('error', 'Property name already exists.');
         }
-        // Create a new property
+
         Property::create([
             'property_name' => $request->property_name,
             'property_phone' => $request->property_phone,
@@ -84,7 +89,10 @@ class propertyController extends Controller
             'yearly_tax_fee' => $request->yearly_tax_fee,
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
+            'is_owner' => $request->is_owner,
+            'designation' => $request->designation,
             'dalal_company_name' => $request->dalal_company_name,
+
             'monitoring_status' => $request->monitoring_status,
             'status' => $request->status,
         ]);

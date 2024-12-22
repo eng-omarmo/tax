@@ -127,11 +127,10 @@
                             <td>{{ $property->tenant_phone }}</td>
                             <td>{{ $property->branch }}</td>
                             <td>{{ $property->nbr }}</td>
-                            <td>{{ $property->zone }}</td>
-
                             <td>{{ $property->designation }}</td>
                             <td>{{ $property->house_type }}</td>
                             <td>{{ $property->house_rent }}</td>
+                            <td>{{ $property->zone }}</td>
                             <td>{{ $property->quarterly_tax_fee }}</td>
                             <td>{{ $property->yearly_tax_fee }}</td>
                             <td>{{ $property->latitude }}</td>

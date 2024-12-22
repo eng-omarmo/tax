@@ -28,9 +28,7 @@ Route::controller(AuthenticationController::class)->group(function () {
 Route::controller(changePasswordController::class)->group(function () {
     Route::post('/change-password', 'changePassword')->name('change.password');
 });
-Route::controller(PropertyController::class)
-    ->prefix('property')
-    ->group(function () {
+Route::controller(PropertyController::class)->prefix('property')->middleware(['auth.admin'])->group(function () {
         Route::get('/index', 'index')->name('property.index');
         Route::get('/create', 'create')->name('property.create');
         Route::post('/store', 'store')->name('property.store');
