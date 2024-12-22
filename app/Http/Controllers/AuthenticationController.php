@@ -26,13 +26,13 @@ class AuthenticationController extends Controller
 
     public function signIn()
     {
-        return view('authentication.signIn');
+        return view('authentication.signin');
     }
 
-    public function signUp()
-    {
-        return view('authentication.signUp');
-    }
+    // public function signUp()
+    // {
+    //     return view('authentication.signUp');
+    // }
 
     public function login(Request $request)
     {
