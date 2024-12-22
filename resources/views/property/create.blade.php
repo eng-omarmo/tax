@@ -91,15 +91,15 @@
                                     <input type="text" class="form-control radius-8" id="zone" name="zone" placeholder="Enter zone name" value="{{ old('zone') }}">
                                 </div>
                                 <div class="col-md-6 mb-20">
-                                    <label for="house_type" class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                        House Type
+                                    <label for="house_rent" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                        House Rent
                                     </label>
-                                    <input type="text" class="form-control radius-8" id="house_type" name="house_type" placeholder="Enter house type" value="{{ old('house_type') }}">
+                                    <input type="text" class="form-control radius-8" id="house_rent" name="house_rent" placeholder="Enter house type" value="{{ old('house_rent') }}">
 
                                 </div>
                                 <div class="col-md-4 mb-20 ">
                                     <label for="house_rent" class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                        House Rent
+                                        House type
                                     </label>
                                     <select name="house_type"  class="form-control radius-8 form-select">
                                         <option value="">Property  Type</option>
