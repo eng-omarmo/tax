@@ -94,7 +94,7 @@
                                     <label for="house_type" class="form-label fw-semibold text-primary-light text-sm mb-8">
                                         House Type
                                     </label>
-                                  <select name="house_type" class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px">
+                                  <select name="house_type"  class="form-control radius-8 form-select">
                                     <option value="">House Type</option>
                                     <option value="villa">Villa</option>
                                     <option value="Apartment">Apartment</option>
