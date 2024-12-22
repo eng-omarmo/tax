@@ -30,10 +30,23 @@
                     </div>
 
                     <select name="status" class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px">
-                        <option value="">Status</option>
-                        <option value="Available" {{ request()->status == 'Available' ? 'selected' : '' }}>Available</option>
-                        <option value="Sold" {{ request()->status == 'Sold' ? 'selected' : '' }}>Sold</option>
+                        <option value="">Property Status</option>
+                        <option value="" > All</option>
+                        @foreach ($statuses as $status)
+                            <option value="{{ $status }}" {{ request()->status == $status ? 'selected' : '' }}>
+                                {{ $status }}</option>
+                        @endforeach
                     </select>
+
+                    <select name="monetering_status" class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px">
+                        <option value="">Property Monetering Status</option>
+                        <option value=""> All</option>
+                        @foreach ($monitoringStatuses as $moneteringStatus)
+                        <option value="{{ $moneteringStatus }}" {{ request()->monetering_status == $moneteringStatus ? 'selected' : '' }}>
+                            {{ $moneteringStatus }}</option>
+                    @endforeach
+                    </select>
+
                 </div>
 
                 <div class="d-flex align-items-center gap-3 flex-wrap">

@@ -36,7 +36,7 @@ Route::controller(PropertyController::class)
         Route::post('/store', 'store')->name('property.store');
         Route::get('/edit/{id}', 'edit')->name('property.edit');
         Route::put('/update/{id}', 'update')->name('property.update');
-        Route::delete('/delete/{id}', 'destroy')->name('property.delete'); 
+        Route::get('/delete/{id}', 'destroy')->name('property.delete');
     });
 
 Route::controller(HomeController::class)->group(function () {
