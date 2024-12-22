@@ -30,7 +30,7 @@ return new class extends Migration
             $table->decimal('longitude', 10, 6);
             $table->string('dalal_company_name')->nullable();
             $table->enum('is_owner', ['Yes', 'No'])->default('No');
-            $table->enum('monitoring_status', ['Monitoring', 'Approved'])->nullable();
+            $table->enum('monitoring_status', ['Pending', 'Approved'])->nullable();
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();
         });

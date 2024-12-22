@@ -78,16 +78,16 @@
                                         Status <span class="text-danger-600">*</span>
                                     </label>
                                     <select class="form-control radius-8 form-select" id="status" name="status">
-                                        <option value="active">Active</option>
-                                        <option value="inactive">Inactive</option>
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-20">
                                     <label for="monitoring_status" class="form-label fw-semibold text-primary-light text-sm mb-8">
                                          Monetering Status <span class="text-danger-600">*</span>
                                     </label>
-                                    <select class="form-control radius-8 form-select" id="status" name="status">
-                                        <option value="Monitoring">Monitoring</option>
+                                    <select class="form-control radius-8 form-select" id="monitoring_status" name="monitoring_status">
+                                        <option value="Pending">Pending</option>
                                         <option value="Approved">Approved</option>
                                     </select>
                                 </div>

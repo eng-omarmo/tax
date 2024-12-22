@@ -30,7 +30,7 @@ class PropertyFactory extends Factory
             'longitude' => $this->faker->longitude,
             'dalal_company_name' => $this->faker->company,
             'is_owner' => $this->faker->randomElement(['Yes', 'No']),
-            'monitoring_status' => $this->faker->randomElement(['Monitoring', 'Approved']),
+            'monitoring_status' => $this->faker->randomElement(['Pending', 'Approved']),
             'status' => $this->faker->randomElement(['Active', 'Inactive']),
             'created_at' => now(),
             'updated_at' => now(),
