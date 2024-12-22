@@ -94,7 +94,7 @@
                                     <label for="house_rent" class="form-label fw-semibold text-primary-light text-sm mb-8">
                                         House Rent
                                     </label>
-                                    <input type="text" class="form-control radius-8" id="house_rent" name="house_rent" placeholder="Enter house type" value="{{ old('house_rent') }}">
+                                    <input type="text" class="form-control radius-8" id="house_rent" name="house_rent" placeholder="Enter house rent" value="{{ old('house_rent') }}">
 
                                 </div>
                                 <div class="col-md-4 mb-20 ">
