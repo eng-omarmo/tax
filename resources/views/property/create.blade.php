@@ -100,7 +100,7 @@
                                     <option value="Apartment">Apartment</option>
 
                                 </div>
-                                <div class="col-md-6 mb-20">
+                                <div class="col-md-6 mb-20 mt-3">
                                     <label for="house_rent" class="form-label fw-semibold text-primary-light text-sm mb-8">
                                         House Rent
                                     </label>
