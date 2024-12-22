@@ -94,7 +94,11 @@
                                     <label for="house_type" class="form-label fw-semibold text-primary-light text-sm mb-8">
                                         House Type
                                     </label>
-                                    <input type="text" class="form-control radius-8" id="house_type" name="house_type" placeholder="Enter house type" value="{{ old('house_type') }}">
+                                  <select name="house_type" class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px">
+                                    <option value="">House Type</option>
+                                    <option value="villa">Villa</option>
+                                    <option value="Apartment">Apartment</option>
+
                                 </div>
                                 <div class="col-md-6 mb-20">
                                     <label for="house_rent" class="form-label fw-semibold text-primary-light text-sm mb-8">
