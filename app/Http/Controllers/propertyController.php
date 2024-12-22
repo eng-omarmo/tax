@@ -53,11 +53,15 @@ class propertyController extends Controller
             'tenant_name' => 'nullable|string|max:255',
             'tenant_phone' => 'nullable|string|max:15',
             'branch' => 'nullable|string|max:255',
+            'quarterly_tax_fee'=>'nullable|numeric',
+             'yearly_tax_fee'=>'nullable|numeric',
+             'dalal_company_name' => 'nullable|string|max:255',
             'zone' => 'nullable|string|max:255',
             'house_type' => 'nullable|string|max:255',
             'house_rent' => 'nullable|numeric',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
+            'monitoring_status' => 'required|in:Monitoring,Approved',
             'status' => 'required|in:active,inactive',
         ]);
         $checkProperty = Property::where('property_name', $request->property_name)->first();

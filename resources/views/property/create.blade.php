@@ -72,6 +72,33 @@
                                     </label>
                                     <input type="text" class="form-control radius-8" id="tenant_name" name="tenant_name" placeholder="Enter tenant name" value="{{ old('tenant_name') }}">
                                 </div>
+
+                                <div class="col-md-6 mb-20">
+                                    <label for="status" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                        Status <span class="text-danger-600">*</span>
+                                    </label>
+                                    <select class="form-control radius-8 form-select" id="status" name="status">
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-20">
+                                    <label for="monitoring_status" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                         Monetering Status <span class="text-danger-600">*</span>
+                                    </label>
+                                    <select class="form-control radius-8 form-select" id="status" name="status">
+                                        <option value="Monitoring">Monitoring</option>
+                                        <option value="Approved">Approved</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 mb-20">
+                                    <label for="house_rent" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                        House Rent
+                                    </label>
+                                    <input type="text" class="form-control radius-8" id="house_rent" name="house_rent" placeholder="Enter house rent" value="{{ old('house_rent') }}">
+
+                                </div>
                                 <div class="col-md-6 mb-20">
                                     <label for="tenant_phone" class="form-label fw-semibold text-primary-light text-sm mb-8">
                                         Tenant Phone
@@ -90,18 +117,12 @@
                                     </label>
                                     <input type="text" class="form-control radius-8" id="zone" name="zone" placeholder="Enter zone name" value="{{ old('zone') }}">
                                 </div>
-                                <div class="col-md-6 mb-20">
-                                    <label for="house_rent" class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                        House Rent
-                                    </label>
-                                    <input type="text" class="form-control radius-8" id="house_rent" name="house_rent" placeholder="Enter house rent" value="{{ old('house_rent') }}">
 
-                                </div>
                                 <div class="col-md-4 mb-20 ">
-                                    <label for="house_rent" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                    <label for="house_type" class="form-label fw-semibold text-primary-light text-sm mb-8">
                                         House type
                                     </label>
-                                    <select name="house_type"  class="form-control radius-8 form-select">
+                                    <select name="house_type"  class="form-control radius-8 form-select" >
                                         <option value="">Property  Type</option>
                                         <option value="villa">Villa</option>
                                         <option value="Apartment">Apartment</option>
@@ -119,15 +140,7 @@
                                     </label>
                                     <input type="text" class="form-control radius-8" id="longitude" name="longitude" placeholder="Enter longitude" value="{{ old('longitude') }}">
                                 </div>
-                                <div class="col-md-6 mb-20">
-                                    <label for="status" class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                        Status <span class="text-danger-600">*</span>
-                                    </label>
-                                    <select class="form-control radius-8 form-select" id="status" name="status">
-                                        <option value="active">Active</option>
-                                        <option value="inactive">Inactive</option>
-                                    </select>
-                                </div>
+
                             </div>
                             <div class="d-flex align-items-center justify-content-center gap-3">
                                 <button type="button" class="border border-danger-600 bg-hover-danger-200 text-danger-600 text-md px-56 py-11 radius-8">
