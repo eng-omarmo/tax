@@ -1,14 +1,15 @@
 @extends('layout.layout')
 
 @php
-    $title = 'Property Grid';
-    $subTitle = 'Property Grid';
+    $title = 'Property List';
+    $subTitle = 'Property ';
     $script = '<script>
         $(".remove-item-btn").on("click", function() {
             $(this).closest("tr").addClass("d-none");
         });
     </script>';
 @endphp
+
 @section('content')
     <div class="card h-100 p-0 radius-12">
         @if (session()->has('success'))
@@ -22,7 +23,6 @@
                 class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center justify-content-between flex-wrap gap-3">
                 <!-- Filter Section (Search, Pagination, Status) -->
                 <div class="d-flex align-items-center gap-3 flex-wrap">
-
                     <div class="navbar-search">
                         <input type="text" class="bg-base h-40-px w-auto" name="search" placeholder="Search"
                             value="{{ request()->search }}">
@@ -34,32 +34,21 @@
                         <option value="Available" {{ request()->status == 'Available' ? 'selected' : '' }}>Available</option>
                         <option value="Sold" {{ request()->status == 'Sold' ? 'selected' : '' }}>Sold</option>
                     </select>
-
-                    {{-- <select name="type" class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px">
-                        <option value="">Type</option>
-                        @foreach ($propertyTypes as $type)
-                            <option value="{{ $type }}" {{ request()->type == $type ? 'selected' : '' }}>
-                                {{ $type }}</option>
-                        @endforeach
-                    </select> --}}
                 </div>
 
                 <div class="d-flex align-items-center gap-3 flex-wrap">
-                    <!-- Filter Property -->
                     <a href="javascript:void(0);" id="filterLink"
                         class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
                         <iconify-icon icon="ic:baseline-filter-alt" class="icon text-xl line-height-1"></iconify-icon>
                         Filter
                     </a>
 
-                    <!-- Reset Filter -->
                     <a href="javascript:void(0);" id="resetLink"
                         class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
                         <iconify-icon icon="ic:baseline-filter-alt-off" class="icon text-xl line-height-1"></iconify-icon>
                         Reset
                     </a>
 
-                    <!-- Add New Property Button -->
                     <a href="{{ route('property.create') }}"
                         class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
                         <iconify-icon icon="ic:baseline-plus" class="icon text-xl line-height-1"></iconify-icon>
@@ -68,11 +57,10 @@
                 </div>
             </div>
         </form>
-
     </div>
 
     <div class="card-body p-24">
-        <div class="table-responsive scroll-sm">
+        <div class="table-responsive scroll-sm overflow-x-auto">
             <table class="table bordered-table sm-table mb-0">
                 <thead>
                     <tr>
@@ -85,12 +73,26 @@
                                 S.L
                             </div>
                         </th>
-                        <th scope="col">Property ID</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Location</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Price</th>
-                        <th scope="col" class="text-center">Status</th>
+
+                        <th scope="col">Property Name</th>
+                        <th scope="col">Phone</th>
+
+                        <th scope="col">Tenant Name</th>
+                        <th scope="col">Tenant Phone</th>
+                        <th scope="col">Branch</th>
+                        <th scope="col">NBR</th>
+                        <th scope="col">Designation</th>
+                        <th scope="col">House Type</th>
+                        <th scope="col">House Rent</th>
+                        <th scope="col">Zone</th>
+                        <th scope="col">Quarterly Tax Fee</th>
+                        <th scope="col">Yearly Tax Fee</th>
+                        <th scope="col">Latitude</th>
+                        <th scope="col">Longitude</th>
+                        <th scope="col">Dalal Company Name</th>
+                        <th scope="col">Is Owner</th>
+                        <th scope="col">Monitoring Status</th>
+                        <th scope="col">Status</th>
                         <th scope="col" class="text-center">Action</th>
                     </tr>
                 </thead>
@@ -106,11 +108,24 @@
                                     {{ $loop->iteration }}
                                 </div>
                             </td>
-                            <td>{{ $property->id }}</td>
-                            <td>{{ $property->name }}</td>
-                            <td>{{ $property->location }}</td>
-                            <td>{{ $property->type }}</td>
-                            <td>{{ $property->price }}</td>
+                            <td>{{ $property->property_name }}</td>
+                            <td>{{ $property->property_phone }}</td>
+                            <td>{{ $property->tenant_name }}</td>
+                            <td>{{ $property->tenant_phone }}</td>
+                            <td>{{ $property->branch }}</td>
+                            <td>{{ $property->nbr }}</td>
+                            <td>{{ $property->zone }}</td>
+
+                            <td>{{ $property->designation }}</td>
+                            <td>{{ $property->house_type }}</td>
+                            <td>{{ $property->house_rent }}</td>
+                            <td>{{ $property->quarterly_tax_fee }}</td>
+                            <td>{{ $property->yearly_tax_fee }}</td>
+                            <td>{{ $property->latitude }}</td>
+                            <td>{{ $property->longitude }}</td>
+                            <td>{{ $property->dalal_company_name }}</td>
+                            <td>{{ $property->is_owner }}</td>
+                            <td>{{ $property->monitoring_status }}</td>
                             <td class="text-center">
                                 <span
                                     class="{{ $property->status == 'Available' ? 'bg-success-focus text-success-600' : 'bg-danger-focus text-danger-600' }} border px-24 py-4 radius-4 fw-medium text-sm">
@@ -132,7 +147,6 @@
                             </td>
                         </tr>
                     @endforeach
-
                 </tbody>
             </table>
         </div>
@@ -144,12 +158,14 @@
             </div>
         </div>
     </div>
+
     <script>
         // Attach event listener to the Filter link
         document.getElementById('filterLink').addEventListener('click', function() {
             // Submit the form when the filter link is clicked
             document.getElementById('filterForm').submit();
         });
+
         document.getElementById('resetLink').addEventListener('click', function() {
             const formElements = document.getElementById('filterForm').elements;
             Array.from(formElements).forEach(element => {

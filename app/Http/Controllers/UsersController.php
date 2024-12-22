@@ -92,7 +92,7 @@ class UsersController extends Controller
         }
 
 
-        $users = $query->paginate(10);
+        $users = $query->paginate(5);
 
 
         return view('users.usersList', compact('users', 'roles'));

@@ -112,18 +112,18 @@
                     </li>
 
                     <li>
-                        <a href="#"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
+                        <a href="{{ route('property.create') }}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
                             Property</a>
                     </li>
-                    <li>
-                        <a href="#"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Pending
+                    {{-- <li>
+                        <a href="`"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Pending
                             Property</a>
                     </li>
 
                     <li>
                         <a href="#"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Property
                             Report</a>
-                    </li>
+                    </li> --}}
 
                 </ul>
 
