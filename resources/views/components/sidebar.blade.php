@@ -107,7 +107,7 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="#imagePreview"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                        <a href="{{ route('property.index') }}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
                             Property List</a>
                     </li>
 

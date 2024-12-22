@@ -17,6 +17,7 @@ use App\Http\Controllers\changePasswordController;
 use App\Http\Controllers\RoleandaccessController;
 use App\Http\Controllers\CryptocurrencyController;
 use App\Http\Controllers\OtpController;
+use App\Http\Controllers\propertyController;
 
 Route::controller(AuthenticationController::class)->group(function () {
     Route::get('/', 'signin')->name('signin');
@@ -27,6 +28,16 @@ Route::controller(AuthenticationController::class)->group(function () {
 Route::controller(changePasswordController::class)->group(function () {
     Route::post('/change-password', 'changePassword')->name('change.password');
 });
+Route::controller(PropertyController::class)
+    ->prefix('property')
+    ->group(function () {
+        Route::get('/index', 'index')->name('property.index');
+        Route::get('/create', 'create')->name('property.create');
+        Route::post('/store', 'store')->name('property.store');
+        Route::get('/edit/{id}', 'edit')->name('property.edit');
+        Route::put('/update/{id}', 'update')->name('property.update');
+        Route::delete('/delete/{id}', 'destroy')->name('property.delete'); 
+    });
 
 Route::controller(HomeController::class)->group(function () {
     Route::get('calendar', 'calendar')->name('calendar');
