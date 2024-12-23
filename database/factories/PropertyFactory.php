@@ -17,6 +17,7 @@ class PropertyFactory extends Factory
             'house_code' => $this->faker->unique()->numberBetween(10000, 99999),
             'tenant_name' => $this->faker->name,
             'branch' => $this->faker->city,
+            'district' => $this->faker->city,
             'zone' => $this->faker->word,
             'tenant_phone' => $this->faker->phoneNumber,
             'nbr' => $this->faker->word . $this->faker->numberBetween(1, 10),

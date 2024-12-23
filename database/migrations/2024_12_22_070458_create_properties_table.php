@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('property_name');
             $table->string('property_phone', 25)->nullable();
             $table->string('nbr', 50)->nullable();
+            $table->string('district', 100)->nullable();
             $table->string('house_code', 50)->nullable();
             $table->string('tenant_name')->nullable();
             $table->string('tenant_phone', 25)->nullable();

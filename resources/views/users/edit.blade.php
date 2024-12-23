@@ -50,8 +50,8 @@
                                             class="text-danger-600">*</span></label>
                                     <select class="form-control radius-8 form-select" id="role" name="role">
                                         <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
-                                        <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>Tax Officer</option>
-                                        <option value="manager" {{ $user->role == 'manager' ? 'selected' : '' }}>Business Owner</option>
+                                        <option value="Tax Officer" {{ $user->role == 'Tax Officer' ? 'selected' : '' }}>Tax Officer</option>
+                                        <option value="Business Owner" {{ $user->role == 'Business Owner' ? 'selected' : '' }}>Business Owner</option>
                                         <option value="landlord" {{ $user->role == 'landlord' ? 'selected' : '' }}>Landlord</option>
                                     </select>
                                 </div>

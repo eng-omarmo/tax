@@ -36,6 +36,7 @@ class UsersController extends Controller
         // } else {
         //     $imagePath = null;
         // }
+        dd($validated);
         User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -45,6 +46,7 @@ class UsersController extends Controller
             'status' => $validated['status'],
             'profile_image' => null
         ]);
+
 
         return redirect()->route('usersList')->with('success', 'User created successfully!');
     }
@@ -57,11 +59,13 @@ class UsersController extends Controller
 
     public function usersGrid()
     {
+
         return view('users/usersGrid');
     }
 
     public function usersList(Request $request)
     {
+
         $request->validate([
             'search' => 'nullable|string|max:255',
             'role' => 'nullable|string|max:255',

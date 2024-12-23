@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Property;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class propertyController extends Controller
@@ -40,14 +41,15 @@ class propertyController extends Controller
 
     public function ReportDetails(Request $request)
     {
+
         $query = Property::query();
 
         if ($request->has('start_date') && $request->start_date) {
-            $query->whereDate('created_at', '>=', $request->start_date);
+            $query->whereDate('created_at', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
         }
 
         if ($request->has('end_date') && $request->end_date) {
-            $query->whereDate('created_at', '<=', $request->end_date);
+            $query->whereDate('created_at', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
 
         if ($request->has('nbr') && $request->nbr) {
@@ -58,17 +60,21 @@ class propertyController extends Controller
             $query->where('district', $request->status);
         }
 
-        if ($request->has('branch') && $request->zone && $request->zone !== 'all') {
-            $query->where('branch', $request->monitoring_status);
+        if ($request->has('branch') && $request->branch && $request->branch !== 'all') {
+            $query->where('branch', $request->branch);
         }
 
         if ($request->has('zone') && $request->zone && $request->zone !== 'all') {
-            $query->where('zone', $request->ownership_status);
+            $query->where('zone', $request->zone);
         }
 
+        $data = $this->returnReports();
         $properties = $query->get();
-        return view('property.report', compact('properties'));
+
+
+        return view('property.report', compact('properties', 'data'));
     }
+
 
     public function create()
     {
@@ -77,7 +83,13 @@ class propertyController extends Controller
 
     public function report()
     {
-        return view('property.report');
+
+        return view(
+            'property.report',
+            [
+                'data' => $this->returnReports()
+            ]
+        );
     }
 
     public function store(Request $request)
@@ -167,5 +179,17 @@ class propertyController extends Controller
     {
         Property::query()->find($id)->delete();
         return redirect()->route('property.index')->with('success', 'Property deleted successfully.');
+    }
+
+    private function returnReports()
+    {
+        $data['statuses'] = Property::pluck('status')
+            ->unique();
+        $data['branches'] = Property::pluck('branch')
+            ->unique();
+        $data['zones'] = Property::pluck('zone')
+            ->unique();
+        $data['districts'] = Property::pluck('district');
+        return $data;
     }
 }
