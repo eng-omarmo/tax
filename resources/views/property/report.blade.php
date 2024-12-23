@@ -109,7 +109,7 @@
                                                 </div>
                                             </td>
                                             <td>{{ $property->property_name }}</td>
-                                            <td>{{ $property->property_nbr }}</td>
+                                            <td>{{ $property->nbr }}</td>
                                             <td>{{ $property->tenant_phone }}</td>
 
                                             <td>{{ $property->branch }}</td>
