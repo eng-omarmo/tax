@@ -93,6 +93,8 @@
                                         <th scope="col">Zone</th>
                                         <th scope="col">Latitude</th>
                                         <th scope="col">Longitude</th>
+                                        <th scope="col">status</th>
+
                                         <th scope="col" class="text-center">Action</th>
                                     </tr>
                                 </thead>
