@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('properties', function (Blueprint $table) {
             $table->id();
             $table->string('property_name');
-            $table->string('property_phone', 20)->nullable();
+            $table->string('property_phone', 25)->nullable();
             $table->string('nbr', 50)->nullable();
             $table->string('house_code', 50)->nullable();
             $table->string('tenant_name')->nullable();
-            $table->string('tenant_phone', 20)->nullable();
+            $table->string('tenant_phone', 25)->nullable();
             $table->string('branch')->nullable();
             $table->string('zone', 100)->nullable();
             $table->string('designation', 100)->nullable();
