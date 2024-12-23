@@ -35,6 +35,8 @@ Route::controller(PropertyController::class)->prefix('property')->middleware(['a
         Route::get('/edit/{id}', 'edit')->name('property.edit');
         Route::put('/update/{id}', 'update')->name('property.update');
         Route::get('/delete/{id}', 'destroy')->name('property.delete');
+        Route::get('/report', 'report')->name('property.report');
+        Route::get('/report-details', 'reportDetails')->name('property.report.fech');
     });
 
 Route::controller(HomeController::class)->group(function () {

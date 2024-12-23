@@ -123,9 +123,10 @@
                                     <div class="col-md-6 mb-20">
                                         <label for="designation"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Designation  <span class="text-danger-600">*</span>
+                                            Designation <span class="text-danger-600">*</span>
                                         </label>
-                                        <select class="form-control radius-8 form-select" id="designation" name="designation">
+                                        <select class="form-control radius-8 form-select" id="designation"
+                                            name="designation">
                                             <option value="">Choose Designation</option>
                                             <option value="Deegaan">Deegaan</option>
                                         </select>
@@ -178,7 +179,7 @@
                                     <div class="col-md-6 mb-20">
                                         <label for="dalal_company_name"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                          Dalal Company Name
+                                            Dalal Company Name
                                         </label>
                                         <input type="text" class="form-control radius-8" id="dalal_company_name"
                                             name="dalal_company_name"placeholder="Enter house rent"
