@@ -69,9 +69,7 @@ class propertyController extends Controller
         }
 
         $data = $this->returnReports();
-        $properties = $query->get();
-
-
+        $properties = $query->paginate(10);
         return view('property.report', compact('properties', 'data'));
     }
 

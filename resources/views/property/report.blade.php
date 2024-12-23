@@ -142,13 +142,13 @@
                             </table>
                         </div>
 
-                        {{-- <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">
                             <span>Showing {{ $properties->firstItem() }} to {{ $properties->lastItem() }} of
                                 {{ $properties->total() }} entries</span>
                             <div class="pagination-container">
                                 {{ $properties->links() }}
                             </div>
-                        </div> --}}
+                        </div>
                     </div>
                 @endif
 
