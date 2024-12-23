@@ -29,15 +29,16 @@ Route::controller(changePasswordController::class)->group(function () {
     Route::post('/change-password', 'changePassword')->name('change.password');
 });
 Route::controller(PropertyController::class)->prefix('property')->middleware(['auth.admin'])->group(function () {
-        Route::get('/index', 'index')->name('property.index');
-        Route::get('/create', 'create')->name('property.create');
-        Route::post('/store', 'store')->name('property.store');
-        Route::get('/edit/{id}', 'edit')->name('property.edit');
-        Route::put('/update/{id}', 'update')->name('property.update');
-        Route::get('/delete/{id}', 'destroy')->name('property.delete');
-        Route::get('/report', 'report')->name('property.report');
-        Route::get('/report-details', 'reportDetails')->name('property.report.fech');
-    });
+    Route::get('/index', 'index')->name('property.index');
+    Route::get('/create', 'create')->name('property.create');
+    Route::post('/store', 'store')->name('property.store');
+    Route::get('/edit/{id}', 'edit')->name('property.edit');
+    Route::put('/update/{id}', 'update')->name('property.update');
+    Route::get('/delete/{id}', 'destroy')->name('property.delete');
+    Route::get('/report', 'report')->name('property.report');
+    Route::get('/report-details', 'reportDetails')->name('property.report.fech');
+    Route::get('/property/report/pdf', 'exportPdf')->name('property.report.print');
+});
 
 Route::controller(HomeController::class)->group(function () {
     Route::get('calendar', 'calendar')->name('calendar');

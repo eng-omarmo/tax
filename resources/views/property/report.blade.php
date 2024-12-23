@@ -14,6 +14,7 @@
             </div>
         @endif
         <form method="get" action="{{ route('property.report.fech') }}" id="filterForm">
+            <input type="hidden" name="isPrint" id="isPrint" value="">
             <div
                 class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center justify-content-between flex-wrap gap-3">
 
@@ -60,13 +61,12 @@
                             <iconify-icon icon="ic:baseline-filter-alt" class="icon text-lg line-height-1"></iconify-icon>
                             Load Report
                         </button>
+                        <button type="button" id="print"
+                        class="btn btn-secondary text-xs px-8 py-8 radius-4 d-flex align-items-center">
+                        <iconify-icon icon="ic:baseline-filter-alt" class="icon text-lg line-height-1"></iconify-icon>
+                        Print
+                    </button>
 
-                        <a href="javascript:void(0);" id="print"
-                            class="btn btn-secondary text-xs px-8 py-8 radius-4 d-flex align-items-center">
-                            <iconify-icon icon="ic:baseline-filter-alt-off"
-                                class="icon text-lg line-height-1"></iconify-icon>
-                            Print
-                        </a>
                     </div>
                 </div>
 
@@ -144,7 +144,8 @@
                             </table>
                         </div>
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">
-                            <span>Showing {{ $properties->firstItem() }} to {{ $properties->lastItem() }} of {{ $properties->total() }} entries</span>
+                            <span>Showing {{ $properties->firstItem() }} to {{ $properties->lastItem() }} of
+                                {{ $properties->total() }} entries</span>
                             <div class="pagination-container">
                                 {{ $properties->links() }}
                             </div>
@@ -158,3 +159,15 @@
 
     </div>
 @endsection
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('print').addEventListener('click', function () {
+            // Set the value of 'isPrint' to 1
+            document.getElementById('isPrint').value = '1';
+
+            // Submit the form
+            document.getElementById('filterForm').submit();
+        });
+    });
+</script>

@@ -36,7 +36,7 @@ class UsersController extends Controller
         // } else {
         //     $imagePath = null;
         // }
-        dd($validated);
+     
         User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -65,7 +65,6 @@ class UsersController extends Controller
 
     public function usersList(Request $request)
     {
-
         $request->validate([
             'search' => 'nullable|string|max:255',
             'role' => 'nullable|string|max:255',
@@ -73,10 +72,7 @@ class UsersController extends Controller
         ]);
 
         $roles = User::select('role')->distinct()->pluck('role');
-
         $query = User::query();
-
-
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%')
                 ->orWhere('email', 'like', '%' . $request->search . '%')
@@ -84,26 +80,18 @@ class UsersController extends Controller
                 ->orWhere('role', 'like', '%' . $request->search . '%')
                 ->orWhere('status', 'like', '%' . $request->search . '%');
         }
-
-
         if ($request->filled('role')) {
             $query->where('role', $request->role);
         }
-
-
         if ($request->filled('status')) {
             $query->where('status', ucfirst($request->status));
         }
 
-
         $users = $query->paginate(5);
-
-
         return view('users.usersList', compact('users', 'roles'));
     }
         public function viewProfile()
     {
-
         return view('users/viewProfile');
     }
 

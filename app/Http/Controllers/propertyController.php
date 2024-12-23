@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Property;
 use Carbon\Carbon;
+use App\Models\Property;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
 
 class propertyController extends Controller
 {
@@ -35,6 +37,7 @@ class propertyController extends Controller
         if ($request->filled('monetering_status')) {
             $query->where('monitoring_status', $request->monetering_status);
         }
+
         $properties = $query->paginate(5);
         return view('property.index', compact('properties', 'statuses', 'monitoringStatuses'));
     }
@@ -67,11 +70,32 @@ class propertyController extends Controller
         if ($request->has('zone') && $request->zone && $request->zone !== 'all') {
             $query->where('zone', $request->zone);
         }
+        if (request('isPrint') == 1) {
+            if ($request->input('isPrint') == 1) {
+                return $this->exportPdf($query->get()); // Pass the filtered data to the PDF export method
+            }
+        }
 
-        $data = $this->returnReports();
+
         $properties = $query->paginate(5);
-        return view('property.report', compact('properties', 'data'));
+
+        return view('property.report', [
+            'properties' => $properties,
+            'data' => $this->returnReports()
+        ]);
     }
+
+    public function exportPdf($properties)
+{
+    try {
+        $pdf = Pdf::loadView('property.report_pdf', compact('properties'));
+        return $pdf->download('Property_Report.pdf');
+    } catch (\Throwable $th) {
+        Log::error('Error generating PDF: ' . $th->getMessage());
+        return redirect()->back()->withErrors(['error' => 'Failed to generate PDF. Please try again.']);
+    }
+}
+
 
 
     public function create()
@@ -81,6 +105,7 @@ class propertyController extends Controller
 
     public function report()
     {
+
         return view(
             'property.report',
             [
