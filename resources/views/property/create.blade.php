@@ -212,10 +212,6 @@
                                         <input type="text" class="form-control radius-8" id="zone"
                                             name="zone" placeholder="Enter zone name" value="{{ old('zone') }}">
                                     </div>
-
-
-
-
                                     <div class="col-md-6 mb-20">
                                         <label for="latitude"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">

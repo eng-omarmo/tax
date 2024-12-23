@@ -157,7 +157,7 @@ class propertyController extends Controller
             'house_rent' => 'nullable|numeric',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
-            'status' => 'required|in:Active,inactive',
+            'status' => 'required|in:Active,Inactive',
         ]);
         $property->update($request->all());
         return redirect()->route('property.index')->with('success', 'Property updated successfully.');
