@@ -10,10 +10,13 @@ class DistrictController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        $districts = District::paginate(10);
+        $query= District::query();
+        if($request->has('search') && $request->search){
+            $query->where('name','like','%'.$request->search.'%');
+        }
+        $districts = $query->paginate(5);
         return view('district.index', compact('districts'));
     }
 
