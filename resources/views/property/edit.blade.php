@@ -111,17 +111,6 @@
                                     </div>
 
                                     <div class="col-md-6 mb-20">
-                                        <label for="is_owner"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Is Owner <span class="text-danger-600">*</span>
-                                        </label>
-                                        <select class="form-control radius-8 form-select" id="is_owner" name="is_owner">
-                                            <option value="Yes" {{ old('is_owner', $property->is_owner) == 'Yes' ? 'selected' : '' }}>Yes</option>
-                                            <option value="No" {{ old('is_owner', $property->is_owner) == 'No' ? 'selected' : '' }}>No</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-md-6 mb-20">
                                         <label for="designation"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
                                             Designation <span class="text-danger-600">*</span>
@@ -188,15 +177,7 @@
 
                                     </div>
 
-                                    <div class="col-md-6 mb-20">
-                                        <label for="tenant_phone"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Tenant Phone
-                                        </label>
-                                        <input type="text" class="form-control radius-8" id="tenant_phone"
-                                            name="tenant_phone" placeholder="Enter tenant phone"
-                                            value="{{ old('tenant_phone', $property->tenant_phone) }}">
-                                    </div>
+
                                     <div class="col-md-6 mb-20">
                                         <label for="branch"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">

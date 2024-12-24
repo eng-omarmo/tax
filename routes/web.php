@@ -20,6 +20,7 @@ use App\Http\Controllers\CryptocurrencyController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\propertyController;
+use App\Http\Controllers\tenantController;
 
 Route::controller(AuthenticationController::class)->group(function () {
     Route::get('/', 'signin')->name('signin');
@@ -102,6 +103,21 @@ Route::prefix('branch')->middleware(['auth.admin'])->group(function () {
         Route::get('/edit/{branch}', 'edit')->name('branch.edit');
         Route::put('/update/{branch}', 'update')->name('branch.update');
         Route::get('/delete/{branch}', 'destroy')->name('branch.delete');
+
+    });
+});
+
+
+Route::prefix('tenant')->middleware(['auth.admin'])->group(function () {
+    Route::controller(tenantController::class)->group(function () {
+        Route::get('/index', 'index')->name('tenant.index');
+        Route::get('/create', 'create')->name('tenant.create');
+        Route::post('/store', 'store')->name('tenant.store');
+        Route::get('/edit/{tenant}', 'edit')->name('tenant.edit');
+        Route::put('/update/{tenant}', 'update')->name('tenant.update');
+        Route::get('/delete/{tenant}', 'destroy')->name('tenant.delete');
+        //tenant search
+        Route::get('/search', 'search')->name('tenant.search');
     });
 });
 // chart

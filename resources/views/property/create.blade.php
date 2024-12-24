@@ -77,16 +77,6 @@
                                             name="house_code" placeholder="Enter house code"
                                             value="{{ old('house_code') }}">
                                     </div>
-                                    <div class="col-md-6 mb-20">
-                                        <label for="tenant_name"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Tenant Name
-                                        </label>
-                                        <input type="text" class="form-control radius-8" id="tenant_name"
-                                            name="tenant_name" placeholder="Enter tenant name"
-                                            value="{{ old('tenant_name') }}">
-                                    </div>
-
 
                                     <div class="col-md-6 mb-20">
                                         <label for="status"
@@ -188,15 +178,7 @@
 
                                     </div>
 
-                                    <div class="col-md-6 mb-20">
-                                        <label for="tenant_phone"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Tenant Phone
-                                        </label>
-                                        <input type="text" class="form-control radius-8" id="tenant_phone"
-                                            name="tenant_phone" placeholder="Enter tenant phone"
-                                            value="{{ old('tenant_phone') }}">
-                                    </div>
+                              
                                     <div class="col-md-6 mb-20">
                                         <label for="branch"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">

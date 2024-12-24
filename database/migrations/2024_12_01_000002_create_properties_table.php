@@ -18,8 +18,6 @@ return new class extends Migration
             $table->string('nbr', 50)->nullable();
             $table->unsignedBigInteger('district_id');
             $table->string('house_code', 50)->nullable();
-            $table->string('tenant_name')->nullable();
-            $table->string('tenant_phone', 25)->nullable();
             $table->string('branch')->nullable();
             $table->string('zone', 100)->nullable();
             $table->string('designation', 100)->nullable();
@@ -30,13 +28,11 @@ return new class extends Migration
             $table->decimal('latitude', 10, 6);
             $table->decimal('longitude', 10, 6);
             $table->string('dalal_company_name')->nullable();
-            $table->enum('is_owner', ['Yes', 'No'])->default('No');
             $table->enum('monitoring_status', ['Pending', 'Approved'])->nullable();
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->foreign('district_id')->references('id')->on('districts')->onDelete('cascade');
             $table->timestamps();
         });
-        //
     }
 
     /**

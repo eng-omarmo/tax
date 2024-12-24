@@ -186,8 +186,6 @@ class propertyController extends Controller
             'property_phone' => 'nullable|string|max:15',
             'nbr' => 'nullable|string|max:100',
             'house_code' => 'nullable|string|max:50',
-            'tenant_name' => 'nullable|string|max:255',
-            'tenant_phone' => 'nullable|string|max:15',
             'branch' => 'nullable|string|max:255',
             'zone' => 'nullable|string|max:255',
             'house_type' => 'nullable|string|max:255',
