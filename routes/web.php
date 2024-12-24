@@ -13,6 +13,7 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\BranchController;
 use App\Http\Controllers\changePasswordController;
 use App\Http\Controllers\RoleandaccessController;
 use App\Http\Controllers\CryptocurrencyController;
@@ -90,6 +91,17 @@ Route::prefix('district')->middleware(['auth.admin'])->group(function () {
         Route::get('/edit/{District}', 'edit')->name('district.edit');
         Route::put('/update/{District}', 'update')->name('district.update');
         Route::get('/delete/{District}', 'destroy')->name('district.delete');
+    });
+});
+
+Route::prefix('branch')->middleware(['auth.admin'])->group(function () {
+    Route::controller(BranchController::class)->group(function () {
+        Route::get('/index', 'index')->name('branch.index');
+        Route::get('/create', 'create')->name('branch.create');
+        Route::post('/store', 'store')->name('branch.store');
+        Route::get('/edit/{branch}', 'edit')->name('branch.edit');
+        Route::put('/update/{branch}', 'update')->name('branch.update');
+        Route::get('/delete/{branch}', 'destroy')->name('branch.delete');
     });
 });
 // chart
