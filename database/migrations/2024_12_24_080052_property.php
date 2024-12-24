@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('property_name');
             $table->string('property_phone', 25)->nullable();
             $table->string('nbr', 50)->nullable();
-            $table->string('district', 100)->nullable();
+            $table->unsignedBigInteger('district_id');
             $table->string('house_code', 50)->nullable();
             $table->string('tenant_name')->nullable();
             $table->string('tenant_phone', 25)->nullable();
@@ -33,8 +33,10 @@ return new class extends Migration
             $table->enum('is_owner', ['Yes', 'No'])->default('No');
             $table->enum('monitoring_status', ['Pending', 'Approved'])->nullable();
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
+            $table->foreign('district_id')->references('id')->on('districts')->onDelete('cascade');
             $table->timestamps();
         });
+        //
     }
 
     /**
@@ -43,5 +45,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('properties');
+                //
     }
 };

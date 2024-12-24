@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\District;
 use App\Models\Property;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -100,7 +101,8 @@ class propertyController extends Controller
 
     public function create()
     {
-        return view('property.create');
+        $data['districts'] = District::select('id', 'name')->get();
+        return view('property.create', $data);
     }
 
     public function report()
@@ -139,6 +141,7 @@ class propertyController extends Controller
             'designation' => 'nullable|string|max:255',
             'monitoring_status' => 'required|in:Pending,Approved',
             'status' => 'required|in:Active,Inactive',
+            'district_id' => 'required|exists:districts,id',
         ]);
         $checkProperty = Property::where('property_name', $request->property_name)->first();
         if ($checkProperty) {
@@ -163,7 +166,7 @@ class propertyController extends Controller
             'is_owner' => $request->is_owner,
             'designation' => $request->designation,
             'dalal_company_name' => $request->dalal_company_name,
-
+            'district_id' => $request->district_id,
             'monitoring_status' => $request->monitoring_status,
             'status' => $request->status,
         ]);
