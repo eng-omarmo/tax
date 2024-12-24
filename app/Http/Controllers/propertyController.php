@@ -208,13 +208,14 @@ class propertyController extends Controller
 
     private function returnReports()
     {
+        $getDistrictIDs = Property::pluck('district_id');
         $data['statuses'] = Property::pluck('status')
             ->unique();
         $data['branches'] = Property::pluck('branch')
             ->unique();
         $data['zones'] = Property::pluck('zone')
             ->unique();
-        $data['districts'] = Property::pluck('district');
+        $data['districts'] = District::whereIn('id', $getDistrictIDs)->select('name','id')->get();
         return $data;
     }
 }
