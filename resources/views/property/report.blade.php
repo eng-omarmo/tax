@@ -33,7 +33,7 @@
 
                             <option value="">All</option>
                             @foreach ($data['districts'] as $district)
-                                <option value="{{ $district }}">{{ $district }}</option>
+                                <option value="{{ $district->id }}">{{ $district->name }}</option>
                             @endforeach
                         </select>
 
@@ -94,8 +94,8 @@
                                         <th scope="col">Latitude</th>
                                         <th scope="col">Longitude</th>
                                         <th scope="col">status</th>
-
-                                        <th scope="col" class="text-center">Action</th>
+{{--
+                                        <th scope="col" class="text-center">Action</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -124,7 +124,7 @@
                                                     {{ ucfirst($property->status) }}
                                                 </span>
                                             </td>
-                                            <td class="text-center">
+                                            {{-- <td class="text-center">
                                                 <div class="d-flex align-items-center gap-10 justify-content-center">
                                                     <a href="{{ route('property.edit', $property->id) }}"
                                                         class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
@@ -137,7 +137,7 @@
                                                             class="menu-icon"></iconify-icon>
                                                     </a>
                                                 </div>
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                     @endforeach
                                 </tbody>

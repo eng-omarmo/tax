@@ -87,6 +87,7 @@
                                             value="{{ old('tenant_name') }}">
                                     </div>
 
+
                                     <div class="col-md-6 mb-20">
                                         <label for="status"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
@@ -203,6 +204,21 @@
                                         </label>
                                         <input type="text" class="form-control radius-8" id="branch"
                                             name="branch" placeholder="Enter branch name" value="{{ old('branch') }}">
+                                    </div>
+
+
+                                    <div class="col-md-6 mb-20">
+                                        <label for="district"
+                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                            District <span class="text-danger-600">*</span>
+                                        </label>
+                                        <select class="form-control radius-8 form-select" id="district_id" name="district_id">
+                                            <option value="">Choose District</option>
+                                         @foreach($districts as $district)
+                                            <option value="{{ $district->id }}">{{ $district->name }}</option>
+                                         @endforeach
+
+                                        </select>
                                     </div>
                                     <div class="col-md-6 mb-20">
                                         <label for="zone"

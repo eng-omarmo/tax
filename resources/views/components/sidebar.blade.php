@@ -103,6 +103,28 @@
             <li class="dropdown">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
+                    <span>District</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li>
+                        <a href="{{ route('district.index') }}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                            District </a>
+                    </li>
+
+
+                    <li>
+                        <a href="{{ route('branch.index') }}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Branch
+
+                        </a>
+                    </li>
+
+                </ul>
+
+            </li>
+
+            <li class="dropdown">
+                <a href="javascript:void(0)">
+                    <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
                     <span>Property</span>
                 </a>
                 <ul class="sidebar-submenu">
@@ -128,6 +150,7 @@
                 </ul>
 
             </li>
+
 
             <li class="dropdown">
                 <a href="javascript:void(0)">
