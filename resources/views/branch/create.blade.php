@@ -53,7 +53,7 @@
                                     <label for="name"
                                         class="form-label fw-semibold text-primary-light text-sm mb-8">District <span
                                             class="text-danger-600">*</span></label>
-                               <select name="district" class="form-select h-40-px w-auto">
+                               <select name="district_id" class="form-control radius-8 form-select" >
                                     <option value="">Select District</option>
                                     @foreach ($districts as $district)
                                         <option value="{{ $district->id }}">{{ $district->name }}</option>

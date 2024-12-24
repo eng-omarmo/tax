@@ -50,13 +50,18 @@
                                     <input type="text" class="form-control radius-8" id="name" name="name" value="{{ $branch->name }}"
                                         placeholder="Enter Full Name" value="{{ old('name') }}">
                                 </div>
-                                <select name="district" class="form-select h-40-px w-auto">
+                                <div class="mb-20">
+                                    <label for="name"
+                                        class="form-label fw-semibold text-primary-light text-sm mb-8">Branch District
+                                <span class="text-danger-600">*</span></label>
+                                        <select name="district_id" class="form-control radius-8 form-select">
                                     <option value="">Select District</option>
-                                <option  value="{{ $branch->district->id }}" selected> {{ $branch->district->name }}</option"> 
+                                <option  value="{{ $branch->district->id }}" selected> {{ $branch->district->name }}</option">
                                     @foreach ($districts as $district)
                                         <option value="{{ $district->id }}">{{ $district->name }}</option>
                                     @endforeach
                                 </select>
+                                </div>
                                 <div class="d-flex align-items-center justify-content-center gap-3">
                                     <button type="button"
                                         class="border border-danger-600 bg-hover-danger-200 text-danger-600 text-md px-56 py-11 radius-8">Cancel</button>

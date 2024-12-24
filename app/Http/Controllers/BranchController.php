@@ -58,9 +58,11 @@ class BranchController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Branch $branch)
+    public function edit($branch)
     {
-        //
+        $branch = Branch::find($branch);
+        $districts = District::select('id', 'name')->get();
+        return view('branch.edit', compact('branch', 'districts'));
     }
 
     /**
