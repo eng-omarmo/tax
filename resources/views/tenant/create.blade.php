@@ -31,6 +31,16 @@
 </div>
 @endif
 
+@if ($errors->any())
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
 @if(!isset($property) || empty($property->id))
     <!-- Search Form -->
     <div class="card h-100 p-0 radius-12 mb-4">
@@ -55,15 +65,7 @@
         </div>
     </div>
 @else
-@if ($errors->any())
-<div class="alert alert-danger">
-    <ul>
-        @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-        @endforeach
-    </ul>
-</div>
-@endif
+
     <!-- Tenant Form -->
     <div class="card h-100 p-0 radius-12">
         <div class="card-body p-24">
@@ -154,8 +156,8 @@
                                         Rent Amount <span class="text-danger-600">*</span>
                                     </label>
                                     <input type="number" step="0.01" class="form-control radius-8" id="rent_amount"
-                                        name="rent_amount" placeholder="Enter Rent Amount"
-                                        value="{{ old('rent_amount') }}" required>
+                                        name="rent_amount" placeholder="Enter Rent Amount" value="{{$property->house_rent}}"  readonly
+                                       required>
                                 </div>
 
                                 <div class="mb-20">

@@ -32,4 +32,14 @@ class Tenant extends Model
     {
         return $this->hasMany(Transaction::class);
     }
+
+    // App\Models\Tenant.php
+public function calculateBalance()
+{
+    $totalDebits = $this->transactions->sum('debit');
+    $totalCredits = $this->transactions->sum('credit');
+
+    return $totalDebits - $totalCredits;
+}
+
 }

@@ -80,10 +80,13 @@
                         </th>
                         <th scope="col">SNO</th>
                         <th scope="col">Tenant Name</th>
+                        <th scope="col">Property</th>
+
                         <th scope="col">Phone</th>
                         <th scope="col">Reference</th>
                         <th scope="col">Rent Amount</th>
                         <th scope="col">Tax  Amount</th>
+
                         <th scope="col" class="text-center">Status</th>
                         <th scope="col" class="text-center">Action</th>
                     </tr>
@@ -103,13 +106,11 @@
                             <td>{{ $tenant->id }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <img src="{{ asset('assets/images/tenant-list/tenant-list' . $loop->iteration . '.png') }}"
-                                        alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
-                                    <div class="flex-grow-1">
                                         <span class="text-md mb-0 fw-normal text-secondary-light">{{ $tenant->tenant_name }}</span>
                                     </div>
                                 </div>
                             </td>
+                            <td>{{ $tenant->property->property_name }}</td>
                             <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $tenant->reference }}</span></td>
                             <td>{{ $tenant->tenant_phone }}</td>
                             <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $tenant->rent_amount }}</span></td>

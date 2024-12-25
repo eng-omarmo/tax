@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Tenant;
 use App\Models\Property;
+use App\Models\Transaction;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class tenantController extends Controller
@@ -16,6 +19,9 @@ class tenantController extends Controller
         $query = Tenant::query();
         if ($request->has('search') && $request->search) {
             $query->where('name', 'like', '%' . $request->search . '%');
+        }
+        if($request->has('status') && $request->status){
+            $query->where('status', $request->status);
         }
         $tenants = $query->paginate(5);
 
@@ -59,8 +65,8 @@ class tenantController extends Controller
                 'tax_fee' => 'nullable|numeric|min:0',
                 'status' => 'required|in:Active,Inactive',
             ]);
-
-            Tenant::create([
+            DB::beginTransaction();
+            $tenant =  Tenant::create([
                 'property_id' => $validatedData['property_id'],
                 'tenant_name' => $validatedData['tenant_name'],
                 'tenant_phone' => $validatedData['tenant_phone'],
@@ -71,18 +77,30 @@ class tenantController extends Controller
                 'tax_fee' => $validatedData['tax_fee'],
                 'status' => $validatedData['status'],
             ]);
-
+            $this->createTransaction($tenant);
+            DB::commit();
             return redirect()->route('tenant.index')->with('success', 'Tenant added successfully!');
         } catch (\Throwable $th) {
+
             Log::info($th->getMessage());
             return redirect()->route('tenant.index')->with('error', $th->getMessage());
         }
     }
 
+
+
     public function edit($id)
     {
         $tenant = Tenant::query()->find($id);
-        return view('tenant.edit', compact('tenant'));
+        $properties = Property::select('property_name', 'id')->get();
+        $balance = $this->getBalance($tenant->id);
+        return view('tenant.edit', compact('tenant', 'properties', 'balance'));
+    }
+
+    public function getBalance($tenantId)
+    {
+        $tenant = Tenant::with('transactions')->findOrFail($tenantId);
+        return  $tenant->calculateBalance();
     }
 
     public function update(Request $request, $id)
@@ -93,7 +111,6 @@ class tenantController extends Controller
             'rental_start_date' => 'required|date|before_or_equal:rental_end_date',
             'rental_end_date' => 'nullable|date|after:rental_start_date',
             'reference' => 'required|string|max:255',
-            'rent_amount' => 'required|numeric|min:0',
             'tax_fee' => 'nullable|numeric|min:0',
             'status' => 'required|in:Active,Inactive',
         ]);
@@ -105,5 +122,18 @@ class tenantController extends Controller
     {
         Tenant::query()->find($id)->delete();
         return redirect()->route('tenant.index')->with('success', 'Tenant deleted successfully.');
+    }
+
+    private function createTransaction($tenant)
+    {
+        return Transaction::create([
+            'tenant_id' => $tenant->id,
+            'property_id' => $tenant->property_id,
+            'amount' => $tenant->rent_amount,
+            'description' => 'Tenant Rent',
+            'credit' => 0,
+            'debit' => $tenant->rent_amount,
+            'status' => 'Pending',
+        ]);
     }
 }

@@ -13,7 +13,8 @@ class Transaction extends Model
     protected $fillable = [
         'tenant_id',
         'amount',
-        'transaction_type',
+        'credit',
+        'debit',
         'description',
         'status',
     ];

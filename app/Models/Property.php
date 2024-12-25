@@ -29,12 +29,7 @@ class Property extends Model
         'district_id'
     ];
 
-    // Define the relationship with the Tenant model
-    public function tenants()
-    {
-        return $this->hasMany(Tenant::class); // A property can have many tenants
-    }
-
+   
     // You can define other relationships if needed (e.g., for district or transactions)
     public function district()
     {
