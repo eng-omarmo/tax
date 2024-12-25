@@ -100,6 +100,29 @@
 
             </li>
 
+
+            <li class="dropdown">
+                <a href="javascript:void(0)">
+                    <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
+                    <span>Business</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li>
+                        <a href="{{ route('business.index') }}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                            business List </a>
+                    </li>
+
+
+                    <li>
+                        <a href="{{ route('business.create') }}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add Business
+
+                        </a>
+                    </li>
+
+                </ul>
+
+            </li>
+
             <li class="dropdown">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>

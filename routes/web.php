@@ -12,6 +12,7 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\tenantController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\paymentController;
+use App\Http\Controllers\businessController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\propertyController;
 use App\Http\Controllers\SettingsController;
@@ -132,6 +133,19 @@ Route::prefix('payment')->middleware(['auth.admin'])->group(function () {
         Route::get('/get-payment-amount/{tenantId}/{paymentType}', 'getPaymentAmount')->name('tenant.payment.getPaymentAmount');
 
         Route::get('/search', 'search')->name('tenant.payment.search');
+    });
+});
+
+
+Route::prefix('business')->middleware(['auth.admin'])->group(function () {
+    Route::controller(businessController::class)->group(function () {
+        Route::get('/index', 'index')->name('business.index');
+        Route::get('/create', 'create')->name('business.create');
+        Route::post('/store', 'store')->name('business.store');
+        Route::get('/edit/{business}', 'edit')->name('business.edit');
+        Route::put('/update/{business}', '
+        ')->name('business.update');
+        Route::get('/delete/{business}', 'destroy')->name('business.delete');
     });
 });
 
