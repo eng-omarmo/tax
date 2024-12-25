@@ -23,13 +23,12 @@ class Property extends Model
         'latitude',
         'longitude',
         'dalal_company_name',
-        'is_owner',
         'monitoring_status',
         'status',
         'district_id'
     ];
 
-   
+
     // You can define other relationships if needed (e.g., for district or transactions)
     public function district()
     {

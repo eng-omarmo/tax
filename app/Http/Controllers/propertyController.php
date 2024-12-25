@@ -14,7 +14,6 @@ class propertyController extends Controller
 
     public function index(Request $request)
     {
-
         $statuses = Property::pluck('status')->unique();
 
         $monitoringStatuses = Property::pluck('monitoring_status')->unique();
@@ -87,15 +86,15 @@ class propertyController extends Controller
     }
 
     public function exportPdf($properties)
-{
-    try {
-        $pdf = Pdf::loadView('property.report_pdf', compact('properties'));
-        return $pdf->download('Property_Report.pdf');
-    } catch (\Throwable $th) {
-        Log::error('Error generating PDF: ' . $th->getMessage());
-        return redirect()->back()->withErrors(['error' => 'Failed to generate PDF. Please try again.']);
+    {
+        try {
+            $pdf = Pdf::loadView('property.report_pdf', compact('properties'));
+            return $pdf->download('Property_Report.pdf');
+        } catch (\Throwable $th) {
+            Log::error('Error generating PDF: ' . $th->getMessage());
+            return redirect()->back()->withErrors(['error' => 'Failed to generate PDF. Please try again.']);
+        }
     }
-}
 
 
 
@@ -118,84 +117,121 @@ class propertyController extends Controller
 
     public function store(Request $request)
     {
+        try {
+            $request->validate([
+                'property_name' => 'required|string|max:255',
+                'property_phone' => 'nullable|string|max:15',
+                'nbr' => 'nullable|string|max:100',
+                'house_code' => 'nullable|string|max:50',
+                'tenant_name' => 'nullable|string|max:255',
+                'tenant_phone' => 'nullable|string|max:15',
+                'branch' => 'nullable|string|max:255',
+                'quarterly_tax_fee' => 'nullable|numeric',
+                'yearly_tax_fee' => 'nullable|numeric',
+                'zone' => 'nullable|string|max:255',
+                'house_type' => 'nullable|string|max:255',
+                'house_rent' => 'nullable|numeric',
+                'latitude' => 'required|numeric',
+                'quarterly_tax_fee' => 'required|numeric',
+                'yearly_tax_fee' => 'required|numeric',
+                'longitude' => 'required|numeric',
+                'dalal_company_name' => 'nullable|string|max:255',
+                'designation' => 'nullable|string|max:255',
+                'monitoring_status' => 'required|in:Pending,Approved',
+                'status' => 'required|in:Active,Inactive',
+                'district_id' => 'required|exists:districts,id',
+            ]);
+            $checkProperty = Property::where('property_name', $request->property_name)->first();
+            if ($checkProperty) {
+                return back()->with('error', 'Property name already exists.');
+            }
 
-        $request->validate([
-            'property_name' => 'required|string|max:255',
-            'property_phone' => 'nullable|string|max:15',
-            'nbr' => 'nullable|string|max:100',
-            'house_code' => 'nullable|string|max:50',
-            'tenant_name' => 'nullable|string|max:255',
-            'tenant_phone' => 'nullable|string|max:15',
-            'branch' => 'nullable|string|max:255',
-            'quarterly_tax_fee' => 'nullable|numeric',
-            'yearly_tax_fee' => 'nullable|numeric',
-            'zone' => 'nullable|string|max:255',
-            'house_type' => 'nullable|string|max:255',
-            'house_rent' => 'nullable|numeric',
-            'latitude' => 'required|numeric',
-            'quarterly_tax_fee' => 'required|numeric',
-            'yearly_tax_fee' => 'required|numeric',
-            'longitude' => 'required|numeric',
-            'dalal_company_name' => 'nullable|string|max:255',
-            'is_owner' => 'required|in:Yes,No',
-            'designation' => 'nullable|string|max:255',
-            'monitoring_status' => 'required|in:Pending,Approved',
-            'status' => 'required|in:Active,Inactive',
-            'district_id' => 'required|exists:districts,id',
-        ]);
-        $checkProperty = Property::where('property_name', $request->property_name)->first();
-        if ($checkProperty) {
-            return back()->with('error', 'Property name already exists.');
+            Property::create([
+                'property_name' => $request->property_name,
+                'property_phone' => $request->property_phone,
+                'nbr' => $request->nbr,
+                'house_code' => $request->house_code,
+                'tenant_name' => $request->tenant_name,
+                'tenant_phone' => $request->tenant_phone,
+                'branch' => $request->branch,
+                'zone' => $request->zone,
+                'house_type' => $request->house_type,
+                'house_rent' => $request->house_rent,
+                'quarterly_tax_fee' => $request->quarterly_tax_fee,
+                'yearly_tax_fee' => $request->yearly_tax_fee,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+                'designation' => $request->designation,
+                'dalal_company_name' => $request->dalal_company_name,
+                'district_id' => $request->district_id,
+                'monitoring_status' => $request->monitoring_status,
+                'status' => $request->status,
+            ]);
+            return redirect()->route('property.index')->with('success', 'Property registered successfully.');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
         }
-
-        Property::create([
-            'property_name' => $request->property_name,
-            'property_phone' => $request->property_phone,
-            'nbr' => $request->nbr,
-            'house_code' => $request->house_code,
-            'tenant_name' => $request->tenant_name,
-            'tenant_phone' => $request->tenant_phone,
-            'branch' => $request->branch,
-            'zone' => $request->zone,
-            'house_type' => $request->house_type,
-            'house_rent' => $request->house_rent,
-            'quarterly_tax_fee' => $request->quarterly_tax_fee,
-            'yearly_tax_fee' => $request->yearly_tax_fee,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-            'is_owner' => $request->is_owner,
-            'designation' => $request->designation,
-            'dalal_company_name' => $request->dalal_company_name,
-            'district_id' => $request->district_id,
-            'monitoring_status' => $request->monitoring_status,
-            'status' => $request->status,
-        ]);
-        return redirect()->route('property.index')->with('success', 'Property registered successfully.');
     }
 
     public function edit($id)
     {
         $property = Property::findorFail($id);
+        $districts = District::select('id', 'name')->get();
 
-        return view('property.edit', compact('property'));
+        return view('property.edit', compact('property', 'districts'));
     }
-    public function update(Request $request, Property $property)
+    public function update(Request $request,$property)
     {
-        $request->validate([
-            'property_name' => 'required|string|max:255',
-            'property_phone' => 'nullable|string|max:15',
-            'nbr' => 'nullable|string|max:100',
-            'house_code' => 'nullable|string|max:50',
-            'branch' => 'nullable|string|max:255',
-            'zone' => 'nullable|string|max:255',
-            'house_type' => 'nullable|string|max:255',
-            'house_rent' => 'nullable|numeric',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-            'status' => 'required|in:Active,Inactive',
-        ]);
-        $property->update($request->all());
-        return redirect()->route('property.index')->with('success', 'Property updated successfully.');
+        try {
+            $request->validate([
+                'property_name' => 'required|string|max:255',
+                'property_phone' => 'nullable|string|max:15',
+                'nbr' => 'nullable|string|max:100',
+                'house_code' => 'nullable|string|max:50',
+                'tenant_name' => 'nullable|string|max:255',
+                'tenant_phone' => 'nullable|string|max:15',
+                'branch' => 'nullable|string|max:255',
+                'quarterly_tax_fee' => 'nullable|numeric',
+                'yearly_tax_fee' => 'nullable|numeric',
+                'zone' => 'nullable|string|max:255',
+                'house_type' => 'nullable|string|max:255',
+                'house_rent' => 'nullable|numeric',
+                'latitude' => 'required|numeric',
+                'quarterly_tax_fee' => 'required|numeric',
+                'yearly_tax_fee' => 'required|numeric',
+                'longitude' => 'required|numeric',
+                'dalal_company_name' => 'nullable|string|max:255',
+                'designation' => 'nullable|string|max:255',
+                'monitoring_status' => 'required|in:Pending,Approved',
+                'status' => 'required|in:Active,Inactive',
+                'district_id' => 'required|exists:districts,id',
+            ]);
+            Property::find($property)->update([
+                'property_name' => $request->property_name,
+                'property_phone' => $request->property_phone,
+                'nbr' => $request->nbr,
+                'house_code' => $request->house_code,
+                'tenant_name' => $request->tenant_name,
+                'tenant_phone' => $request->tenant_phone,
+                'branch' => $request->branch,
+                'zone' => $request->zone,
+                'house_type' => $request->house_type,
+                'house_rent' => $request->house_rent,
+                'quarterly_tax_fee' => $request->quarterly_tax_fee,
+                'yearly_tax_fee' => $request->yearly_tax_fee,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+                'designation' => $request->designation,
+                'dalal_company_name' => $request->dalal_company_name,
+                'district_id' => $request->district_id,
+                'monitoring_status' => $request->monitoring_status,
+                'status' => $request->status,
+            ]);
+            return redirect()->route('property.index')->with('success', 'Property updated successfully.');
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+            Log::info($th->getMessage());
+        }
     }
 
     public function destroy($id)
@@ -213,7 +249,7 @@ class propertyController extends Controller
             ->unique();
         $data['zones'] = Property::pluck('zone')
             ->unique();
-        $data['districts'] = District::whereIn('id', $getDistrictIDs)->select('name','id')->get();
+        $data['districts'] = District::whereIn('id', $getDistrictIDs)->select('name', 'id')->get();
         return $data;
     }
 }
