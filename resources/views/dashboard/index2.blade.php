@@ -109,7 +109,7 @@
                                         <iconify-icon icon="mdi:leads" class="icon"></iconify-icon>
                                     </span>
                                     <div>
-                                        <span class="mb-2 fw-medium text-secondary-light text-sm">Total Tax Income</span>
+                                        <span class="mb-2 fw-medium text-secondary-light text-sm">Total Paid Tax </span>
                                         <h6 class="fw-semibold">250</h6>
                                     </div>
                                 </div>
