@@ -21,14 +21,14 @@
                                         <iconify-icon icon="mingcute:user-follow-fill" class="icon"></iconify-icon>
                                     </span>
                                     <div>
-                                        <span class="mb-2 fw-medium text-secondary-light text-sm">New Users</span>
-                                        <h6 class="fw-semibold">15,000</h6>
+                                        <span class="mb-2 fw-medium text-secondary-light text-sm">All properties</span>
+                                        <h6 class="fw-semibold">12</h6>
                                     </div>
                                 </div>
 
                                 <div id="new-user-chart" class="remove-tooltip-title rounded-tooltip-value"></div>
                             </div>
-                            <p class="text-sm mb-0">Increase by <span class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">+200</span> this week</p>
+                            <p class="text-sm mb-0">Increase by <span class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">+2</span> this week</p>
                         </div>
                     </div>
                 </div>
@@ -43,14 +43,14 @@
                                         <iconify-icon icon="mingcute:user-follow-fill" class="icon"></iconify-icon>
                                     </span>
                                     <div>
-                                        <span class="mb-2 fw-medium text-secondary-light text-sm">Active Users</span>
+                                        <span class="mb-2 fw-medium text-secondary-light text-sm">Total Unpaid Rent</span>
                                         <h6 class="fw-semibold">8,000</h6>
                                     </div>
                                 </div>
 
                                 <div id="active-user-chart" class="remove-tooltip-title rounded-tooltip-value"></div>
                             </div>
-                            <p class="text-sm mb-0">Increase by <span class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">+200</span> this week</p>
+                            <p class="text-sm mb-0">Increase by <span class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">+2</span> this week</p>
                         </div>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
                                         <iconify-icon icon="iconamoon:discount-fill" class="icon"></iconify-icon>
                                     </span>
                                     <div>
-                                        <span class="mb-2 fw-medium text-secondary-light text-sm">Total Sales</span>
+                                        <span class="mb-2 fw-medium text-secondary-light text-sm">Total Paid Rent</span>
                                         <h6 class="fw-semibold">$5,00,000</h6>
                                     </div>
                                 </div>
@@ -87,8 +87,8 @@
                                         <iconify-icon icon="mdi:message-text" class="icon"></iconify-icon>
                                     </span>
                                     <div>
-                                        <span class="mb-2 fw-medium text-secondary-light text-sm">Conversion</span>
-                                        <h6 class="fw-semibold">25%</h6>
+                                        <span class="mb-2 fw-medium text-secondary-light text-sm">All Tenants</span>
+                                        <h6 class="fw-semibold">25</h6>
                                     </div>
                                 </div>
 
@@ -109,7 +109,7 @@
                                         <iconify-icon icon="mdi:leads" class="icon"></iconify-icon>
                                     </span>
                                     <div>
-                                        <span class="mb-2 fw-medium text-secondary-light text-sm">Leads</span>
+                                        <span class="mb-2 fw-medium text-secondary-light text-sm">Total Tax Income</span>
                                         <h6 class="fw-semibold">250</h6>
                                     </div>
                                 </div>
@@ -131,7 +131,7 @@
                                         <iconify-icon icon="streamline:bag-dollar-solid" class="icon"></iconify-icon>
                                     </span>
                                     <div>
-                                        <span class="mb-2 fw-medium text-secondary-light text-sm">Total Profit</span>
+                                        <span class="mb-2 fw-medium text-secondary-light text-sm">Total UnPaid Tax</span>
                                         <h6 class="fw-semibold">$3,00,700</h6>
                                     </div>
                                 </div>
@@ -924,4 +924,3 @@
     </div>
 
 @endsection
-
