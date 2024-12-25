@@ -108,13 +108,15 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{ route('business.index') }}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                        <a href="{{ route('business.index') }}"><i
+                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
                             business List </a>
                     </li>
 
 
                     <li>
-                        <a href="{{ route('business.create') }}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add Business
+                        <a href="{{ route('business.create') }}"><i
+                                class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add Business
 
                         </a>
                     </li>
@@ -130,13 +132,15 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{ route('district.index') }}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                        <a href="{{ route('district.index') }}"><i
+                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
                             District </a>
                     </li>
 
 
                     <li>
-                        <a href="{{ route('branch.index') }}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Branch
+                        <a href="{{ route('branch.index') }}"><i
+                                class="ri-circle-fill circle-icon text-info-main w-auto"></i> Branch
 
                         </a>
                     </li>
@@ -152,21 +156,24 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{ route('property.index') }}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                        <a href="{{ route('property.index') }}"><i
+                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
                             Property List</a>
                     </li>
 
                     <li>
-                        <a href="{{ route('property.create') }}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
+                        <a href="{{ route('property.create') }}"><i
+                                class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
                             Property</a>
                     </li>
                     {{-- <li>
                         <a href="`"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Pending
                             Property</a>
-                    </li>--}}
+                    </li> --}}
 
                     <li>
-                        <a href="{{ route('property.report') }}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Property
+                        <a href="{{ route('property.report') }}"><i
+                                class="ri-circle-fill circle-icon text-info-main w-auto"></i> Property
                             Report</a>
                     </li>
 
@@ -181,12 +188,14 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{ route('tenant.index') }}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                        <a href="{{ route('tenant.index') }}"><i
+                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
                             Tenant List</a>
                     </li>
 
                     <li>
-                        <a href="{{ route('tenant.create') }}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
+                        <a href="{{ route('tenant.create') }}"><i
+                                class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
                             Tenant</a>
                     </li>
 
@@ -201,12 +210,14 @@
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="{{ route('payment.index') }}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                        <a href="{{ route('payment.index') }}"><i
+                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
                             Payment List</a>
                     </li>
 
                     <li>
-                        <a href="{{ route('payment.create') }}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
+                        <a href="{{ route('payment.create') }}"><i
+                                class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
                             Payment</a>
                     </li>
 
