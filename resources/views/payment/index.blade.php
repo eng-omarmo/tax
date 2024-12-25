@@ -1,8 +1,8 @@
 @extends('layout.layout')
 
 @php
-    $title = 'Tenants Grid';
-    $subTitle = 'Tenants Grid';
+    $title = 'Payments Grid';
+    $subTitle = 'Payments Grid';
     $script = '<script>
         $(".remove-item-btn").on("click", function() {
             $(this).closest("tr").addClass("d-none");
@@ -18,7 +18,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-        <form method="GET" action="{{ route('tenant.index') }}" id="filterForm">
+        <form method="GET" action="{{ route('payment.index') }}" id="filterForm">
             <div class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center justify-content-between flex-wrap gap-3">
                 <!-- Filter Section (Search, Pagination, Status) -->
                 <div class="d-flex align-items-center gap-3 flex-wrap">
@@ -29,13 +29,13 @@
 
                     <select name="status" class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px">
                         <option value="">Status</option>
-                        <option value="Active" {{ request()->status == 'Active' ? 'selected' : '' }}>Active</option>
-                        <option value="Inactive" {{ request()->status == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                        <option value="Paid" {{ request()->status == 'Paid' ? 'selected' : '' }}>Paid</option>
+                        <option value="Pending" {{ request()->status == 'Pending' ? 'selected' : '' }}>Pending</option>
                     </select>
                 </div>
 
                 <div class="d-flex align-items-center gap-3 flex-wrap">
-                    <!-- Filter Tenant (link to submit filter form) -->
+                    <!-- Filter Payment (link to submit filter form) -->
                     <a href="javascript:void(0);" id="filterLink" class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
                         <iconify-icon icon="ic:baseline-filter-alt" class="icon text-xl line-height-1"></iconify-icon>
                         Filter
@@ -47,10 +47,10 @@
                         Reset
                     </a>
 
-                    <!-- Add New Tenant Button -->
-                    <a href="{{ route('tenant.create') }}" class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
+                    <!-- Add New Payment Button -->
+                    <a href="{{ route('payment.create') }}" class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
                         <iconify-icon icon="ic:baseline-plus" class="icon text-xl line-height-1"></iconify-icon>
-                        Add New Tenant
+                        Add New Payment
                     </a>
                 </div>
             </div>
@@ -73,18 +73,15 @@
                         <th scope="col">SNO</th>
                         <th scope="col">Tenant Name</th>
                         <th scope="col">Property</th>
-                        <th scope="col">Phone</th>
-                        <th scope="col">Reference</th>
-                        <th scope="col">Rent Amount</th>
-                        <th scope="col">Tax Amount</th>
-                        <th scope="col">Rent  Balance</th>
-                        <th scope="col">Tax  Balance</th>
+                        <th scope="col">Payment Type</th>
+                        <th scope="col">Amount Paid</th>
+                        <th scope="col">Payment Date</th>
                         <th scope="col" class="text-center">Status</th>
                         <th scope="col" class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($tenants as $tenant)
+                    @foreach ($payments as $payment)
                         <tr>
                             <td>
                                 <div class="d-flex align-items-center gap-10">
@@ -94,34 +91,31 @@
                                     {{ $loop->iteration }}
                                 </div>
                             </td>
-                            <td>{{ $tenant->id }}</td>
+                            <td>{{ $payment->id }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <span class="text-md mb-0 fw-normal text-secondary-light">{{ $tenant->tenant_name }}</span>
+                                    <span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->tenant->tenant_name }}</span>
                                 </div>
                             </td>
-                            <td>{{ $tenant->property->property_name }}</td>
-                            <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $tenant->tenant_phone }}</span></td>
-                            <td>{{ $tenant->reference }}</td>
-                            <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $tenant->rent_amount }}</span></td>
-                            <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $tenant->tax_fee }}</span></td>
+                            <td>{{ $payment->tenant->property->property_name }}</td>
+                            <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->reference }}</span></td>
+                            <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->amount }}</span></td>
 
-                            <!-- Display Rent and Tax Totals -->
-                            <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $tenant->rentTotalBalance }}</span></td>
-                            <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $tenant->taxTotalBalance }}</span></td>
+                        
+                            <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->payment_date }}</span></td>
 
                             <td class="text-center">
                                 <span class="bg-success-focus text-success-600 border border-success-main px-24 py-4 radius-4 fw-medium text-sm">
-                                    {{ ucfirst($tenant->status) ?? $tenant->status }}
+                                    {{ ucfirst($payment->status) ?? $payment->status }}
                                 </span>
                             </td>
                             <td class="text-center">
                                 <div class="d-flex align-items-center gap-10 justify-content-center">
-                                    <a href="{{ route('tenant.edit', $tenant->id) }}" class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
+                                    <a href="{{ route('payment.edit', $payment->id) }}" class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
                                         <iconify-icon icon="lucide:edit" class="menu-icon"></iconify-icon>
                                     </a>
 
-                                    <a href="{{ route('tenant.delete', $tenant->id) }}" class="remove-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
+                                    <a href="{{ route('payment.delete', $payment->id) }}" class="remove-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
                                         <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
                                     </a>
                                 </div>
@@ -133,9 +127,9 @@
         </div>
 
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">
-            <span>Showing {{ $tenants->firstItem() }} to {{ $tenants->lastItem() }} of {{ $tenants->total() }} entries</span>
+            <span>Showing {{ $payments->firstItem() }} to {{ $payments->lastItem() }} of {{ $payments->total() }} entries</span>
             <div class="pagination-container">
-                {{ $tenants->links() }}
+                {{ $payments->links() }}
             </div>
         </div>
     </div>

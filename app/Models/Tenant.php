@@ -27,19 +27,22 @@ class Tenant extends Model
         return $this->belongsTo(Property::class);
     }
 
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
 
     public function transactions()
     {
         return $this->hasMany(Transaction::class);
     }
 
-    // App\Models\Tenant.php
-public function calculateBalance()
-{
-    $totalDebits = $this->transactions->sum('debit');
-    $totalCredits = $this->transactions->sum('credit');
+    public function calculateBalance()
+    {
+        $totalDebits = $this->transactions->sum('debit');
+        $totalCredits = $this->transactions->sum('credit');
 
-    return $totalDebits - $totalCredits;
-}
-
+        return $totalDebits - $totalCredits;
+    }
 }

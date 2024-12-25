@@ -3,20 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Transaction extends Model
+class Payment extends Model
 {
-    use HasFactory;
-
+    protected $table = 'payments';
 
     protected $fillable = [
         'tenant_id',
         'amount',
-        'credit',
-        'debit', 
-        'transaction_type',
-        'description',
+        'payment_date',
+        'reference',
+        'payment_method',
         'status',
     ];
 

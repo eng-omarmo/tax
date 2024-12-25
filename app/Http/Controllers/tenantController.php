@@ -20,10 +20,15 @@ class tenantController extends Controller
         if ($request->has('search') && $request->search) {
             $query->where('name', 'like', '%' . $request->search . '%');
         }
-        if($request->has('status') && $request->status){
+        if ($request->has('status') && $request->status) {
             $query->where('status', $request->status);
         }
         $tenants = $query->paginate(5);
+
+        foreach ($tenants as $tenant) {
+            $tenant->rentTotalBalance = $tenant->transactions()->where('transaction_type', 'Rent')->sum('debit');
+            $tenant->taxTotalBalance = $tenant->transactions()->where('transaction_type', 'Tax')->sum('debit');
+        }
 
         return view('tenant.index', compact('tenants'));
     }
@@ -78,6 +83,7 @@ class tenantController extends Controller
                 'status' => $validatedData['status'],
             ]);
             $this->createTransaction($tenant);
+            $this->createTransactionForTaxFee($tenant);
             DB::commit();
             return redirect()->route('tenant.index')->with('success', 'Tenant added successfully!');
         } catch (\Throwable $th) {
@@ -86,7 +92,6 @@ class tenantController extends Controller
             return redirect()->route('tenant.index')->with('error', $th->getMessage());
         }
     }
-
 
 
     public function edit($id)
@@ -120,8 +125,16 @@ class tenantController extends Controller
 
     public function destroy($id)
     {
-        Tenant::query()->find($id)->delete();
-        return redirect()->route('tenant.index')->with('success', 'Tenant deleted successfully.');
+        try {
+            DB::beginTransaction();
+            Tenant::query()->find($id)->delete();
+            Transaction::where('tenant_id', $id)->delete();
+            return redirect()->route('tenant.index')->with('success', 'Tenant deleted successfully.');
+            DB::commit();
+        } catch (\Throwable $th) {
+            Log::info($th->getMessage());
+            return redirect()->route('tenant.index')->with('error', $th->getMessage());
+        }
     }
 
     private function createTransaction($tenant)
@@ -129,10 +142,24 @@ class tenantController extends Controller
         return Transaction::create([
             'tenant_id' => $tenant->id,
             'property_id' => $tenant->property_id,
+            'transaction_type' => 'Rent',
             'amount' => $tenant->rent_amount,
             'description' => 'Tenant Rent',
             'credit' => 0,
             'debit' => $tenant->rent_amount,
+            'status' => 'Pending',
+        ]);
+    }
+
+    private function createTransactionForTaxFee($tenant)
+    {
+        return Transaction::create([
+            'tenant_id' => $tenant->id,
+            'transaction_type' => 'Tax',
+            'amount' => $tenant->tax_fee,
+            'description' => 'Tenant Tax Fee',
+            'credit' => 0,
+            'debit' => $tenant->tax_fee,
             'status' => 'Pending',
         ]);
     }

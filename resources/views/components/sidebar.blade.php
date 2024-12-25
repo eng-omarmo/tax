@@ -170,6 +170,26 @@
                 </ul>
 
             </li>
+
+            <li class="dropdown">
+                <a href="javascript:void(0)">
+                    <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
+                    <span>Payment</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li>
+                        <a href="{{ route('payment.index') }}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                            Payment List</a>
+                    </li>
+
+                    <li>
+                        <a href="{{ route('payment.create') }}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
+                            Payment</a>
+                    </li>
+
+                </ul>
+
+            </li>
             <li class="dropdown">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>

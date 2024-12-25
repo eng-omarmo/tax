@@ -1,26 +1,27 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OtpController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\AiapplicationController;
-use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\ChartController;
-use App\Http\Controllers\ComponentpageController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FormsController;
-use App\Http\Controllers\InvoiceController;
-use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\UsersController;
-use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BranchController;
-use App\Http\Controllers\changePasswordController;
-use App\Http\Controllers\RoleandaccessController;
-use App\Http\Controllers\CryptocurrencyController;
-use App\Http\Controllers\DistrictController;
-use App\Http\Controllers\OtpController;
-use App\Http\Controllers\propertyController;
 use App\Http\Controllers\tenantController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\paymentController;
+use App\Http\Controllers\DistrictController;
+use App\Http\Controllers\propertyController;
+use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AiapplicationController;
+use App\Http\Controllers\ComponentpageController;
+use App\Http\Controllers\RoleandaccessController;
+use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\changePasswordController;
+use App\Http\Controllers\CryptocurrencyController;
 
 Route::controller(AuthenticationController::class)->group(function () {
     Route::get('/', 'signin')->name('signin');
@@ -103,7 +104,6 @@ Route::prefix('branch')->middleware(['auth.admin'])->group(function () {
         Route::get('/edit/{branch}', 'edit')->name('branch.edit');
         Route::put('/update/{branch}', 'update')->name('branch.update');
         Route::get('/delete/{branch}', 'destroy')->name('branch.delete');
-
     });
 });
 
@@ -120,6 +120,21 @@ Route::prefix('tenant')->middleware(['auth.admin'])->group(function () {
         Route::get('/search', 'search')->name('tenant.search');
     });
 });
+
+Route::prefix('payment')->middleware(['auth.admin'])->group(function () {
+    Route::controller(paymentController::class)->group(function () {
+        Route::get('/index', 'index')->name('payment.index');
+        Route::get('/create', 'create')->name('payment.create');
+        Route::post('/store', 'store')->name('payment.store');
+        Route::get('/edit/{payment}', 'edit')->name('payment.edit');
+        Route::put('/update/{payment}', 'update')->name('payment.update');
+        Route::get('/delete/{payment}', 'destroy')->name('payment.delete');
+        Route::get('/get-payment-amount/{tenantId}/{paymentType}', 'getPaymentAmount')->name('tenant.payment.getPaymentAmount');
+
+        Route::get('/search', 'search')->name('tenant.payment.search');
+    });
+});
+
 // chart
 Route::prefix('chart')->group(function () {
     Route::controller(ChartController::class)->group(function () {
