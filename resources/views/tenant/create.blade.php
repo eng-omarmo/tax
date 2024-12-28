@@ -158,6 +158,7 @@
                                     <input type="number" step="0.01" class="form-control radius-8" id="rent_amount"
                                         name="rent_amount" placeholder="Enter Rent Amount" value="{{$property->house_rent}}"  readonly
                                        required>
+
                                 </div>
 
                                 <div class="mb-20">
