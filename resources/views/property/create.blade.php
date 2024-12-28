@@ -141,7 +141,7 @@
                                         </label>
                                         <input type="text" class="form-control radius-8" id="house_rent"
                                             name="house_rent" placeholder="Enter house rent"
-                                            value="{{ old('house_rent') }}">
+                                            value="{{ old('house_rent') , $property->house_rent }}">
 
                                     </div>
 
@@ -178,7 +178,7 @@
 
                                     </div>
 
-                              
+
                                     <div class="col-md-6 mb-20">
                                         <label for="branch"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
