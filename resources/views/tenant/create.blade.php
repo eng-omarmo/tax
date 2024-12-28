@@ -41,6 +41,8 @@
 </div>
 @endif
 
+
+
 @if(!isset($property) || empty($property->id))
     <!-- Search Form -->
     <div class="card h-100 p-0 radius-12 mb-4">
@@ -50,7 +52,7 @@
                     <form action="{{ route('tenant.search') }}" method="GET" class="d-flex align-items-center">
                         <div class="d-flex flex-grow-1 align-items-center">
                             <input type="text" class="form-control radius-8 me-2 flex-grow-1" id="search_property"
-                                name="search_property" placeholder="Enter Property Name"
+                                name="search_property" placeholder="Enter Tenant Phone Number"
                                 value="{{ old('search_property') }}" required>
                         </div>
                         <!-- Add New Tenant Button -->
@@ -73,19 +75,24 @@
                 <div class="col-xxl-6 col-xl-8 col-lg-10">
                     <div class="card border">
                         <div class="card-body">
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
+                            @if(session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
                             @endif
-                            <form action="{{ route('tenant.store') }}" method="POST" enctype="multipart/form-data">
-                                @csrf
 
-                                <!-- Property Info -->
+                            @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            @endif
+
+                            <form action="{{ route('tenant.store') }}" method="POST">
+                                @csrf                                <!-- Property Info -->
                                 <input type="hidden" name="property_id" value="{{ $property->id }}">
 
                                 <!-- Additional Fields -->
@@ -104,10 +111,13 @@
                                         {{ $property->property_phone  }}
                                     </div>
 
-
-
+                                    <label for="property_rent" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                        Property Rent <span class="text-danger-600">*</span>
+                                    </label>
+                                    <div class="bg-gray-100 border border-gray-300 p-4 rounded-md shadow-sm text-sm text-gray-800">
+                                        {{ $property->house_rent  }}
+                                    </div>
                                 </div>
-
                                 <div class="mb-20">
                                     <label for="tenant_name" class="form-label fw-semibold text-primary-light text-sm mb-8">
                                         Tenant Name <span class="text-danger-600">*</span>
@@ -152,23 +162,6 @@
                                 </div>
 
                                 <div class="mb-20">
-                                    <label for="rent_amount" class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                        Rent Amount <span class="text-danger-600">*</span>
-                                    </label>
-                                    <input type="number" step="0.01" class="form-control radius-8" id="rent_amount"
-                                        name="rent_amount" placeholder="Enter Rent Amount" value="{{$property->house_rent}}"  readonly
-                                       required>
-
-                                </div>
-
-                                <div class="mb-20">
-                                    <label for="tax_fee" class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                        Tax Fee (Optional)
-                                    </label>
-                                    <input type="number" step="0.01" class="form-control radius-8"
-                                        id="tax_fee" name="tax_fee" placeholder="Enter Tax Fee"
-                                        value="{{ old('tax_fee') }}">
-                                </div>
 
                                 <div class="mb-20">
                                     <label for="status" class="form-label fw-semibold text-primary-light text-sm mb-8">

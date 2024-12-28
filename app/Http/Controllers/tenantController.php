@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Tenant;
 use App\Models\Property;
 use App\Models\Transaction;
-
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -69,39 +69,46 @@ class tenantController extends Controller
 
     public function store(Request $request)
     {
-
         try {
-            $validatedData = $request->validate([
+            $request->validate([
                 'property_id' => 'required|exists:properties,id',
                 'tenant_name' => 'required|string|max:255',
                 'tenant_phone' => 'required|string',
-                'rental_start_date' => 'required|date|before_or_equal:rental_end_date',
-                'rental_end_date' => 'nullable|date|after:rental_start_date',
                 'reference' => 'required|string|max:255',
-                'rent_amount' => 'required|numeric|min:0',
-                'tax_fee' => 'nullable|numeric|min:0',
                 'status' => 'required|in:Active,Inactive',
             ]);
             DB::beginTransaction();
+
+            if ($request->rental_end_date && $request->rental_start_date &&  $request->rental_end_date < $request->rental_start_date) {
+                return redirect()->back()->with('error', 'Rental end date must be greater than rental start date.');
+            }
+            $property = Property::where('id', $request->property_id)->first();
+
+            if ($property->status == 'Inactive') {
+                return redirect()->back()->with('error', 'Property is not active.');
+            }
+
+            if ($property->monitoring_status !== 'Approved') {
+                return redirect()->back()->with('error', 'Property is not approved.');
+            }
             $tenant =  Tenant::create([
-                'property_id' => $validatedData['property_id'],
-                'tenant_name' => $validatedData['tenant_name'],
-                'tenant_phone' => $validatedData['tenant_phone'],
-                'rental_start_date' => $validatedData['rental_start_date'],
-                'rental_end_date' => $validatedData['rental_end_date'],
-                'reference' => $validatedData['reference'],
-                'rent_amount' => $validatedData['rent_amount'],
-                'tax_fee' => $validatedData['tax_fee'],
-                'status' => $validatedData['status'],
+                'property_id' => $property->id,
+                'tenant_name' => $request->tenant_name,
+                'tenant_phone' => $request->tenant_phone,
+                'rental_start_date' => $request->rental_start_date,
+                'rental_end_date' => $request->rental_end_date,
+                'reference' => $request->reference,
+                'rent_amount' => $property->house_rent,
+                'tax_fee' => $property->yearly_tax_fee,
+                'status' => $request->status,
             ]);
             $this->createTransaction($tenant);
             $this->createTransactionForTaxFee($tenant);
             DB::commit();
             return redirect()->route('tenant.index')->with('success', 'Tenant added successfully!');
-        } catch (\Throwable $th) {
-
+        } catch (Exception $th) {
             Log::info($th->getMessage());
-            return redirect()->route('tenant.index')->with('error', $th->getMessage());
+            return redirect()->back()->with('error', $th->getMessage());
         }
     }
 
@@ -151,28 +158,36 @@ class tenantController extends Controller
 
     private function createTransaction($tenant)
     {
-        return Transaction::create([
-            'tenant_id' => $tenant->id,
-            'property_id' => $tenant->property_id,
-            'transaction_type' => 'Rent',
-            'amount' => $tenant->rent_amount,
-            'description' => 'Tenant Rent',
-            'credit' => 0,
-            'debit' => $tenant->rent_amount,
-            'status' => 'Pending',
-        ]);
+        try {
+            return Transaction::create([
+                'tenant_id' => $tenant->id,
+                'property_id' => $tenant->property_id,
+                'transaction_type' => 'Rent',
+                'amount' => $tenant->rent_amount,
+                'description' => 'Tenant Rent',
+                'credit' => 0,
+                'debit' => $tenant->rent_amount,
+                'status' => 'Pending',
+            ]);
+        } catch (\Throwable $th) {
+            Log::info($th->getMessage());
+        }
     }
 
     private function createTransactionForTaxFee($tenant)
     {
-        return Transaction::create([
-            'tenant_id' => $tenant->id,
-            'transaction_type' => 'Tax',
-            'amount' => $tenant->tax_fee,
-            'description' => 'Tenant Tax Fee',
-            'credit' => 0,
-            'debit' => $tenant->tax_fee,
-            'status' => 'Pending',
-        ]);
+        try {
+            return Transaction::create([
+                'tenant_id' => $tenant->id,
+                'transaction_type' => 'Tax',
+                'amount' => $tenant->tax_fee,
+                'description' => 'Tenant Tax Fee',
+                'credit' => 0,
+                'debit' => $tenant->tax_fee,
+                'status' => 'Pending',
+            ]);
+        } catch (\Throwable $th) {
+            Log::info($th->getMessage());
+        }
     }
 }
