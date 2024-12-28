@@ -13,25 +13,37 @@ use Illuminate\Support\Facades\Log;
 class tenantController extends Controller
 {
 
-
     public function index(Request $request)
     {
         $query = Tenant::query();
+
         if ($request->has('search') && $request->search) {
             $query->where('name', 'like', '%' . $request->search . '%');
         }
+
         if ($request->has('status') && $request->status) {
             $query->where('status', $request->status);
         }
+
         $tenants = $query->paginate(5);
 
+        $tenants->load(['transactions' => function ($q) {
+            $q->selectRaw('tenant_id, transaction_type, SUM(credit) as total_credit, SUM(debit) as total_debit')
+                ->groupBy('tenant_id', 'transaction_type');
+        }]);
+
         foreach ($tenants as $tenant) {
-            $tenant->rentTotalBalance = $tenant->transactions()->where('transaction_type', 'Rent')->sum('debit');
-            $tenant->taxTotalBalance = $tenant->transactions()->where('transaction_type', 'Tax')->sum('debit');
+
+            $rentTransactions = $tenant->transactions->firstWhere('transaction_type', 'Rent');
+            $taxTransactions = $tenant->transactions->firstWhere('transaction_type', 'Tax');
+
+            $tenant->rentTotalBalance = ($rentTransactions->total_debit  ?? 0) - ($rentTransactions->total_credit ?? 0);
+            $tenant->taxTotalBalance = ($taxTransactions->total_debit ?? 0) - ($taxTransactions->total_credit ?? 0);
         }
 
         return view('tenant.index', compact('tenants'));
     }
+
     public function search(Request $request)
     {
         $request->validate([

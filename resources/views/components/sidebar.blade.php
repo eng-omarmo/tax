@@ -103,7 +103,8 @@
 
             <li class="dropdown">
                 <a href="javascript:void(0)">
-                    <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
+                    <iconify-icon icon="mdi:briefcase-outline" class="menu-icon"></iconify-icon>
+
                     <span>Business</span>
                 </a>
                 <ul class="sidebar-submenu">
@@ -127,7 +128,8 @@
 
             <li class="dropdown">
                 <a href="javascript:void(0)">
-                    <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
+                    <iconify-icon icon="mdi:map-outline" class="menu-icon"></iconify-icon>
+
                     <span>District</span>
                 </a>
                 <ul class="sidebar-submenu">
@@ -151,7 +153,7 @@
 
             <li class="dropdown">
                 <a href="javascript:void(0)">
-                    <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
+                    <i class="ri-home-fill text-warning-main text-xl"></i>
                     <span>Property</span>
                 </a>
                 <ul class="sidebar-submenu">
@@ -183,7 +185,7 @@
 
             <li class="dropdown">
                 <a href="javascript:void(0)">
-                    <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
+                    <i class="ri-user-fill text-info-main text-xl"></i>
                     <span>Tenant</span>
                 </a>
                 <ul class="sidebar-submenu">
@@ -205,7 +207,8 @@
 
             <li class="dropdown">
                 <a href="javascript:void(0)">
-                    <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
+                    <i class="ri-money-dollar-circle-fill text-success-main text-xl"></i>
+
                     <span>Payment</span>
                 </a>
                 <ul class="sidebar-submenu">
