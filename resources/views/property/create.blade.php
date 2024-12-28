@@ -39,6 +39,12 @@
                                 </div>
                             @endif
 
+                            @if(session('error'))
+                                <div class="alert alert-danger">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
+
                             <form action="{{ route('property.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
@@ -139,7 +145,7 @@
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
                                             House Rent
                                         </label>
-                                        <input type="text" class="form-control radius-8" id="house_rent"
+                                        <input type="number" class="form-control radius-8" id="house_rent"
                                             name="house_rent" placeholder="Enter house rent"
                                             value="{{ old('house_rent') }}">
 
@@ -150,7 +156,7 @@
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
                                             Quarterly Tax Fee
                                         </label>
-                                        <input type="text" class="form-control radius-8" id="quarterly_tax_fee"
+                                        <input type="number" class="form-control radius-8" id="quarterly_tax_fee"
                                             name="quarterly_tax_fee" placeholder="Enter house rent"
                                             value="{{ old('quarterly_tax_fee') }}">
 
@@ -161,7 +167,7 @@
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
                                             Yearly Tax Fee
                                         </label>
-                                        <input type="text" class="form-control radius-8" id="yearly_tax_fee"
+                                        <input type="number" class="form-control radius-8" id="yearly_tax_fee"
                                             name="yearly_tax_fee" placeholder="Enter house rent"
                                             value="{{ old('yearly_tax_fee') }}">
 
@@ -215,7 +221,7 @@
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
                                             Latitude <span class="text-danger-600">*</span>
                                         </label>
-                                        <input type="text" class="form-control radius-8" id="latitude"
+                                        <input type="number" class="form-control radius-8" id="latitude"
                                             name="latitude" placeholder="Enter latitude" value="{{ old('latitude') }}">
                                     </div>
                                     <div class="col-md-6 mb-20">
@@ -223,7 +229,7 @@
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
                                             Longitude <span class="text-danger-600">*</span>
                                         </label>
-                                        <input type="text" class="form-control radius-8" id="longitude"
+                                        <input type="number" class="form-control radius-8" id="longitude"
                                             name="longitude" placeholder="Enter longitude"
                                             value="{{ old('longitude') }}">
                                     </div>

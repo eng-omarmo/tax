@@ -20,6 +20,9 @@ class Property extends Model
         'zone',
         'designation',
         'house_type',
+        'house_rent',
+        'quarterly_tax_fee',
+        'yearly_tax_fee',
         'latitude',
         'longitude',
         'dalal_company_name',
@@ -27,11 +30,8 @@ class Property extends Model
         'status',
         'district_id'
     ];
-
-
-    // You can define other relationships if needed (e.g., for district or transactions)
     public function district()
     {
-        return $this->belongsTo(District::class); // A property belongs to a district
+        return $this->belongsTo(District::class); 
     }
 }

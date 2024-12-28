@@ -118,32 +118,33 @@ class propertyController extends Controller
     public function store(Request $request)
     {
         try {
+
             $request->validate([
                 'property_name' => 'required|string|max:255',
-                'property_phone' => 'nullable|string|max:15',
+                'property_phone' => 'nullable|string|max:45',
                 'nbr' => 'nullable|string|max:100',
                 'house_code' => 'nullable|string|max:50',
-                'tenant_name' => 'nullable|string|max:255',
-                'tenant_phone' => 'nullable|string|max:15',
                 'branch' => 'nullable|string|max:255',
-                'quarterly_tax_fee' => 'nullable|numeric',
-                'yearly_tax_fee' => 'nullable|numeric',
                 'zone' => 'nullable|string|max:255',
                 'house_type' => 'nullable|string|max:255',
-                'house_rent' => 'nullable|numeric',
                 'latitude' => 'required|numeric',
-                'quarterly_tax_fee' => 'required|numeric',
-                'yearly_tax_fee' => 'required|numeric',
                 'longitude' => 'required|numeric',
                 'dalal_company_name' => 'nullable|string|max:255',
                 'designation' => 'nullable|string|max:255',
                 'monitoring_status' => 'required|in:Pending,Approved',
                 'status' => 'required|in:Active,Inactive',
                 'district_id' => 'required|exists:districts,id',
+                'house_rent' => 'nullable|numeric',
+                'quarterly_tax_fee' => 'nullable|numeric',
+                'yearly_tax_fee' => 'nullable|numeric',
             ]);
-            $checkProperty = Property::where('property_name', $request->property_name)->first();
+
+            $checkProperty = Property::where('property_name', $request->property_name)
+            ->where('property_phone', $request->property_phone)
+            ->first();
+
             if ($checkProperty) {
-                return back()->with('error', 'Property name already exists.');
+                return back()->with('error', 'Property name and phone already exists.');
             }
 
             Property::create([
@@ -151,27 +152,27 @@ class propertyController extends Controller
                 'property_phone' => $request->property_phone,
                 'nbr' => $request->nbr,
                 'house_code' => $request->house_code,
-                'tenant_name' => $request->tenant_name,
-                'tenant_phone' => $request->tenant_phone,
                 'branch' => $request->branch,
                 'zone' => $request->zone,
                 'house_type' => $request->house_type,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+                'dalal_company_name' => $request->dalal_company_name,
+                'designation' => $request->designation,
+                'monitoring_status' => $request->monitoring_status,
+                'status' => $request->status,
+                'district_id' => $request->district_id,
                 'house_rent' => $request->house_rent,
                 'quarterly_tax_fee' => $request->quarterly_tax_fee,
                 'yearly_tax_fee' => $request->yearly_tax_fee,
-                'latitude' => $request->latitude,
-                'longitude' => $request->longitude,
-                'designation' => $request->designation,
-                'dalal_company_name' => $request->dalal_company_name,
-                'district_id' => $request->district_id,
-                'monitoring_status' => $request->monitoring_status,
-                'status' => $request->status,
             ]);
+
             return redirect()->route('property.index')->with('success', 'Property registered successfully.');
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
     }
+
 
     public function edit($id)
     {
@@ -182,14 +183,13 @@ class propertyController extends Controller
     }
     public function update(Request $request,$property)
     {
+
         try {
             $request->validate([
                 'property_name' => 'required|string|max:255',
                 'property_phone' => 'nullable|string|max:15',
                 'nbr' => 'nullable|string|max:100',
                 'house_code' => 'nullable|string|max:50',
-                'tenant_name' => 'nullable|string|max:255',
-                'tenant_phone' => 'nullable|string|max:15',
                 'branch' => 'nullable|string|max:255',
                 'quarterly_tax_fee' => 'nullable|numeric',
                 'yearly_tax_fee' => 'nullable|numeric',
