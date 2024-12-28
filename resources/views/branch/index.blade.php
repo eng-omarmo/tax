@@ -40,6 +40,8 @@
         </div>
     </form>
 
+</div>
+
     <div class="card-body p-24">
         <div class="table-responsive scroll-sm">
             <table class="table bordered-table sm-table mb-0">
