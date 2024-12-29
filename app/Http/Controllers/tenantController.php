@@ -69,6 +69,7 @@ class tenantController extends Controller
 
     public function store(Request $request)
     {
+
         try {
             $request->validate([
                 'property_id' => 'required|exists:properties,id',
@@ -79,18 +80,20 @@ class tenantController extends Controller
             ]);
             DB::beginTransaction();
 
-            if ($request->rental_end_date && $request->rental_start_date &&  $request->rental_end_date < $request->rental_start_date) {
-                return redirect()->back()->with('error', 'Rental end date must be greater than rental start date.');
-            }
+            // if ($request->rental_end_date && $request->rental_start_date &&  $request->rental_end_date < $request->rental_start_date) {
+            //     return redirect()->back()->withInput()->with('error', 'Rental end date must be greater than rental start date.');
+            // }
+
             $property = Property::where('id', $request->property_id)->first();
 
-            if ($property->status == 'Inactive') {
-                return redirect()->back()->with('error', 'Property is not active.');
-            }
+            // if ($property->status == 'Inactive') {
+            //     return redirect()->back()->withInput()->with('error', 'Property is not active.');
+            // }
 
-            if ($property->monitoring_status !== 'Approved') {
-                return redirect()->back()->with('error', 'Property is not approved.');
-            }
+            // if ($property->monitoring_status !== 'Approved') {
+            //     return redirect()->back()->withInput()->with('error', 'Property is not approved.');
+            // }
+
             $tenant =  Tenant::create([
                 'property_id' => $property->id,
                 'tenant_name' => $request->tenant_name,
@@ -102,13 +105,14 @@ class tenantController extends Controller
                 'tax_fee' => $property->yearly_tax_fee,
                 'status' => $request->status,
             ]);
+
             $this->createTransaction($tenant);
             $this->createTransactionForTaxFee($tenant);
             DB::commit();
             return redirect()->route('tenant.index')->with('success', 'Tenant added successfully!');
         } catch (Exception $th) {
             Log::info($th->getMessage());
-            return redirect()->back()->with('error', $th->getMessage());
+            return redirect()->back()->withInput()->with('error', $th->getMessage());
         }
     }
 
