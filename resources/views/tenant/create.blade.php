@@ -75,12 +75,6 @@
                 <div class="col-xxl-6 col-xl-8 col-lg-10">
                     <div class="card border">
                         <div class="card-body">
-                            @if(session('error'))
-                            <div class="alert alert-danger">
-                                {{ session('error') }}
-                            </div>
-                            @endif
-
                             @if ($errors->any())
                             <div class="alert alert-danger">
                                 <ul>
@@ -89,7 +83,13 @@
                                     @endforeach
                                 </ul>
                             </div>
-                            @endif
+                        @endif
+
+                        @if(session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
 
                             <form action="{{ route('tenant.store') }}" method="POST">
                                 @csrf                                <!-- Property Info -->
