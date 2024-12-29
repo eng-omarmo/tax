@@ -35,7 +35,7 @@
                 <form action="{{ route('property.lanlord.search') }}" method="GET" class="d-flex align-items-center">
                     <div class="d-flex flex-grow-1 align-items-center">
                         <input type="text" class="form-control radius-8 me-2 flex-grow-1" id="search_lanlord"
-                            name="search_lanlord" placeholder="Enter Tenant Phone Number"
+                            name="search_lanlord" placeholder="Enter lanlord Phone Number"
                             value="{{ old('search_lanlord') }}" required>
                     </div>
                     <!-- Add New Tenant Button -->

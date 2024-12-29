@@ -52,7 +52,7 @@
                     <form action="{{ route('tenant.search') }}" method="GET" class="d-flex align-items-center">
                         <div class="d-flex flex-grow-1 align-items-center">
                             <input type="text" class="form-control radius-8 me-2 flex-grow-1" id="search_property"
-                                name="search_property" placeholder="Enter Tenant Phone Number"
+                                name="search_property" placeholder="Enter Property Phone Number"
                                 value="{{ old('search_property') }}" required>
                         </div>
                         <!-- Add New Tenant Button -->
