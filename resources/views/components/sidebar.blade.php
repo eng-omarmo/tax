@@ -255,7 +255,8 @@
             </li>
             <li class="dropdown">
                 <a href="javascript:void(0)">
-                    <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
+                    <iconify-icon icon="mdi:eye-outline" class="menu-icon"></iconify-icon>
+
                     <span>Monitoring</span>
                 </a>
                 <ul class="sidebar-submenu">
@@ -265,8 +266,8 @@
                     </li>
 
                     <li>
-                        <a href="#"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Appoint
-                            Report
+                        <a href="#"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Track
+                            Appointment
                         </a>
                     </li>
 
