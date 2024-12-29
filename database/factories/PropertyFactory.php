@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\District;
+use App\Models\Landlord;
 use App\Models\Property;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,6 +19,7 @@ class PropertyFactory extends Factory
             'house_code' => $this->faker->unique()->numberBetween(10000, 99999),
             'branch' => $this->faker->city,
             'district_id' => District::factory(),
+            'landlord_id' => Landlord::factory(),
             'zone' => $this->faker->word,
             'nbr' => $this->faker->word . $this->faker->numberBetween(1, 10),
             'branch' => $this->faker->city,

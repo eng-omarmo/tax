@@ -43,6 +43,26 @@
                                 @csrf
                                 @method('PUT')
                                 <div class="row">
+
+                                    <div class="col-md-6 mb-20">
+                                        <label for="property_name"
+                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                            Lanlord Name <span class="text-danger-600">*</span>
+                                        </label>
+                                        <input type="text" class="form-control radius-8" id="property_name"
+                                            name="property_name" placeholder="Enter property name"
+                                            value="{{ old('property_name', $property->landlord->name) }}">
+                                    </div>
+
+                                    <div class="col-md-6 mb-20">
+                                        <label for="property_name"
+                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                            Lanlord Phone <span class="text-danger-600">*</span>
+                                        </label>
+                                        <input type="text" class="form-control radius-8" id="property_name"
+                                            name="property_name" placeholder="Enter property name"
+                                            value="{{ old('property_name', $property->landlord->phone_number) }}">
+                                    </div>
                                     <div class="col-md-6 mb-20">
                                         <label for="property_name"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">

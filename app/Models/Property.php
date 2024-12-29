@@ -28,10 +28,16 @@ class Property extends Model
         'dalal_company_name',
         'monitoring_status',
         'status',
-        'district_id'
+        'district_id',
+        'landlord_id'
     ];
     public function district()
     {
-        return $this->belongsTo(District::class); 
+        return $this->belongsTo(District::class);
+    }
+
+    public function landlord()
+    {
+        return $this->belongsTo(Landlord::class);
     }
 }

@@ -23,6 +23,7 @@ use App\Http\Controllers\RoleandaccessController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\changePasswordController;
 use App\Http\Controllers\CryptocurrencyController;
+use App\Http\Controllers\landlordController;
 
 Route::controller(AuthenticationController::class)->group(function () {
     Route::get('/', 'signin')->name('signin');
@@ -43,6 +44,8 @@ Route::controller(PropertyController::class)->prefix('property')->middleware(['a
     Route::get('/report', 'report')->name('property.report');
     Route::get('/report-details', 'reportDetails')->name('property.report.fech');
     Route::get('/property/report/pdf', 'exportPdf')->name('property.report.print');
+    //search property
+    Route::get('/search', 'search')->name('property.lanlord.search');
 });
 
 Route::controller(HomeController::class)->group(function () {
@@ -143,9 +146,22 @@ Route::prefix('business')->middleware(['auth.admin'])->group(function () {
         Route::get('/create', 'create')->name('business.create');
         Route::post('/store', 'store')->name('business.store');
         Route::get('/edit/{business}', 'edit')->name('business.edit');
-        Route::put('/update/{business}', '
-        ')->name('business.update');
+        Route::put('/update/{business}', 'update')->name('business.update');
         Route::get('/delete/{business}', 'destroy')->name('business.delete');
+    });
+});
+
+
+
+Route::prefix('lanlord')->middleware(['auth.admin'])->group(function () {
+    Route::controller(landlordController::class)->group(function () {
+        Route::get('/index', 'index')->name('lanlord.index');
+        Route::get('/create', 'create')->name('lanlord.create');
+        Route::post('/store', 'store')->name('lanlord.store');
+
+        Route::get('/edit/{lanlord}', 'edit')->name('lanlord.edit');
+        Route::put('/update/{lanlord}', 'update')->name('lanlord.update');
+        Route::get('/delete/{lanlord}', 'destroy')->name('lanlord.delete');
     });
 });
 

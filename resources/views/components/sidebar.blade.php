@@ -128,6 +128,31 @@
 
             <li class="dropdown">
                 <a href="javascript:void(0)">
+                    <iconify-icon icon="mdi:briefcase-outline" class="menu-icon"></iconify-icon>
+
+                    <span>Landlord</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li>
+                        <a href="{{ route('lanlord.index') }}"><i
+                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                                Landlord List </a>
+                    </li>
+
+
+                    <li>
+                        <a href="{{ route('lanlord.create') }}"><i
+                                class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add Landlord
+
+                        </a>
+                    </li>
+
+                </ul>
+
+            </li>
+
+            <li class="dropdown">
+                <a href="javascript:void(0)">
                     <iconify-icon icon="mdi:map-outline" class="menu-icon"></iconify-icon>
 
                     <span>District</span>

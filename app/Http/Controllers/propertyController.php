@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\District;
+use App\Models\Landlord;
 use App\Models\Property;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class propertyController extends Controller
@@ -118,6 +120,7 @@ class propertyController extends Controller
     public function store(Request $request)
     {
         try {
+            DB::beginTransaction();
 
             $request->validate([
                 'property_name' => 'required|string|max:255',
@@ -140,8 +143,8 @@ class propertyController extends Controller
             ]);
 
             $checkProperty = Property::where('property_name', $request->property_name)
-            ->where('property_phone', $request->property_phone)
-            ->first();
+                ->where('property_phone', $request->property_phone)
+                ->first();
 
             if ($checkProperty) {
                 return back()->with('error', 'Property name and phone already exists.');
@@ -165,10 +168,14 @@ class propertyController extends Controller
                 'house_rent' => $request->house_rent,
                 'quarterly_tax_fee' => $request->quarterly_tax_fee,
                 'yearly_tax_fee' => $request->yearly_tax_fee,
+                'landlord_id' => $request->lanlord_id
             ]);
+
+            DB::commit();
 
             return redirect()->route('property.index')->with('success', 'Property registered successfully.');
         } catch (\Throwable $th) {
+            DB::rollBack();
             return back()->with('error', $th->getMessage());
         }
     }
@@ -181,7 +188,7 @@ class propertyController extends Controller
 
         return view('property.edit', compact('property', 'districts'));
     }
-    public function update(Request $request,$property)
+    public function update(Request $request, $property)
     {
 
         try {
@@ -251,5 +258,16 @@ class propertyController extends Controller
             ->unique();
         $data['districts'] = District::whereIn('id', $getDistrictIDs)->select('name', 'id')->get();
         return $data;
+    }
+
+    public function search(Request $request)
+    {
+
+        $lanlord = Landlord::where('phone_number', $request->search_lanlord)->first();
+        $districts = District::select('id', 'name')->get();
+        if(!$lanlord){
+            return back()->with('error', 'Landlord not found');
+        }
+        return view('property.create', compact('lanlord', 'districts'));
     }
 }
