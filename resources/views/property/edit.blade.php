@@ -30,15 +30,20 @@
                     <div class="card border">
                         <div class="card-body">
                             @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
 
+                        @if(session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
                             <form action="{{ route('property.update', $property->id) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
@@ -97,15 +102,6 @@
                                         <input type="text" class="form-control radius-8" id="house_code"
                                             name="house_code" placeholder="Enter house code"
                                             value="{{ old('house_code', $property->house_code) }}">
-                                    </div>
-                                    <div class="col-md-6 mb-20">
-                                        <label for="tenant_name"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Tenant Name
-                                        </label>
-                                        <input type="text" class="form-control radius-8" id="tenant_name"
-                                            name="tenant_name" placeholder="Enter tenant name"
-                                            value="{{ old('tenant_name', $property->tenant_name) }}">
                                     </div>
 
                                     <div class="col-md-6 mb-20">

@@ -8,6 +8,7 @@ use App\Models\Landlord;
 use App\Models\Property;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -194,7 +195,7 @@ class propertyController extends Controller
         try {
             $request->validate([
                 'property_name' => 'required|string|max:255',
-                'property_phone' => 'nullable|string|max:15',
+                'property_phone' => 'nullable|string|max:25',
                 'nbr' => 'nullable|string|max:100',
                 'house_code' => 'nullable|string|max:50',
                 'branch' => 'nullable|string|max:255',
@@ -218,8 +219,6 @@ class propertyController extends Controller
                 'property_phone' => $request->property_phone,
                 'nbr' => $request->nbr,
                 'house_code' => $request->house_code,
-                'tenant_name' => $request->tenant_name,
-                'tenant_phone' => $request->tenant_phone,
                 'branch' => $request->branch,
                 'zone' => $request->zone,
                 'house_type' => $request->house_type,
@@ -235,7 +234,7 @@ class propertyController extends Controller
                 'status' => $request->status,
             ]);
             return redirect()->route('property.index')->with('success', 'Property updated successfully.');
-        } catch (\Throwable $th) {
+        } catch (Exception $th) {
             return back()->with('error', $th->getMessage());
             Log::info($th->getMessage());
         }
@@ -265,7 +264,7 @@ class propertyController extends Controller
 
         $lanlord = Landlord::where('phone_number', $request->search_lanlord)->first();
         $districts = District::select('id', 'name')->get();
-        if(!$lanlord){
+        if (!$lanlord) {
             return back()->with('error', 'Landlord not found');
         }
         return view('property.create', compact('lanlord', 'districts'));
