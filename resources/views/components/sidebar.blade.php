@@ -128,7 +128,8 @@
 
             <li class="dropdown">
                 <a href="javascript:void(0)">
-                    <iconify-icon icon="mdi:briefcase-outline" class="menu-icon"></iconify-icon>
+                    <iconify-icon icon="mdi:account-cog" class="menu-icon"></iconify-icon>
+
 
                     <span>Landlord</span>
                 </a>
@@ -260,7 +261,7 @@
                 <ul class="sidebar-submenu">
                     <li>
                         <a href="#imagePreview"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
-                            Hubin Milkiile </a>
+                        Approve Properties </a>
                     </li>
 
                     <li>
