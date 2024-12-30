@@ -14,7 +14,8 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('tenant_id');
+            $table->unsignedBigInteger('tenant_id')->nullable();
+            $table->unsignedBigInteger('property_id')->nullable()->nullable();
             $table->decimal('amount', 10, 2);
             $table->string('transaction_type');
             $table->string('description');
@@ -23,6 +24,7 @@ return new class extends Migration
             $table->enum('status', ['Completed', 'Pending'])->default('Completed');
             $table->timestamps();
             $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
+            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
         });
     }
 

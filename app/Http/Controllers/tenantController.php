@@ -2,44 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\Tenant;
 use App\Models\Property;
 use App\Models\Transaction;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use app\Models\User;
 
 class tenantController extends Controller
 {
 
     public function index(Request $request)
     {
-        $query = Tenant::query();
+        $query = Tenant::where('registered_by', auth()->user()->id)->with('user');
 
-        if ($request->has('search') && $request->search) {
+        if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
         }
 
-        if ($request->has('status') && $request->status) {
+        if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
+
         $tenants = $query->paginate(5);
 
-        $tenants->load(['transactions' => function ($q) {
-            $q->selectRaw('tenant_id, transaction_type, SUM(credit) as total_credit, SUM(debit) as total_debit')
-                ->groupBy('tenant_id', 'transaction_type');
-        }]);
-
-        foreach ($tenants as $tenant) {
-
-            $rentTransactions = $tenant->transactions->firstWhere('transaction_type', 'Rent');
-            $taxTransactions = $tenant->transactions->firstWhere('transaction_type', 'Tax');
-
-            $tenant->rentTotalBalance = ($rentTransactions->total_debit  ?? 0) - ($rentTransactions->total_credit ?? 0);
-            $tenant->taxTotalBalance = ($taxTransactions->total_debit ?? 0) - ($taxTransactions->total_credit ?? 0);
-        }
 
         return view('tenant.index', compact('tenants'));
     }
@@ -72,42 +61,29 @@ class tenantController extends Controller
 
         try {
             $request->validate([
-                'property_id' => 'required|exists:properties,id',
-                'tenant_name' => 'required|string|max:255',
-                'tenant_phone' => 'required|string',
-                'reference' => 'required|string|max:255',
+                'name' => 'required',
+                'email' => 'required|string|max:255',
+                'phone' => 'required|string',
                 'status' => 'required|in:Active,Inactive',
             ]);
             DB::beginTransaction();
 
-            // if ($request->rental_end_date && $request->rental_start_date &&  $request->rental_end_date < $request->rental_start_date) {
-            //     return redirect()->back()->withInput()->with('error', 'Rental end date must be greater than rental start date.');
-            // }
 
-            $property = Property::where('id', $request->property_id)->first();
-
-            // if ($property->status == 'Inactive') {
-            //     return redirect()->back()->withInput()->with('error', 'Property is not active.');
-            // }
-
-            // if ($property->monitoring_status !== 'Approved') {
-            //     return redirect()->back()->withInput()->with('error', 'Property is not approved.');
-            // }
-
-            $tenant =  Tenant::create([
-                'property_id' => $property->id,
-                'tenant_name' => $request->tenant_name,
-                'tenant_phone' => $request->tenant_phone,
-                'rental_start_date' => $request->rental_start_date,
-                'rental_end_date' => $request->rental_end_date,
-                'reference' => $request->reference,
-                'rent_amount' => $property->house_rent,
-                'tax_fee' => $property->yearly_tax_fee,
+            $user =  User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'status' => $request->status,
+                'password' => bcrypt('password'),
+                'role' => 'Tenant',
+                'profile_image' => null
+            ]);
+            Tenant::create([
+                'user_id' => $user->id,
+                'registered_by' => auth()->user()->id,
                 'status' => $request->status,
             ]);
 
-            $this->createTransaction($tenant);
-            $this->createTransactionForTaxFee($tenant);
             DB::commit();
             return redirect()->route('tenant.index')->with('success', 'Tenant added successfully!');
         } catch (Exception $th) {
@@ -119,10 +95,8 @@ class tenantController extends Controller
 
     public function edit($id)
     {
-        $tenant = Tenant::query()->find($id);
-        $properties = Property::select('property_name', 'id')->get();
-        $balance = $this->getBalance($tenant->id);
-        return view('tenant.edit', compact('tenant', 'properties', 'balance'));
+        $tenant = Tenant::with('user')->findOrFail($id);
+        return view('tenant.edit', compact('tenant'));
     }
 
     public function getBalance($tenantId)
@@ -133,16 +107,14 @@ class tenantController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'tenant_name' => 'required|string|max:255',
-            'tenant_phone' => 'required|string',
-            'rental_start_date' => 'required|date|before_or_equal:rental_end_date',
-            'rental_end_date' => 'nullable|date|after:rental_start_date',
-            'reference' => 'required|string|max:255',
-            'tax_fee' => 'nullable|numeric|min:0',
-            'status' => 'required|in:Active,Inactive',
+        $tenant = Tenant::find($id);
+        $tenant->user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'status' => $request->status,
         ]);
-        Tenant::query()->find($id)->update($request->all());
+
         return redirect()->route('tenant.index')->with('success', 'Tenant updated successfully.');
     }
 
@@ -150,10 +122,12 @@ class tenantController extends Controller
     {
         try {
             DB::beginTransaction();
-            Tenant::query()->find($id)->delete();
-            Transaction::where('tenant_id', $id)->delete();
-            return redirect()->route('tenant.index')->with('success', 'Tenant deleted successfully.');
+            $tenant = Tenant::find($id);
+            $tenant->user->delete();
+            $tenant->delete();
+
             DB::commit();
+            return redirect()->route('tenant.index')->with('success', 'Tenant deleted successfully.');
         } catch (\Throwable $th) {
             Log::info($th->getMessage());
             return redirect()->route('tenant.index')->with('error', $th->getMessage());

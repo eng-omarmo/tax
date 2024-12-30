@@ -76,106 +76,110 @@
                     <span>Kanban</span>
                 </a>
             </li> --}}
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
-                    <span>Users</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="{{ route('usersList') }}"><i
-                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Users List</a>
-                    </li>
-                    {{-- <li>
+
+            @if (Auth::user()->role === 'Admin')
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
+                        <span>Users</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="{{ route('usersList') }}"><i
+                                    class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Users List</a>
+                        </li>
+                        {{-- <li>
                         <a  href="{{ route('usersGrid') }}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Users Grid</a>
                     </li> --}}
-                    <li>
-                        <a href="{{ route('addUser') }}"><i
-                                class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add User</a>
-                    </li>
-                    {{-- <li>
+                        <li>
+                            <a href="{{ route('addUser') }}"><i
+                                    class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add User</a>
+                        </li>
+                        {{-- <li>
                         <a  href="{{ route('viewProfile') }}"><i class="ri-circle-fill circle-icon text-danger-main w-auto"></i> View Profile</a>
                     </li> --}}
-                </ul>
+                    </ul>
 
-            </li>
-
-
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="mdi:briefcase-outline" class="menu-icon"></iconify-icon>
-
-                    <span>Business</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="{{ route('business.index') }}"><i
-                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
-                            business List </a>
-                    </li>
+                </li>
 
 
-                    <li>
-                        <a href="{{ route('business.create') }}"><i
-                                class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add Business
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="mdi:briefcase-outline" class="menu-icon"></iconify-icon>
 
-                        </a>
-                    </li>
-
-                </ul>
-
-            </li>
-
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="mdi:account-cog" class="menu-icon"></iconify-icon>
+                        <span>Business</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="{{ route('business.index') }}"><i
+                                    class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                                business List </a>
+                        </li>
 
 
-                    <span>Landlord</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="{{ route('lanlord.index') }}"><i
-                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                        <li>
+                            <a href="{{ route('business.create') }}"><i
+                                    class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add Business
+
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </li>
+
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="mdi:account-cog" class="menu-icon"></iconify-icon>
+
+
+                        <span>Landlord</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="{{ route('lanlord.index') }}"><i
+                                    class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
                                 Landlord List </a>
-                    </li>
+                        </li>
 
 
-                    <li>
-                        <a href="{{ route('lanlord.create') }}"><i
-                                class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add Landlord
+                        <li>
+                            <a href="{{ route('lanlord.create') }}"><i
+                                    class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add Landlord
 
-                        </a>
-                    </li>
+                            </a>
+                        </li>
 
-                </ul>
+                    </ul>
 
-            </li>
-
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="mdi:map-outline" class="menu-icon"></iconify-icon>
-
-                    <span>District</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="{{ route('district.index') }}"><i
-                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
-                            District </a>
-                    </li>
+                </li>
 
 
-                    <li>
-                        <a href="{{ route('branch.index') }}"><i
-                                class="ri-circle-fill circle-icon text-info-main w-auto"></i> Branch
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="mdi:map-outline" class="menu-icon"></iconify-icon>
 
-                        </a>
-                    </li>
+                        <span>District</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="{{ route('district.index') }}"><i
+                                    class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                                District </a>
+                        </li>
 
-                </ul>
 
-            </li>
+                        <li>
+                            <a href="{{ route('branch.index') }}"><i
+                                    class="ri-circle-fill circle-icon text-info-main w-auto"></i> Branch
+
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </li>
+            @endif
 
             <li class="dropdown">
                 <a href="javascript:void(0)">
@@ -209,6 +213,7 @@
 
             </li>
 
+
             <li class="dropdown">
                 <a href="javascript:void(0)">
                     <i class="ri-user-fill text-info-main text-xl"></i>
@@ -233,6 +238,29 @@
 
             <li class="dropdown">
                 <a href="javascript:void(0)">
+                    <i class="ri-wallet-fill text-info-main text-xl"></i>
+
+
+                    <span>Rent</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li>
+                        <a href="{{ route('rent.index') }}"><i
+                                class="ri-circle-fill circle-icon text-info-600 w-auto"></i>
+                            Rent List</a>
+                    </li>
+
+                    <li>
+                        <a href="{{ route('rent.create') }}"><i
+                                class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
+                            Rent</a>
+                    </li>
+
+                </ul>
+            </li>
+
+            <li class="dropdown">
+                <a href="javascript:void(0)">
                     <i class="ri-money-dollar-circle-fill text-success-main text-xl"></i>
 
                     <span>Payment</span>
@@ -253,16 +281,17 @@
                 </ul>
 
             </li>
+
+
             <li class="dropdown">
                 <a href="javascript:void(0)">
-                    <iconify-icon icon="mdi:eye-outline" class="menu-icon"></iconify-icon>
-
+                    <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
                     <span>Monitoring</span>
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
                         <a href="#imagePreview"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
-                        Approve Properties </a>
+                            Approve Properties </a>
                     </li>
 
                     <li>

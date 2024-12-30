@@ -11,19 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-
         Schema::create('tenants', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('property_id');
-            $table->string('tenant_name');
-            $table->string('tenant_phone', 25)->nullable();
-            $table->string('reference')->nullable();
-            $table->decimal('rent_amount', 10, 2);
-            $table->decimal('tax_fee', 10, 2)->nullable();
-            $table->enum('status', ['Active', 'Inactive'])->default('Active');
-            $table->date('rental_start_date');
-            $table->date('rental_end_date')->nullable();
-            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('registered_by')->nullable();
+            $table->string('status');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('registered_by')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

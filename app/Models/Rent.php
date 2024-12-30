@@ -3,25 +3,24 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Transaction extends Model
+class Rent extends Model
 {
-    use HasFactory;
-
 
     protected $fillable = [
         'tenant_id',
         'property_id',
-        'amount',
-        'credit',
-        'debit',
-        'transaction_type',
-        'description',
-        'property_id',
+        'rent_amount',
+        'rent_start_date',
+        'rent_end_date',
         'status',
     ];
 
+
+    public function property()
+    {
+        return $this->belongsTo(Property::class);
+    }
     public function tenant()
     {
         return $this->belongsTo(Tenant::class);

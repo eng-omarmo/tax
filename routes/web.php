@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\rentController;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\FormsController;
 use App\Http\Controllers\TableController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\paymentController;
 use App\Http\Controllers\businessController;
 use App\Http\Controllers\DistrictController;
+use App\Http\Controllers\landlordController;
 use App\Http\Controllers\propertyController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\DashboardController;
@@ -23,7 +25,6 @@ use App\Http\Controllers\RoleandaccessController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\changePasswordController;
 use App\Http\Controllers\CryptocurrencyController;
-use App\Http\Controllers\landlordController;
 
 Route::controller(AuthenticationController::class)->group(function () {
     Route::get('/', 'signin')->name('signin');
@@ -46,6 +47,20 @@ Route::controller(PropertyController::class)->prefix('property')->middleware(['a
     Route::get('/property/report/pdf', 'exportPdf')->name('property.report.print');
     //search property
     Route::get('/search', 'search')->name('property.lanlord.search');
+});
+Route::controller(rentController::class)->prefix('rent')->middleware(['auth.admin'])->group(function () {
+    Route::get('/index', 'index')->name('rent.index');
+    Route::get('/create', 'create')->name('rent.create');
+    Route::post('/store', 'store')->name('rent.store');
+    Route::get('/edit/{id}', 'edit')->name('rent.edit');
+    Route::put('/update/{id}', 'update')->name('rent.update');
+    Route::get('/delete/{id}', 'destroy')->name('rent.delete');
+    Route::get('/report', 'report')->name('rent.report');
+    Route::get('/report-details', 'reportDetails')->name('rent.report.fech');
+    Route::get('/rent/report/pdf', 'exportPdf')->name('rent.report.print');
+
+    Route::get('/rent/property/search', 'search')->name('rent.property.search');
+
 });
 
 Route::controller(HomeController::class)->group(function () {

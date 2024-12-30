@@ -10,26 +10,25 @@ class Tenant extends Model
     use HasFactory;
 
     protected $fillable = [
-        'property_id',
-        'tenant_name',
-        'tenant_phone',
-        'rent_amount',
-        'tax_fee',
+        'user_id',
         'status',
-        'rental_start_date',
-        'rental_end_date',
-        'reference'
+        'registered_by',
     ];
 
 
-    public function property()
-    {
-        return $this->belongsTo(Property::class);
-    }
 
     public function payments()
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+    public function created_by()
+    {
+        return $this->belongsTo(User::class, 'register_by');
     }
 
 
