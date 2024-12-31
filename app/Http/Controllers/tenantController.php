@@ -16,7 +16,7 @@ class tenantController extends Controller
 
     public function index(Request $request)
     {
-        $query = Tenant::where('registered_by', auth()->user()->id)->with('user');
+        $query = Tenant::where('registered_by', auth()->user()->id)->with('user', 'transactions');
 
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
@@ -28,6 +28,13 @@ class tenantController extends Controller
 
 
         $tenants = $query->paginate(5);
+
+        foreach ($tenants as $tenant) {
+            $tenant->balance = $tenant->transactions->sum(function ($transaction) {
+                return $transaction->debit - $transaction->credit;
+            });
+        }
+
 
 
         return view('tenant.index', compact('tenants'));
@@ -131,41 +138,6 @@ class tenantController extends Controller
         } catch (\Throwable $th) {
             Log::info($th->getMessage());
             return redirect()->route('tenant.index')->with('error', $th->getMessage());
-        }
-    }
-
-    private function createTransaction($tenant)
-    {
-        try {
-            return Transaction::create([
-                'tenant_id' => $tenant->id,
-                'property_id' => $tenant->property_id,
-                'transaction_type' => 'Rent',
-                'amount' => $tenant->rent_amount,
-                'description' => 'Tenant Rent',
-                'credit' => 0,
-                'debit' => $tenant->rent_amount,
-                'status' => 'Pending',
-            ]);
-        } catch (\Throwable $th) {
-            Log::info($th->getMessage());
-        }
-    }
-
-    private function createTransactionForTaxFee($tenant)
-    {
-        try {
-            return Transaction::create([
-                'tenant_id' => $tenant->id,
-                'transaction_type' => 'Tax',
-                'amount' => $tenant->tax_fee,
-                'description' => 'Tenant Tax Fee',
-                'credit' => 0,
-                'debit' => $tenant->tax_fee,
-                'status' => 'Pending',
-            ]);
-        } catch (\Throwable $th) {
-            Log::info($th->getMessage());
         }
     }
 }

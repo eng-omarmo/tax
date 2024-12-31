@@ -88,6 +88,9 @@
                         </th>
                         <th scope="col">Property Name</th>
                         <th scope="col">Phone</th>
+                        @if(Auth::user()->role == 'Admin')
+                        <th scope="col">Lanlord</th>
+                        @endif
                         <th scope="col">Branch</th>
                         <th scope="col">NBR</th>
                         <th scope="col">Designation</th>
@@ -99,8 +102,8 @@
                         <th scope="col">Latitude</th>
                         <th scope="col">Longitude</th>
                         <th scope="col">Dalal Company Name</th>
-      
                         <th scope="col">Monitoring Status</th>
+                        <th scope="col">Tax Balance</th>
                         <th scope="col">Status</th>
                         <th scope="col" class="text-center">Action</th>
                     </tr>
@@ -119,6 +122,9 @@
                             </td>
                             <td>{{ $property->property_name }}</td>
                             <td>{{ $property->property_phone }}</td>
+                            @if(Auth::user()->role == 'Admin')
+                            <td>{{ $property->landlord->name . " (" . $property->landlord->phone_number . ")" }}</td>
+                            @endif
                             <td>{{ $property->branch }}</td>
                             <td>{{ $property->nbr }}</td>
                             <td>{{ $property->designation }}</td>
@@ -131,12 +137,14 @@
                             <td>{{ $property->longitude }}</td>
                             <td>{{ $property->dalal_company_name }}</td>
                             <td>{{ $property->monitoring_status }}</td>
+                            <td>{{ $property->balance ? $property->balance : '0' }}</td>
                             <td class="text-center">
                                 <span
                                     class="{{ $property->status == 'Available' ? 'bg-success-focus text-success-600' : 'bg-danger-focus text-danger-600' }} border px-24 py-4 radius-4 fw-medium text-sm">
                                     {{ ucfirst($property->status) }}
                                 </span>
                             </td>
+
                             <td class="text-center">
                                 <div class="d-flex align-items-center gap-10 justify-content-center">
                                     <a href="{{ route('property.edit', $property->id) }}"

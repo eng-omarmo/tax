@@ -9,7 +9,8 @@ class Payment extends Model
     protected $table = 'payments';
 
     protected $fillable = [
-        'tenant_id',
+        'tax_id',
+        'rent_id',
         'amount',
         'payment_date',
         'reference',
@@ -17,8 +18,14 @@ class Payment extends Model
         'status',
     ];
 
-    public function tenant()
+   public function tax()
     {
-        return $this->belongsTo(Tenant::class);
+        return $this->belongsTo(Tax::class);
     }
+    public function rent()
+    {
+        return $this->belongsTo(Rent::class);
+    }
+
+
 }

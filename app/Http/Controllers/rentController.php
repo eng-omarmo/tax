@@ -6,8 +6,11 @@ use Carbon\Carbon;
 use App\Models\Rent;
 use App\Models\Tenant;
 use App\Models\Property;
-use Illuminate\Http\Request;
+use App\Models\Transaction;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use function Laravel\Prompts\select;
 
 class rentController extends Controller
@@ -32,9 +35,21 @@ class rentController extends Controller
         $rents = $query->paginate(5);
 
         foreach ($rents as $rent) {
-            $rent->duration = $this->getRentDuration($rent);
-            $rent->total_rent_amount =  $this->getTotalRentAmount($rent);
+            $rent->balance =
+                Transaction::where('tenant_id', $rent->tenant_id)
+                ->where('property_id', $rent->property_id)
+                ->where('transaction_type', 'Rent')
+                ->sum('debit')
+                -
+                Transaction::where('tenant_id', $rent->tenant_id)
+                ->where('property_id', $rent->property_id)
+                ->where('transaction_type', 'Rent')
+                ->sum('credit');
+
+
+            $rent->total_rent_amount =  $this->calculateMonthsBetween($rent->rent_start_date, $rent->rent_end_date) * $rent->rent_amount;
         }
+
         return view('rent.index', compact('rents'));
     }
 
@@ -52,7 +67,35 @@ class rentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $request->validate([
+                'tenant_id' => 'required|exists:tenants,id',
+                'property_id' => 'required|exists:properties,id',
+                'rent_amount' => 'required|numeric|min:0',
+                'rent_start_date' => 'required|date',
+                'rent_end_date' => 'required|date',
+                'status' => 'required',
+            ]);
+            DB::beginTransaction();
+            $rent_code = 'R' . rand(1000, 9999);
+            $rent = Rent::create([
+                'tenant_id' => $request->tenant_id,
+                'rent_code' => $rent_code,
+                'property_id' => $request->property_id,
+                'rent_amount' => $request->rent_amount,
+                'rent_start_date' => $request->rent_start_date,
+                'rent_end_date' => $request->rent_end_date,
+                'status' => $request->status
+
+            ]);
+            $rent->rent_amount = $this->calculateMonthsBetween($rent->rent_start_date, $rent->rent_end_date) * $rent->rent_amount;
+            $this->createTransaction($rent);
+            DB::commit();
+            return redirect()->route('rent.index')->with('success', 'Rent created successfully.');
+        } catch (\Throwable $th) {
+            Log::info($th->getMessage());
+            return redirect()->route('rent.index')->with('error', $th->getMessage());
+        }
     }
 
     /**
@@ -82,35 +125,41 @@ class rentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Rent $rent)
+    public function destroy($rent)
     {
-        //
+        $rent = Rent::find($rent);
+        $rent->delete();
+        return redirect()->route('rent.index')->with('success', 'Rent deleted successfully.');
     }
 
 
     public function getRentDuration(Rent $rent)
     {
-        // Parse the start and end dates using Carbon
+
         $startDate = Carbon::parse($rent->rent_start_date);
         $endDate = Carbon::parse($rent->rent_end_date);
 
-        // Calculate the rent duration in days
         $durationInDays = $startDate->diffInDays($endDate);
 
-        return $durationInDays;  // Return duration in days
+        return $durationInDays;
     }
 
-    public function getTotalRentAmount(Rent $rent)
+
+    function calculateMonthsBetween($startDate, $endDate)
     {
-        // Calculate the rent duration in months
-        $startDate = Carbon::parse($rent->rent_start_date);
-        $endDate = Carbon::parse($rent->rent_end_date);
-        $durationInMonths = $startDate->diffInMonths($endDate) + 1;  // Add 1 to include the start month
 
-        // Calculate the total rent amount
-        return $rent->rent_amount * $durationInMonths;
+        $start = Carbon::parse($startDate);
+        $end = Carbon::parse($endDate);
+
+
+        if ($start->greaterThan($end)) {
+            throw new \InvalidArgumentException("Start date cannot be after the end date.");
+        }
+
+        $months = $start->diffInMonths($end) + 1;
+
+        return $months;
     }
-
     public function search(Request $request)
     {
 
@@ -119,7 +168,7 @@ class rentController extends Controller
         ]);
 
         $property = Property::where('property_phone', $request->search_property)
-            ->select('id','property_name','property_phone','house_rent')->first();
+            ->select('id', 'property_name', 'property_phone', 'house_rent')->first();
         $tenants = Tenant::with('user')
             ->where(
                 'registered_by',
@@ -132,9 +181,56 @@ class rentController extends Controller
             return back()->with('error', 'property not found');
         }
 
-        return view('rent.create',[
+        return view('rent.create', [
             'property' => $property,
             'tenants' => $tenants
         ]);
+    }
+
+
+    private function createTransaction($rent)
+    {
+        try {
+            return Transaction::create([
+                'tenant_id' => $rent->tenant_id,
+                'property_id' => $rent->property_id,
+                'transaction_type' => 'Rent',
+                'amount' => $rent->rent_amount,
+                'description' => 'Tenant Rent',
+                'credit' => 0,
+                'debit' => $rent->rent_amount,
+                'status' => 'Pending',
+            ]);
+        } catch (\Throwable $th) {
+            Log::info($th->getMessage());
+        }
+    }
+
+    private function createTransactionForTaxFee($rent)
+    {
+        try {
+            return Transaction::create([
+                'tenant_id' => $rent->id,
+                'transaction_type' => 'Tax',
+                'amount' => $tenant->tax_fee,
+                'description' => 'Tenant Tax Fee',
+                'credit' => 0,
+                'debit' => $tenant->tax_fee,
+                'status' => 'Pending',
+            ]);
+        } catch (\Throwable $th) {
+            Log::info($th->getMessage());
+        }
+    }
+
+
+    private function generateUniqueCode()
+    {
+        $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $code = '';
+        for ($i = 0; $i < 3; $i++) {
+            $code .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        return $code;
     }
 }

@@ -103,7 +103,7 @@
 
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <span class="text-md mb-0 fw-normal text-secondary-light">{{0.0 }}</span>
+                                    <span class="text-md mb-0 fw-normal text-secondary-light">{{ $tenant->balance ?? 0 }}</span>
                                 </div>
                             </td>
 

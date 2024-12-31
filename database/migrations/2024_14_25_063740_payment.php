@@ -13,16 +13,16 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('tenant_id')->nullable();
-            $table->unsignedBigInteger('property_id')->nullable();
+            $table->unsignedBigInteger('tax_id')->nullable();
+            $table->unsignedBigInteger('rent_id')->nullable();
             $table->decimal('amount', 10, 2);
             $table->date('payment_date');
             $table->enum('payment_method', ['Cash', 'Bank Transfer', 'Mobile Money'])->default('Cash');
             $table->string('reference')->nullable();
             $table->enum('status', ['Completed', 'Pending', 'Failed'])->default('Completed');
             $table->timestamps();
-            $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
-            $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
+            $table->foreign('tax_id')->references('id')->on('taxes')->onDelete('cascade');
+            $table->foreign('rent_id')->references('id')->on('rents')->onDelete('cascade');
         });
     }
 

@@ -40,4 +40,9 @@ class Property extends Model
     {
         return $this->belongsTo(Landlord::class);
     }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 }

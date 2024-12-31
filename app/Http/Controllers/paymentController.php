@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\Rent;
 use App\Models\Tenant;
 use App\Models\Payment;
 use App\Models\Transaction;
@@ -13,12 +15,10 @@ class paymentController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Payment::with('tenant');
+        $query = Payment::with('tax', 'rent');
         if ($request->has('search') && $request->search) {
-            $query->whereHas('tenant', function ($q) use ($request) {
-                $q->where('tenant_name', 'like', '%' . $request->search . '%')
-                    ->orWhere('tenant_phone', 'like', '%' . $request->search . '%');
-            });
+            $query->where('reference', 'like', '%' . $request->search . '%')
+                ->orWhere('amount', 'like', '%' . $request->search . '%');
         }
 
         $payments = $query->paginate(5);
@@ -34,46 +34,54 @@ class paymentController extends Controller
     }
     public function search(Request $request)
     {
-        $tenant = Tenant::where('tenant_phone', trim($request->search_tenant))->first();
 
-        if (!$tenant) {
+        $rent =  Rent::with('tenant', 'property')->where('rent_code', $request->rent_code)->first();
+        if (!$rent) {
             return back()->with('error', 'Tenant not found.');
         }
 
-        return view('payment.create', compact('tenant'));
+        return view('payment.create', compact('rent'));
     }
 
     public function store(Request $request)
     {
 
+
         try {
             $request->validate([
-                'tenant_id' => 'required|exists:tenants,id',
+                'rent_id' => 'nullable|exists:rents,id',
                 'amount' => 'required|numeric|min:0',
                 'payment_date' => 'required|date',
-                'reference' => 'required|string|max:255',
+                'reference' => 'nullable|string|max:255',
             ]);
             DB::beginTransaction();
-            $payment =   Payment::create([
-                'tenant_id' => $request->tenant_id,
-                'amount' => $request->amount,
-                'payment_date' => now(),
-                'reference' => $request->reference,
-                'payment_method' => $request->payment_method,
-                'status' => 'completed',
-            ]);
-            $tenant = Tenant::where('id', $payment->tenant_id)->first();
-            if ($request->reference == 'Rent') {
-                if ($tenant->rent_amount < $payment->amount) {
+            if ($request->rent_id) {
+                $rent = Rent::where('id', $request->rent_id)->first();
+                if ($rent->rent_amount < $request->amount) {
                     return back()->with('error', 'Payment amount cannot be greater than rent amount.');
                 }
-                $this->createTransactionRent($tenant, $payment->amount);
-            }
-            if ($request->reference == 'Tax') {
-                if ($tenant->tax_fee < $payment->amount) {
-                    return back()->with('error', 'Payment amount cannot be greater than tax fee.');
-                }
-                $this->createTransactionForTaxFee($tenant, $payment->amount);
+                $payment =   Payment::create([
+                    'rent_id' => $request->rent_id,
+                    'tax_id' => null,
+                    'amount' => $request->amount,
+                    'payment_date' => now(),
+                    'reference' => 'Rent',
+                    'payment_method' => $request->payment_method,
+                    'status' => 'completed',
+                ]);
+               $dueAmount= $this->calculateMonthsBetween($rent->rent_start_date, $rent->rent_end_date) * $rent->rent_amount;
+                $this->createTransactionRent($rent, $dueAmount, $payment->amount);
+            } else {
+                $payment =   Payment::create([
+                    'rent_id' => null,
+                    'tax_id' => $request->tax_id,
+                    'amount' => $request->amount,
+                    'payment_date' => now(),
+                    'reference' => 'Tax',
+                    'payment_method' => $request->payment_method,
+                    'status' => 'completed',
+                ]);
+                $this->createTransactionTaxFee($payment->tax_id, $payment->amount);
             }
             DB::commit();
             return redirect()->route('payment.index')->with('success', 'Payment created successfully.');
@@ -82,6 +90,22 @@ class paymentController extends Controller
             return back()->with('error', $th->getMessage());
             Log::info($th->getMessage());
         }
+    }
+
+    function calculateMonthsBetween($startDate, $endDate)
+    {
+
+        $start = Carbon::parse($startDate);
+        $end = Carbon::parse($endDate);
+
+
+        if ($start->greaterThan($end)) {
+            throw new \InvalidArgumentException("Start date cannot be after the end date.");
+        }
+
+        $months = $start->diffInMonths($end) + 1;
+
+        return $months;
     }
 
     public function getPaymentAmount($tenantId, $paymentType)
@@ -128,18 +152,16 @@ class paymentController extends Controller
         }
     }
 
-    private function createTransactionRent($tenant, $amount)
+    private function createTransactionRent($rent, $dueAmount, $paidAmount)
     {
         try {
-
-            $transaction = transaction::where('tenant_id', $tenant->id)->where('transaction_type', 'Rent')->first();
-
             return Transaction::create([
-                'tenant_id' => $transaction->tenant_id,
-                'transaction_type' => $transaction->transaction_type,
-                'amount' => $amount,
+                'tenant_id' => $rent->tenant_id ?? null ,
+                'property_id' => $rent->property_id ?? null,
+                'transaction_type' => 'Rent',
+                'amount' => $dueAmount,
                 'description' => 'Tenant Paid Rent',
-                'credit' => $amount,
+                'credit' => $paidAmount,
                 'debit' => 0,
                 'status' => 'Pending',
             ]);
@@ -148,7 +170,7 @@ class paymentController extends Controller
         }
     }
 
-    private function createTransactionForTaxFee($tenant, $amount)
+    private function createTransactionTaxFee($tenant, $amount)
     {
         try {
             $transaction = transaction::where('tenant_id', $tenant->id)->where('transaction_type', 'Tax')->first();

@@ -41,7 +41,7 @@
         </div>
     @endif
 
-    @if (!isset($tenant) || empty($tenant->id))
+    @if (!isset($rent) || empty($rent->id))
         <!-- Search Form -->
         <div class="card h-100 p-0 radius-12 mb-4">
             <div class="card-body p-24">
@@ -49,8 +49,8 @@
                     <div class="col-xxl-6 col-xl-8 col-lg-10">
                         <form action="{{ route('tenant.payment.search') }}" method="GET" class="d-flex align-items-center">
                             <div class="d-flex flex-grow-1 align-items-center">
-                                <input type="text" class="form-control radius-8 me-2 flex-grow-1" id="search_tenant"
-                                    name="search_tenant" placeholder="Enter Property Name"
+                                <input type="text" class="form-control radius-8 me-2 flex-grow-1" id="rent_code"
+                                    name="rent_code" placeholder="Enter Property Name"
                                     value="{{ old('search_property') }}" required>
                             </div>
                             <!-- Add New Tenant Button -->
@@ -85,7 +85,9 @@
                                     @csrf
 
                                     <!-- Property Info -->
-                                    <input type="hidden" name="tenant_id" value="{{ $tenant->id }}">
+                                    <input type="hidden" name="rent_id" value="{{isset($rent->id) ? $rent->id : '' }}">
+                                    <input type="hidden" name="tax_id" value="{{isset($tax->id) ? $tax->id : '' }}">
+
 
                                     <!-- Tenant Details -->
                                     <div class="mb-20">
@@ -95,7 +97,7 @@
                                         </label>
                                         <div
                                             class="bg-gray-100 border border-gray-300 p-4 rounded-md shadow-sm text-sm text-gray-800">
-                                            {{ $tenant->tenant_name }}
+                                            {{ $rent->tenant->user->name }}
                                         </div>
 
                                         <label for="property_phone"
@@ -104,10 +106,30 @@
                                         </label>
                                         <div
                                             class="bg-gray-100 border border-gray-300 p-4 rounded-md shadow-sm text-sm text-gray-800">
-                                            {{ $tenant->tenant_phone }}
+                                            {{ $rent->tenant->user->phone }}
                                         </div>
                                     </div>
 
+                                    <div class="mb-20">
+                                        <label for="property_name"
+                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                            Property Name <span class="text-danger-600">*</span>
+                                        </label>
+                                        <div
+                                            class="bg-gray-100 border border-gray-300 p-4 rounded-md shadow-sm text-sm text-gray-800">
+                                            {{ $rent->property->property_name }}
+                                        </div>
+
+                                        <label for="property_phone"
+                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                            Property Phone <span class="text-danger-600">*</span>
+                                        </label>
+                                        <div
+                                            class="bg-gray-100 border border-gray-300 p-4 rounded-md shadow-sm text-sm text-gray-800">
+                                            {{ $rent->property->property_phone }}
+                                        </div>
+                                    </div>
+                                    {{-- @if(auth()->user()->role == 'Admin')
                                     <div class="mb-20">
                                         <label for="description"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
@@ -116,14 +138,18 @@
                                         <select class="form-control radius-8 form-select" id="description" name="reference"
                                             required>
                                             <option value="">Choose Payment Type</option>
+                                            <option value="Rent">
+                                                Rent Bill</option>
+
                                             <option value="Tax">
+
                                                 Tax Bill</option>
-                                                <option value="Rent">
-                                                    Rent Bill</option>
+
+
 
                                         </select>
-
-                                    </div>
+                                        @endif --}}
+                                    {{-- </div> --}}
                                     <!-- Payment Information -->
                                     <div class="mb-20">
                                         <label for="payment_amount"
@@ -131,7 +157,7 @@
                                             Payment Due <span class="text-danger-600">*</span>
                                         </label>
                                         <input type="number" step="0.01" class="form-control radius-8"
-                                            id="payment_amount" name="payment_amount" placeholder="Enter Payment Amount"
+                                            id="payment_amount" name="payment_amount" value ="{{ $rent->rent_amount }}"
                                             readonly required>
                                     </div>
 
@@ -141,7 +167,7 @@
                                             Payment Amount <span class="text-danger-600">*</span>
                                         </label>
                                         <input type="number" step="0.01" class="form-control radius-8"
-                                            id="amount" name="amount" placeholder="Enter Payment Amount"
+                                            id="amount" name="amount" value="{{ old('amount') }}" placeholder="Enter Payment Amount"
                                              required>
                                     </div>
 

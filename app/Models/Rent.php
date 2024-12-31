@@ -14,6 +14,7 @@ class Rent extends Model
         'rent_start_date',
         'rent_end_date',
         'status',
+        'rent_code',
     ];
 
 

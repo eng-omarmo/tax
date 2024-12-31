@@ -78,10 +78,13 @@
                         </th>
                         <th scope="col">SNO</th>
                         <th scope="col">Tenant </th>
-                        <th scope="col">Tenant Phone</th>
                         <th scope="col">Property </th>
+                        <th scope="col">Rent code  </th>
+
                         <th scope="col">Rent Amount </th>
-                        <th scope="col">Rent duration</th>
+                        <th scope="col">Rent Start Date</th>
+                        <th scope="col">Rent Start Date</th>
+
                         <th scope="col">Rent Total Amount</th>
                         <th scope="col">Rent Balance</th>
                         <th scope="col" class="text-center">Status</th>
@@ -103,19 +106,20 @@
                             <td>{{ $rent->id }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <span class="text-md mb-0 fw-normal text-secondary-light">{{ $rent->user->name }}</span>
+                                    <span class="text-md mb-0 fw-normal text-secondary-light">{{ $rent->tenant->user->name }}</span>
                                 </div>
                             </td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <span
-                                        class="text-md mb-0 fw-normal text-secondary-light">{{ $rent->user->phone }}</span>
-                                </div>
-                            </td>
+
                             <td>
                                 <div class="d-flex align-items-center">
                                     <span
                                         class="text-md mb-0 fw-normal text-secondary-light">{{ $rent->property->property_name }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <span
+                                        class="text-md mb-0 fw-normal text-secondary-light">{{ $rent->rent_code }}</span>
                                 </div>
                             </td>
                             <td>
@@ -127,20 +131,27 @@
                             <td>
                                 <div class="d-flex align-items-center">
                                     <span
-                                        class="text-md mb-0 fw-normal text-secondary-light">{{ $rent->rent_duration }}</span>
+                                        class="text-md mb-0 fw-normal text-secondary-light">{{ $rent->rent_start_date }}</span>
                                 </div>
                             </td>
                             <td>
                                 <div class="d-flex align-items-center">
                                     <span
-                                        class="text-md mb-0 fw-normal text-secondary-light">{{ $rent->total_rent_amount }}</span>
+                                        class="text-md mb-0 fw-normal text-secondary-light">{{ $rent->rent_end_date  }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <span
+                                        class="text-md mb-0 fw-normal text-secondary-light">{{
+                                        number_format($rent->total_rent_amount, 2) ?? $rent->total_rent_amount }}</span>
                                 </div>
                             </td>
 
 
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <span class="text-md mb-0 fw-normal text-secondary-light">{{ 0.0 }}</span>
+                                    <span class="text-md mb-0 fw-normal text-secondary-light">{{$rent->balance}}</span>
                                 </div>
                             </td>
 

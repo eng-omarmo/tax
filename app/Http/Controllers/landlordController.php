@@ -44,6 +44,7 @@ class landlordController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone,
             'password' => bcrypt('password'),
             'role' => 'Landlord',
             'status' => 'Active',

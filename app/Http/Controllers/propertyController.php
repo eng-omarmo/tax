@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Carbon\Carbon;
 use App\Models\District;
 use App\Models\Landlord;
 use App\Models\Property;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -40,8 +41,17 @@ class propertyController extends Controller
         if ($request->filled('monetering_status')) {
             $query->where('monitoring_status', $request->monetering_status);
         }
-
+        if (auth()->user()->role == 'Landlord') {
+            $user_id = auth()->user()->id;
+            $landlord = Landlord::where('user_id', $user_id)->first('id')->first();
+            $query->where('landlord_id', $landlord->id);
+        }
         $properties = $query->paginate(5);
+        foreach ($properties as $property) {
+            $property->balance = $property->transactions->sum(function ($transaction) {
+                return $transaction->debit - $transaction->credit;
+            });
+        }
         return view('property.index', compact('properties', 'statuses', 'monitoringStatuses'));
     }
 
@@ -78,9 +88,12 @@ class propertyController extends Controller
                 return $this->exportPdf($query->get()); // Pass the filtered data to the PDF export method
             }
         }
-
-
         $properties = $query->paginate(5);
+        foreach ($properties as $property) {
+            $property->balance = $property->transactions->sum(function ($transaction) {
+                return $transaction->debit - $transaction->credit;
+            });
+        }
 
         return view('property.report', [
             'properties' => $properties,
@@ -151,7 +164,7 @@ class propertyController extends Controller
                 return back()->with('error', 'Property name and phone already exists.');
             }
 
-            Property::create([
+            $property =  Property::create([
                 'property_name' => $request->property_name,
                 'property_phone' => $request->property_phone,
                 'nbr' => $request->nbr,
@@ -171,7 +184,7 @@ class propertyController extends Controller
                 'yearly_tax_fee' => $request->yearly_tax_fee,
                 'landlord_id' => $request->lanlord_id
             ]);
-
+            $this->createTransaction($property);
             DB::commit();
 
             return redirect()->route('property.index')->with('success', 'Property registered successfully.');
@@ -268,5 +281,22 @@ class propertyController extends Controller
             return back()->with('error', 'Landlord not found');
         }
         return view('property.create', compact('lanlord', 'districts'));
+    }
+    private function createTransaction($property)
+    {
+        try {
+            return Transaction::create([
+                'tenant_id' => null,
+                'property_id' => $property->id,
+                'transaction_type' => 'Tax',
+                'amount' => $property->yearly_tax_fee,
+                'description' => 'Tenant Rent',
+                'credit' => 0,
+                'debit' => $property->yearly_tax_fee,
+                'status' => 'Pending',
+            ]);
+        } catch (\Throwable $th) {
+            Log::info($th->getMessage());
+        }
     }
 }

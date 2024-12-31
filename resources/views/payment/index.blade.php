@@ -94,14 +94,14 @@
                             <td>{{ $payment->id }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->tenant->tenant_name }}</span>
+                                    <span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->rent->tenant->user->name }}</span>
                                 </div>
                             </td>
-                            <td>{{ $payment->tenant->property->property_name }}</td>
+                            <td>{{ $payment->rent->property->property_name }}</td>
                             <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->reference }}</span></td>
                             <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->amount }}</span></td>
 
-                        
+
                             <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->payment_date }}</span></td>
 
                             <td class="text-center">
