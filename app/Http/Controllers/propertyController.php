@@ -44,12 +44,11 @@ class propertyController extends Controller
         if ($request->filled('monetering_status')) {
             $query->where('monitoring_status', $request->monetering_status);
         }
-        if (auth()->user()->role == 'Landlord') {
-            $query->whereHas('property.landlord', function ($q) {
-                $q->where('user_id', auth()->id());
+        if (auth()->user()->role === 'Landlord') {
+            $query->whereHas('landlord.user', function ($q) {
+                $q->where('id', auth()->id());
             });
         }
-
         $properties = $query->paginate(5);
         foreach ($properties as $property) {
             $property->balance = $property->transactions->sum(function ($transaction) {
