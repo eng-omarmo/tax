@@ -45,9 +45,7 @@ class propertyController extends Controller
             $query->where('monitoring_status', $request->monetering_status);
         }
         if (auth()->user()->role == 'Landlord') {
-            $user_id = auth()->user()->id;
-            $landlord = Landlord::where('user_id', $user_id)->first('id')->first();
-            $query->where('landlord_id', $landlord->id);
+            $query->where('property.landlord_id.user_id', auth()->user()->landlord_id);
         }
         $properties = $query->paginate(5);
         foreach ($properties as $property) {
