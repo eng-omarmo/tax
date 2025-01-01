@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('property_id');
             $table->decimal('tax_amount', 10, 2);
+            $table->string('tax_code');
             $table->date('due_date');
             $table->enum('status', ['pending', 'paid'])->default('pending');
             $table->timestamps();

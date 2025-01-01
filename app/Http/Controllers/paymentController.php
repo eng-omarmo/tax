@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\Tax;
 use App\Models\Rent;
 use App\Models\Tenant;
 use App\Models\Payment;
@@ -15,7 +16,11 @@ class paymentController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Payment::with('tax', 'rent');
+        $query = Payment::with('rent')->whereNull('rent_id');
+
+        if (auth()->user()->role == 'Landlord') {
+            $query->where('landlord_id', auth()->user()->id);
+        }
         if ($request->has('search') && $request->search) {
             $query->where('reference', 'like', '%' . $request->search . '%')
                 ->orWhere('amount', 'like', '%' . $request->search . '%');
@@ -25,6 +30,32 @@ class paymentController extends Controller
 
         return view('payment.index', [
             'payments' => $payments
+        ]);
+    }
+    public function taxIndex(Request $request)
+    {
+        $query = Payment::with('tax')->whereNotNull('tax_id');
+        if ($request->has('search') && $request->search) {
+            $query->where('reference', 'like', '%' . $request->search . '%')
+                ->orWhere('amount', 'like', '%' . $request->search . '%');
+        }
+        $payments = $query->paginate(5);
+        return view('payment.tax.index', [
+            'payments' => $payments
+        ]);
+    }
+
+    public function taxCreate()
+    {
+        return view('payment.tax.create');
+    }
+
+
+    public function show($id)
+    {
+        $payment = Payment::findorFail($id);
+        return view('payment.show', [
+            'payment' => $payment
         ]);
     }
 
@@ -45,8 +76,6 @@ class paymentController extends Controller
 
     public function store(Request $request)
     {
-
-
         try {
             $request->validate([
                 'rent_id' => 'nullable|exists:rents,id',
@@ -69,7 +98,7 @@ class paymentController extends Controller
                     'payment_method' => $request->payment_method,
                     'status' => 'completed',
                 ]);
-               $dueAmount= $this->calculateMonthsBetween($rent->rent_start_date, $rent->rent_end_date) * $rent->rent_amount;
+                $dueAmount = $this->calculateMonthsBetween($rent->rent_start_date, $rent->rent_end_date) * $rent->rent_amount;
                 $this->createTransactionRent($rent, $dueAmount, $payment->amount);
             } else {
                 $payment =   Payment::create([
@@ -91,6 +120,43 @@ class paymentController extends Controller
             Log::info($th->getMessage());
         }
     }
+
+    public function taxStore(Request $request)
+    {
+        try {
+            $request->validate([
+                'tax_id' => 'nullable|exists:taxes,id',
+                'amount' => 'required|numeric|min:0',
+                'payment_date' => 'required|date',
+                'reference' => 'nullable|string|max:255',
+            ]);
+            DB::beginTransaction();
+
+            $tax = Tax::where('id', $request->tax_id)->first();
+            if ($tax->tax_amount < $request->amount) {
+                return back()->with('error', 'Payment amount cannot be greater than tax amount.');
+            }
+            $payment = Payment::create([
+                'rent_id' => null,
+                'tax_id' => $request->tax_id,
+                'amount' => $request->amount,
+                'payment_date' => now(),
+                'reference' => 'Tax',
+                'payment_method' => $request->payment_method,
+                'status' => 'completed',
+            ]);
+
+            $this->createTransactionTaxFee($tax, $payment->amount);
+
+            DB::commit();
+            return redirect()->route('payment.index.tax')->with('success', 'Payment created successfully.');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->with('error', $th->getMessage());
+            Log::info($th->getMessage());
+        }
+    }
+
 
     function calculateMonthsBetween($startDate, $endDate)
     {
@@ -156,7 +222,7 @@ class paymentController extends Controller
     {
         try {
             return Transaction::create([
-                'tenant_id' => $rent->tenant_id ?? null ,
+                'tenant_id' => $rent->tenant_id ?? null,
                 'property_id' => $rent->property_id ?? null,
                 'transaction_type' => 'Rent',
                 'amount' => $dueAmount,
@@ -170,22 +236,31 @@ class paymentController extends Controller
         }
     }
 
-    private function createTransactionTaxFee($tenant, $amount)
+    private function createTransactionTaxFee($tax, $paidAmount)
     {
         try {
-            $transaction = transaction::where('tenant_id', $tenant->id)->where('transaction_type', 'Tax')->first();
-
             return Transaction::create([
-                'tenant_id' => $tenant->id,
-                'transaction_type' => $transaction->transaction_type,
-                'amount' => $amount,
+                'tenant_id' => $tax->property->tenant_id ?? null,
+                'property_id' => $tax->property_id ?? null,
+                'transaction_type' => 'Tax',
+                'amount' => $tax->tax_amount,
                 'description' => 'Paid Tax Fee',
-                'credit' => $tenant->tax_fee,
+                'credit' => $paidAmount,
                 'debit' => 0,
                 'status' => 'Pending',
             ]);
         } catch (\Throwable $th) {
             Log::info($th->getMessage());
         }
+    }
+
+    //search tax code
+    public function searchTax(Request $request)
+    {
+        $tax =  Tax::with('property')->where('tax_code', $request->tax_code)->first();
+        if (!$tax) {
+            return back()->with('error', 'Tax code not found.');
+        }
+        return view('payment.tax.create', compact('tax'));
     }
 }

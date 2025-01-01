@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OtpController;
+use App\Http\Controllers\taxController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\rentController;
@@ -45,6 +46,8 @@ Route::controller(PropertyController::class)->prefix('property')->middleware(['a
     Route::get('/report', 'report')->name('property.report');
     Route::get('/report-details', 'reportDetails')->name('property.report.fech');
     Route::get('/property/report/pdf', 'exportPdf')->name('property.report.print');
+    Route::get('/property/{id}', 'show')->name('property.show');
+
     //search property
     Route::get('/search', 'search')->name('property.lanlord.search');
 });
@@ -60,7 +63,6 @@ Route::controller(rentController::class)->prefix('rent')->middleware(['auth.admi
     Route::get('/rent/report/pdf', 'exportPdf')->name('rent.report.print');
 
     Route::get('/rent/property/search', 'search')->name('rent.property.search');
-
 });
 
 Route::controller(HomeController::class)->group(function () {
@@ -143,11 +145,17 @@ Route::prefix('tenant')->middleware(['auth.admin'])->group(function () {
 Route::prefix('payment')->middleware(['auth.admin'])->group(function () {
     Route::controller(paymentController::class)->group(function () {
         Route::get('/index', 'index')->name('payment.index');
+        Route::get('/index/tax', 'taxIndex')->name('payment.index.tax');
         Route::get('/create', 'create')->name('payment.create');
+        Route::get('/create/tax', 'taxCreate')->name('payment.create.tax');
         Route::post('/store', 'store')->name('payment.store');
+        Route::post('tax/store', 'taxStore')->name('tax.payment.store');
         Route::get('/edit/{payment}', 'edit')->name('payment.edit');
         Route::put('/update/{payment}', 'update')->name('payment.update');
         Route::get('/delete/{payment}', 'destroy')->name('payment.delete');
+        //tax search
+
+        Route::get('/search/tax-code', 'searchTax')->name('tax.payment.search');
         Route::get('/get-payment-amount/{tenantId}/{paymentType}', 'getPaymentAmount')->name('tenant.payment.getPaymentAmount');
 
         Route::get('/search', 'search')->name('tenant.payment.search');
@@ -173,13 +181,32 @@ Route::prefix('lanlord')->middleware(['auth.admin'])->group(function () {
         Route::get('/index', 'index')->name('lanlord.index');
         Route::get('/create', 'create')->name('lanlord.create');
         Route::post('/store', 'store')->name('lanlord.store');
+        Route::get('/show/{lanlord}', 'show')->name('landlord.show');
 
         Route::get('/edit/{lanlord}', 'edit')->name('lanlord.edit');
         Route::put('/update/{lanlord}', 'update')->name('lanlord.update');
         Route::get('/delete/{lanlord}', 'destroy')->name('lanlord.delete');
+
+
     });
 });
 
+
+
+
+Route::prefix('tax')->middleware(['auth.admin'])->group(function () {
+    Route::controller(taxController::class)->group(function () {
+        Route::get('/index', 'index')->name('tax.index');
+        Route::get('/create', 'create')->name('tax.create');
+        Route::post('/store', 'store')->name('tax.store');
+        Route::get('/edit/{tax}', 'edit')->name('tax.edit');
+        Route::put('/update/{tax}', 'update')->name('tax.update');
+        //show
+
+        Route::get('/delete/{tax}', 'destroy')->name('tax.delete');
+        Route::get('/property/search', 'search')->name('property.tax.search');
+    });
+});
 // chart
 Route::prefix('chart')->group(function () {
     Route::controller(ChartController::class)->group(function () {

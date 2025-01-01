@@ -26,6 +26,13 @@ class User extends Authenticatable
         'profile_image',
     ];
 
+
+    public function landlords()
+    {
+        return $this->hasMany(Landlord::class);
+    }
+
+
     /**
      * The attributes that should be hidden for serialization.
      *

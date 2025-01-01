@@ -77,7 +77,7 @@ class rentController extends Controller
                 'status' => 'required',
             ]);
             DB::beginTransaction();
-            $rent_code = 'R' . rand(1000, 9999);
+            $rent_code = 'R' . rand(1000, 9999).rand(1000, 9999);
             $rent = Rent::create([
                 'tenant_id' => $request->tenant_id,
                 'rent_code' => $rent_code,
@@ -224,13 +224,5 @@ class rentController extends Controller
     }
 
 
-    private function generateUniqueCode()
-    {
-        $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $code = '';
-        for ($i = 0; $i < 3; $i++) {
-            $code .= $characters[rand(0, strlen($characters) - 1)];
-        }
-        return $code;
-    }
+
 }

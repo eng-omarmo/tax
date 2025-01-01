@@ -41,17 +41,17 @@
         </div>
     @endif
 
-    @if (!isset($rent) || empty($rent->id))
+    @if (!isset($tax) || empty($tax->id))
         <!-- Search Form -->
         <div class="card h-100 p-0 radius-12 mb-4">
             <div class="card-body p-24">
                 <div class="row justify-content-center">
                     <div class="col-xxl-6 col-xl-8 col-lg-10">
-                        <form action="{{ route('tenant.payment.search') }}" method="GET" class="d-flex align-items-center">
+                        <form action="{{ route('tax.payment.search') }}" method="GET" class="d-flex align-items-center">
                             <div class="d-flex flex-grow-1 align-items-center">
-                                <input type="text" class="form-control radius-8 me-2 flex-grow-1" id="rent_code"
-                                    name="rent_code" placeholder="Enter Rent Code"
-                                    value="{{ old('rent_code') }}" required>
+                                <input type="text" class="form-control radius-8 me-2 flex-grow-1" id="tax_code"
+                                    name="tax_code" placeholder="Enter Tax Code"
+                                    value="{{ old('tax_code') }}" required>
                             </div>
                             <!-- Add New Tenant Button -->
                             <button type="submit"
@@ -81,35 +81,10 @@
                                         </ul>
                                     </div>
                                 @endif
-                                <form action="{{ route('payment.store') }}" method="POST">
+                                <form action="{{ route('tax.payment.store') }}" method="POST">
                                     @csrf
 
-                                    <!-- Property Info -->
-                                    <input type="hidden" name="rent_id" value="{{isset($rent->id) ? $rent->id : '' }}">
                                     <input type="hidden" name="tax_id" value="{{isset($tax->id) ? $tax->id : '' }}">
-
-
-                                    <!-- Tenant Details -->
-                                    <div class="mb-20">
-                                        <label for="property_name"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Tenant Name <span class="text-danger-600">*</span>
-                                        </label>
-                                        <div
-                                            class="bg-gray-100 border border-gray-300 p-4 rounded-md shadow-sm text-sm text-gray-800">
-                                            {{ $rent->tenant->user->name }}
-                                        </div>
-
-                                        <label for="property_phone"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Tenant Phone <span class="text-danger-600">*</span>
-                                        </label>
-                                        <div
-                                            class="bg-gray-100 border border-gray-300 p-4 rounded-md shadow-sm text-sm text-gray-800">
-                                            {{ $rent->tenant->user->phone }}
-                                        </div>
-                                    </div>
-
                                     <div class="mb-20">
                                         <label for="property_name"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
@@ -117,7 +92,7 @@
                                         </label>
                                         <div
                                             class="bg-gray-100 border border-gray-300 p-4 rounded-md shadow-sm text-sm text-gray-800">
-                                            {{ $rent->property->property_name }}
+                                            {{ $tax->property->property_name }}
                                         </div>
 
                                         <label for="property_phone"
@@ -126,38 +101,17 @@
                                         </label>
                                         <div
                                             class="bg-gray-100 border border-gray-300 p-4 rounded-md shadow-sm text-sm text-gray-800">
-                                            {{ $rent->property->property_phone }}
+                                            {{ $tax->property->property_phone }}
                                         </div>
                                     </div>
-                                    {{-- @if(auth()->user()->role == 'Admin')
-                                    <div class="mb-20">
-                                        <label for="description"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Description <span class="text-danger-600">*</span>
-                                        </label>
-                                        <select class="form-control radius-8 form-select" id="description" name="reference"
-                                            required>
-                                            <option value="">Choose Payment Type</option>
-                                            <option value="Rent">
-                                                Rent Bill</option>
 
-                                            <option value="Tax">
-
-                                                Tax Bill</option>
-
-
-
-                                        </select>
-                                        @endif --}}
-                                    {{-- </div> --}}
-                                    <!-- Payment Information -->
                                     <div class="mb-20">
                                         <label for="payment_amount"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
                                             Payment Due <span class="text-danger-600">*</span>
                                         </label>
                                         <input type="number" step="0.01" class="form-control radius-8"
-                                            id="payment_amount" name="payment_amount" value ="{{ $rent->rent_amount }}"
+                                            id="payment_amount" name="payment_amount" value ="{{ $tax->tax_amount }}"
                                             readonly required>
                                     </div>
 

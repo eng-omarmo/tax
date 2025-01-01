@@ -2,7 +2,7 @@
 
 @php
     $title = 'Property List';
-    $subTitle = 'Property ';
+    $subTitle = 'Manage Property ';
     $script = '<script>
         $(".remove-item-btn").on("click", function() {
             $(this).closest("tr").addClass("d-none");
@@ -123,7 +123,9 @@
                             <td>{{ $property->property_name }}</td>
                             <td>{{ $property->property_phone }}</td>
                             @if(Auth::user()->role == 'Admin')
-                            <td>{{ $property->landlord->name . " (" . $property->landlord->phone_number . ")" }}</td>
+         
+                            <td><a href="{{ route('landlord.show', $property->landlord->id) }}">{{ $property->landlord->name }}</a></td>
+
                             @endif
                             <td>{{ $property->branch }}</td>
                             <td>{{ $property->nbr }}</td>

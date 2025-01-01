@@ -258,12 +258,34 @@
 
                 </ul>
             </li>
+            <li class="dropdown">
+                <a href="javascript:void(0)">
+                    <i class="ri-wallet-fill text-info-main text-xl"></i>
+
+
+                    <span>Taxes</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li>
+                        <a href="{{ route('tax.index') }}"><i
+                                class="ri-circle-fill circle-icon text-info-600 w-auto"></i>
+                            Tax List</a>
+                    </li>
+
+                    <li>
+                        <a href="{{ route('tax.create') }}"><i
+                                class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
+                            Tax</a>
+                    </li>
+
+                </ul>
+            </li>
 
             <li class="dropdown">
                 <a href="javascript:void(0)">
                     <i class="ri-money-dollar-circle-fill text-success-main text-xl"></i>
 
-                    <span>Payment</span>
+                    <span>Rent Payment</span>
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
@@ -274,6 +296,29 @@
 
                     <li>
                         <a href="{{ route('payment.create') }}"><i
+                                class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
+                            Payment</a>
+                    </li>
+
+                </ul>
+
+            </li>
+
+            <li class="dropdown">
+                <a href="javascript:void(0)">
+                    <i class="ri-money-dollar-circle-fill text-success-main text-xl"></i>
+
+                    <span>Tax Payment</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li>
+                        <a href="{{ route('payment.index.tax') }}"><i
+                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                            Payment List</a>
+                    </li>
+
+                    <li>
+                        <a href="{{ route('payment.create.tax') }}"><i
                                 class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
                             Payment</a>
                     </li>

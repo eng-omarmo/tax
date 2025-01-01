@@ -64,22 +64,49 @@ class landlordController extends Controller
         ]);
     }
 
+    public function show($landlord)
+    {
+        $landlord = Landlord::find($landlord);
+        return view('landlord.edit', [
+            'lanlord' => $landlord
+        ]);
+    }
 
-    public function update(Request $request, $landlord)
+
+    public function update(Request $request, $landlordId)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
             'phone' => 'required|string|max:255',
-
         ]);
-        Landlord::find($landlord)->update([
+
+        $landlord = Landlord::find($landlordId);
+
+        if (!$landlord) {
+            return redirect()->route('landlord.index')->with('error', 'Landlord not found.');
+        }
+
+        $landlord->update([
             'name' => $request->name,
             'address' => $request->address,
             'phone_number' => $request->phone,
+            'email' => $request->email
         ]);
-        return redirect()->route('lanlord.index');
+
+
+        if ($landlord->user) {
+            $landlord->user->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+            ]);
+        }
+
+        return redirect()->route('lanlord.index')->with('success', 'Landlord updated successfully');
     }
+
     public function destroy($landlord)
     {
         Landlord::find($landlord)->delete();

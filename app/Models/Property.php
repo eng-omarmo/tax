@@ -36,6 +36,11 @@ class Property extends Model
         return $this->belongsTo(District::class);
     }
 
+    public function taxs()
+    {
+        return $this->hasMany(Tax::class);
+    }
+
     public function landlord()
     {
         return $this->belongsTo(Landlord::class);

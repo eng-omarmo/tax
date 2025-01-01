@@ -2,7 +2,7 @@
 
 @php
     $title = 'Rent Registration';
-    $subTitle = 'Register a new rent';
+    $subTitle = 'Manage Rent';
 @endphp
 
 @section('content')

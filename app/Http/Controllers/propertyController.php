@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Carbon\Carbon;
+use App\Models\Tax;
 use App\Models\District;
 use App\Models\Landlord;
 use App\Models\Property;
@@ -21,19 +22,21 @@ class propertyController extends Controller
         $statuses = Property::pluck('status')->unique();
 
         $monitoringStatuses = Property::pluck('monitoring_status')->unique();
-        //app filter
-        $query  = Property::query();
+
+        $query  = Property::with('transactions', 'landlord');
         if ($request->filled('search')) {
+            // has landlord
+            $query->whereHas('landlord', function ($q) use ($request) {
+                $q->whereHas('user', function ($q) use ($request) {
+                    $q->where('name', 'like', '%' . $request->search . '%');
+                });
+            });
+
             $query->where('property_name', 'like', '%' . $request->search . '%')
                 ->orWhere('property_phone', 'like', '%' . $request->search . '%')
-                ->orWhere('nbr', 'like', '%' . $request->search . '%')
                 ->orWhere('house_code', 'like', '%' . $request->search . '%')
-                ->orWhere('tenant_name', 'like', '%' . $request->search . '%')
-                ->orWhere('tenant_phone', 'like', '%' . $request->search . '%')
-                ->orWhere('branch', 'like', '%' . $request->search . '%')
-                ->orWhere('zone', 'like', '%' . $request->search . '%')
-                ->orWhere('house_type', 'like', '%' . $request->search . '%')
-                ->orWhere('status', 'like', '%' . $request->search . '%');
+                ->orWhere('nbr', 'like', '%' . $request->search . '%')
+                ->orWhere('branch', 'like', '%' . $request->search . '%');
         }
         if ($request->filled('status')) {
             $query->where('status', $request->status);
@@ -184,6 +187,7 @@ class propertyController extends Controller
                 'yearly_tax_fee' => $request->yearly_tax_fee,
                 'landlord_id' => $request->lanlord_id
             ]);
+            $this->recordTaxFee($property);
             $this->createTransaction($property);
             DB::commit();
 
@@ -196,6 +200,14 @@ class propertyController extends Controller
 
 
     public function edit($id)
+    {
+        $property = Property::findorFail($id);
+        $districts = District::select('id', 'name')->get();
+
+        return view('property.edit', compact('property', 'districts'));
+    }
+
+    public function show($id)
     {
         $property = Property::findorFail($id);
         $districts = District::select('id', 'name')->get();
@@ -294,6 +306,22 @@ class propertyController extends Controller
                 'credit' => 0,
                 'debit' => $property->yearly_tax_fee,
                 'status' => 'Pending',
+            ]);
+        } catch (\Throwable $th) {
+            Log::info($th->getMessage());
+        }
+    }
+
+    private function recordTaxFee($property)
+    {
+
+        try {
+            return Tax::create([
+                'property_id' => $property->id,
+                'tax_amount' => $property->yearly_tax_fee,
+                'due_date' => now()->addMonths(1),
+                'status' => 'Pending',
+                'tax_code' => 'T' . rand(1000, 9999) . rand(1000, 9999),
             ]);
         } catch (\Throwable $th) {
             Log::info($th->getMessage());

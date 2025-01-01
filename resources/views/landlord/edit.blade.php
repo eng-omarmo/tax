@@ -59,6 +59,13 @@
                                 </div>
                                 <div class="mb-20">
                                     <label for="name"
+                                        class="form-label fw-semibold text-primary-light text-sm mb-8">lanlord Email <span
+                                            class="text-danger-600">*</span></label>
+                                    <input type="text" class="form-control radius-8" id="email" name="email" value="{{ $lanlord->email }}"
+                                        placeholder="Enter  Phone" value="{{ old('Phone') }}">
+                                </div>
+                                <div class="mb-20">
+                                    <label for="name"
                                         class="form-label fw-semibold text-primary-light text-sm mb-8">lanlord Address <span
                                             class="text-danger-600">*</span></label>
                                     <input type="text" class="form-control radius-8" id="address" name="address" value="{{ $lanlord->address }}"

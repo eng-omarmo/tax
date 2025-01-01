@@ -31,7 +31,7 @@
                         <option value="">Status</option>
                         <option value="Paid" {{ request()->status == 'Paid' ? 'selected' : '' }}>Paid</option>
                         <option value="Pending" {{ request()->status == 'Pending' ? 'selected' : '' }}>Pending</option>
-       
+
                     </select>
                 </div>
 
@@ -49,7 +49,7 @@
                     </a>
 
                     <!-- Add New Payment Button -->
-                    <a href="{{ route('payment.create') }}" class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
+                    <a href="{{ route('payment.create.tax') }}" class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
                         <iconify-icon icon="ic:baseline-plus" class="icon text-xl line-height-1"></iconify-icon>
                         Add New Payment
                     </a>
@@ -74,6 +74,8 @@
                         <th scope="col">SNO</th>
                         <th scope="col">Tenant Name</th>
                         <th scope="col">Property</th>
+                        <th scope="col">Tax Code</th>
+                        <th scope="col">Payment Type</th>
                         <th scope="col">Amount Paid</th>
                         <th scope="col">Payment Date</th>
                         <th scope="col" class="text-center">Status</th>
@@ -94,11 +96,11 @@
                             <td>{{ $payment->id }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <a href="{{ route('tenant.edit', $payment->rent->tenant->id) }}" class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->rent->tenant->user->name }}</a>
-
+                                    <span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->tax->property->tenant->user->name ?? 'N/A' }}</span>
                                 </div>
                             </td>
-                            <td>{{ $payment->rent->property->property_name }}</td>
+                            <td><a href="{{ route('property.edit', $payment->tax->property->id) }}" class="text-md mb-0 fw-normal text-secondary-light"> {{ $payment->tax->property->property_name ?? 'N/A' }}</a></td>
+                            <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->tax->tax_code }}</span></td>
                             <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->reference }}</span></td>
                             <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->amount }}</span></td>
 
