@@ -16,11 +16,14 @@ class paymentController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Payment::with('rent')->whereNull('rent_id');
+        $query = Payment::with('rent')->whereNotNull('rent_id');
 
-        if (auth()->user()->role == 'Landlord') {
-            $query->where('landlord_id', auth()->user()->id);
+        if (auth()->user()->role == 'rent') {
+            $query->whereHas('rent.property.landlord', function ($q) {
+                $q->where('user_id', auth()->id());
+            });
         }
+
         if ($request->has('search') && $request->search) {
             $query->where('reference', 'like', '%' . $request->search . '%')
                 ->orWhere('amount', 'like', '%' . $request->search . '%');

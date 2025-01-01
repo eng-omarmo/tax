@@ -11,35 +11,52 @@ class taxController extends Controller
     //
     public function index()
     {
+        // Initialize the query with property and transaction relationships
         $query = Tax::with(['property.transactions']);
 
+        // Apply search filter if provided
         if (request()->filled('search')) {
-            $query->whereHas('property', function ($q) {
-                $q->where('property_name', 'like', '%' . request('search') . '%')
-                  ->orWhere('property_phone', 'like', '%' . request('search') . '%');
+            $search = request('search');
+            $query->whereHas('property', function ($q) use ($search) {
+                $q->where('property_name', 'like', "%{$search}%")
+                  ->orWhere('property_phone', 'like', "%{$search}%");
             });
         }
 
+        // Apply status filter if provided
         if (request()->filled('status')) {
-            if(request('status') == 'Overdue'){
-                $query->where('due_date', '<', now()->format('Y-m-d'));
+            $status = request('status');
+            if ($status === 'Overdue') {
+                $query->where('due_date', '<', now()->toDateString());
+            } else {
+                $query->where('status', $status);
             }
-            $query->where('status', request('status'));
         }
 
-        $taxes = $query->paginate(request('per_page', 5));
+        // Restrict data based on user role
+        if (auth()->user()->role === 'Landlord') {
+            $query->whereHas('property.landlord', function ($q) {
+                $q->where('user_id', auth()->id());
+            });
+        }
 
+        // Paginate results with a default value for per_page
+        $perPage = request('per_page', 5);
+        $taxes = $query->paginate($perPage);
 
+        // Calculate balance for each tax entry
         foreach ($taxes as $tax) {
             $tax->balance = $tax->property->transactions->sum(function ($transaction) {
                 return $transaction->debit - $transaction->credit;
             });
         }
 
+        // Return view with data
         return view('tax.index', [
             'taxes' => $taxes,
         ]);
     }
+
 
 
     public function create()

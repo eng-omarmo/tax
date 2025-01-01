@@ -212,7 +212,7 @@
                 </ul>
 
             </li>
-
+            @if (Auth::user()->role == 'Landlord')
 
             <li class="dropdown">
                 <a href="javascript:void(0)">
@@ -236,6 +236,7 @@
 
             </li>
 
+
             <li class="dropdown">
                 <a href="javascript:void(0)">
                     <i class="ri-wallet-fill text-info-main text-xl"></i>
@@ -258,6 +259,7 @@
 
                 </ul>
             </li>
+            @endif
             <li class="dropdown">
                 <a href="javascript:void(0)">
                     <i class="ri-wallet-fill text-info-main text-xl"></i>
@@ -271,15 +273,17 @@
                                 class="ri-circle-fill circle-icon text-info-600 w-auto"></i>
                             Tax List</a>
                     </li>
-
+             @if(auth()->user()->role == 'Admin')
                     <li>
                         <a href="{{ route('tax.create') }}"><i
                                 class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
                             Tax</a>
                     </li>
+                    @endif
 
                 </ul>
             </li>
+            @if(auth()->user()->role == 'Landlord')
 
             <li class="dropdown">
                 <a href="javascript:void(0)">
@@ -303,7 +307,8 @@
                 </ul>
 
             </li>
-
+            @endif
+  @if(auth()->user()->role == 'Admin')
             <li class="dropdown">
                 <a href="javascript:void(0)">
                     <i class="ri-money-dollar-circle-fill text-success-main text-xl"></i>
@@ -348,6 +353,7 @@
                 </ul>
 
             </li>
+        @endif
             {{-- <li class="dropdown">
                 <a  href="javascript:void(0)">
                     <iconify-icon icon="hugeicons:invoice-03" class="menu-icon"></iconify-icon>

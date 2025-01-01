@@ -31,7 +31,7 @@
                         <option value="">Status</option>
                         <option value="Paid" {{ request()->status == 'Paid' ? 'selected' : '' }}>Paid</option>
                         <option value="Pending" {{ request()->status == 'Pending' ? 'selected' : '' }}>Pending</option>
-       
+                        <option value="overDue" {{ request()->status == 'Overdue' ? 'selected' : '' }}>Overdue</option>
                     </select>
                 </div>
 
