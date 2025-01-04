@@ -7,6 +7,7 @@ use App\Models\Tax;
 use App\Models\Rent;
 use App\Models\Tenant;
 use App\Models\Payment;
+use App\Models\PaymentDetail;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -42,21 +43,43 @@ class paymentController extends Controller
     }
     public function taxIndex(Request $request)
     {
-        $query = Payment::with('tax')->whereNotNull('tax_id');
+        // Build the query with eager loading and tax filtering (if needed).
+        $query = Payment::with('tax', 'paymentDetail')->whereNotNull('tax_id');
+
+        // Apply search condition if it exists.
         if ($request->has('search') && $request->search) {
             $query->where('reference', 'like', '%' . $request->search . '%')
-                ->orWhere('amount', 'like', '%' . $request->search . '%');
+                  ->orWhere('amount', 'like', '%' . $request->search . '%');
         }
-        $payments = $query->paginate(5);
-        if(auth()->user()->role == 'Landlord'){
+
+        // Filter by landlord if the user has the 'Landlord' role.
+        if (auth()->user()->role == 'Landlord') {
             $query->whereHas('tax.property.landlord', function ($q) {
                 $q->where('user_id', auth()->id());
             });
         }
+
+        $payments = $query->paginate(5);
+
+
+        foreach ($payments as $payment) {
+
+            $paymentDetail = $payment->paymentDetail->first();
+
+            $payment->paymentDetails = [
+                'account' => $paymentDetail ? $paymentDetail->account_number : 'N/A',
+                'mobile'  => $paymentDetail ? $paymentDetail->mobile_number : 'N/A',
+                'bank'    => $paymentDetail ? $paymentDetail->bank_name : 'N/A',
+            ];
+        }
+
+
         return view('payment.tax.index', [
-            'payments' => $payments
+            'payments' => $payments,
         ]);
     }
+
+
 
     public function taxCreate()
     {
@@ -143,8 +166,8 @@ class paymentController extends Controller
                 'payment_date' => 'required|date',
                 'reference' => 'nullable|string|max:255',
             ]);
-            DB::beginTransaction();
 
+            DB::beginTransaction();
             $tax = Tax::where('id', $request->tax_id)->first();
             if ($tax->tax_amount < $request->amount) {
                 return back()->with('error', 'Payment amount cannot be greater than tax amount.');
@@ -158,7 +181,13 @@ class paymentController extends Controller
                 'payment_method' => $request->payment_method,
                 'status' => 'completed',
             ]);
-
+            $payment->createPaymentDetail([
+                'payment_id' => $payment->id,
+                'bank_name' => $request->bank_name ?? null,
+                'account_number' => $request->account_number ?? null,
+                'mobile_number' => $request->mobile_number ?? null,
+                'additional_info' => $request->additional_info ?? null,
+            ]);
             $this->createTransactionTaxFee($tax, $payment->amount);
 
             DB::commit();
@@ -270,10 +299,22 @@ class paymentController extends Controller
     //search tax code
     public function searchTax(Request $request)
     {
-        $tax =  Tax::with('property')->where('tax_code', $request->tax_code)->first();
+        $tax = Tax::with(['property'])->where('tax_code', $request->tax_code)->first();
+
         if (!$tax) {
             return back()->with('error', 'Tax code not found.');
         }
-        return view('payment.tax.create', compact('tax'));
+
+        // if ($tax->status != 'Pending') {
+        //     return back()->with('error', 'Tax already paid.');
+        // }
+
+        $balance = $tax->property->transactions->sum(function ($transaction) {
+            return $transaction->debit - $transaction->credit;
+        });
+
+        return view('payment.tax.create', compact('tax', 'balance'));
     }
+
+
 }

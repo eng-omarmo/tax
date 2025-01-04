@@ -108,10 +108,20 @@
                                     <div class="mb-20">
                                         <label for="payment_amount"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Payment Due <span class="text-danger-600">*</span>
+                                            Tax Amount <span class="text-danger-600">*</span>
                                         </label>
                                         <input type="number" step="0.01" class="form-control radius-8"
                                             id="payment_amount" name="payment_amount" value ="{{ $tax->tax_amount }}"
+                                            readonly required>
+                                    </div>
+
+                                    <div class="mb-20">
+                                        <label for="payment_amount"
+                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                            Current Balance <span class="text-danger-600">*</span>
+                                        </label>
+                                        <input type="number" step="0.01" class="form-control radius-8"
+                                            id="balance" name="balance" value ="{{ $balance }}"
                                             readonly required>
                                     </div>
 
@@ -132,8 +142,11 @@
                                         </label>
                                         <select class="form-control radius-8 form-select" id="payment_method"
                                             name="payment_method" required>
+                                            @if(auth()->user()->role == 'Admin')
                                             <option value="Cash" {{ old('payment_method') == 'Cash' ? 'selected' : '' }}>
                                                 Cash</option>
+
+                                            @endif
                                             <option value="Bank Transfer"
                                                 {{ old('payment_method') == 'Bank Transfer' ? 'selected' : '' }}>Bank
                                                 Transfer</option>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\PaymentDetail;
 use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
@@ -26,6 +27,19 @@ class Payment extends Model
     {
         return $this->belongsTo(Rent::class);
     }
-
+    public function paymentDetail()
+    {
+        return $this->hasMany(PaymentDetail::class);
+    }
+    public function createPaymentDetail($data)
+    {
+        return PaymentDetail::create([
+            'payment_id' => $data['payment_id'],
+            'bank_name' => $data['bank_name'] ?? null,
+            'account_number' => $data['account_number'] ?? null,
+            'mobile_number' => $data['mobile_number'] ?? null,
+            'additional_info' => $data['additional_info'] ?? null,
+        ]);
+    }
 
 }
