@@ -144,6 +144,12 @@
                                         </select>
                                     </div>
 
+
+                                    <div class="mb-20" id="payment-details-container">
+                                        <!-- Additional input fields will be inserted here -->
+                                    </div>
+
+
                                     <div class="mb-20">
                                         <label for="payment_date"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
@@ -208,5 +214,41 @@
                     console.error('Error fetching payment amount:', error);
                 });
         }
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const paymentMethodSelect = document.getElementById('payment_method');
+        const paymentDetailsContainer = document.getElementById('payment-details-container');
+
+        paymentMethodSelect.addEventListener('change', function () {
+            const selectedMethod = this.value;
+            paymentDetailsContainer.innerHTML = ''; // Clear previous input fields
+
+            if (selectedMethod === 'Bank Transfer') {
+                paymentDetailsContainer.innerHTML = `
+                    <label for="bank_name" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                        Bank Name <span class="text-danger-600">*</span>
+                    </label>
+                    <input type="text" class="form-control radius-8" id="bank_name" name="bank_name"
+                        placeholder="Enter Bank Name" required>
+
+                    <label for="account_number" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                        Account Number <span class="text-danger-600">*</span>
+                    </label>
+                    <input type="text" class="form-control radius-8" id="account_number" name="account_number"
+                        placeholder="Enter Account Number" required>
+                `;
+            } else if (selectedMethod === 'Mobile Payment') {
+                paymentDetailsContainer.innerHTML = `
+                    <label for="mobile_number" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                        Mobile Number <span class="text-danger-600">*</span>
+                    </label>
+                    <input type="text" class="form-control radius-8" id="mobile_number" name="mobile_number"
+                        placeholder="Enter Mobile Number" required>
+                `;
+            }
+        });
     });
 </script>

@@ -333,7 +333,7 @@
             </li>
 
 
-            <li class="dropdown">
+            {{-- <li class="dropdown">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
                     <span>Monitoring</span>
@@ -352,7 +352,7 @@
 
                 </ul>
 
-            </li>
+            </li> --}}
         @endif
             {{-- <li class="dropdown">
                 <a  href="javascript:void(0)">

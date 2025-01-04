@@ -190,6 +190,7 @@
                                         </select>
                                     </div>
 
+
                                     <div class="mb-20">
                                         <label for="payment_date"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
@@ -254,5 +255,6 @@
                     console.error('Error fetching payment amount:', error);
                 });
         }
+
     });
 </script>
