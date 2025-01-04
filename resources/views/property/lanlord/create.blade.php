@@ -49,7 +49,7 @@
                             <form action="{{ route('property.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
 
-                        
+
                                 <div class="row">
                                     <div class="col-md-6 mb-20">
                                         <label for="property_name"
@@ -87,38 +87,8 @@
                                             value="{{ old('house_code') }}">
                                     </div>
 
-                                    <div class="col-md-6 mb-20">
-                                        <label for="status"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Status <span class="text-danger-600">*</span>
-                                        </label>
-                                        <select class="form-control radius-8 form-select" id="status" name="status">
-                                            <option value="Active">Active</option>
-                                            <option value="Inactive">Inactive</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6 mb-20">
-                                        <label for="monitoring_status"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Monetering Status <span class="text-danger-600">*</span>
-                                        </label>
-                                        <select class="form-control radius-8 form-select" id="monitoring_status"
-                                            name="monitoring_status">
-                                            <option value="Pending">Pending</option>
-                                            <option value="Approved">Approved</option>
-                                        </select>
-                                    </div>
 
-                                    <div class="col-md-6 mb-20">
-                                        <label for="is_owner"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Is Owner <span class="text-danger-600">*</span>
-                                        </label>
-                                        <select class="form-control radius-8 form-select" id="is_owner" name="is_owner">
-                                            <option value="Yes">Yes</option>
-                                            <option value="No">No</option>
-                                        </select>
-                                    </div>
+
 
                                     <div class="col-md-6 mb-20">
                                         <label for="designation"
@@ -176,16 +146,7 @@
 
                                     </div>
 
-                                    <div class="col-md-6 mb-20">
-                                        <label for="dalal_company_name"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Dalal Company Name
-                                        </label>
-                                        <input type="text" class="form-control radius-8" id="dalal_company_name"
-                                            name="dalal_company_name"placeholder="Enter house rent"
-                                            value="{{ old('dalal_company_name') }}">
 
-                                    </div>
 
 
                                     <div class="col-md-6 mb-20">
