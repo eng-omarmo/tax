@@ -50,8 +50,7 @@
                         <form action="{{ route('tenant.payment.search') }}" method="GET" class="d-flex align-items-center">
                             <div class="d-flex flex-grow-1 align-items-center">
                                 <input type="text" class="form-control radius-8 me-2 flex-grow-1" id="rent_code"
-                                    name="rent_code" placeholder="Enter Rent Code"
-                                    value="{{ old('rent_code') }}" required>
+                                    name="rent_code" placeholder="Enter Rent Code" value="{{ old('rent_code') }}" required>
                             </div>
                             <!-- Add New Tenant Button -->
                             <button type="submit"
@@ -85,8 +84,8 @@
                                     @csrf
 
                                     <!-- Property Info -->
-                                    <input type="hidden" name="rent_id" value="{{isset($rent->id) ? $rent->id : '' }}">
-                                    <input type="hidden" name="tax_id" value="{{isset($tax->id) ? $tax->id : '' }}">
+                                    <input type="hidden" name="rent_id" value="{{ isset($rent->id) ? $rent->id : '' }}">
+                                    <input type="hidden" name="tax_id" value="{{ isset($tax->id) ? $tax->id : '' }}">
 
 
                                     <!-- Tenant Details -->
@@ -129,7 +128,7 @@
                                             {{ $rent->property->property_phone }}
                                         </div>
                                     </div>
-                                    {{-- @if(auth()->user()->role == 'Admin')
+                                    {{-- @if (auth()->user()->role == 'Admin')
                                     <div class="mb-20">
                                         <label for="description"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
@@ -166,9 +165,9 @@
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
                                             Payment Amount <span class="text-danger-600">*</span>
                                         </label>
-                                        <input type="number" step="0.01" class="form-control radius-8"
-                                            id="amount" name="amount" value="{{ old('amount') }}" placeholder="Enter Payment Amount"
-                                             required>
+                                        <input type="number" step="0.01" class="form-control radius-8" id="amount"
+                                            name="amount" value="{{ old('amount') }}" placeholder="Enter Payment Amount"
+                                            required>
                                     </div>
 
                                     <div class="mb-20">
@@ -188,6 +187,10 @@
                                                 Payment</option>
                                             <!-- Add more payment methods if necessary -->
                                         </select>
+                                    </div>
+
+                                    <div class="mb-20" id="payment-details-container">
+                                        <!-- Additional input fields will be inserted here -->
                                     </div>
 
 
@@ -224,6 +227,44 @@
     @endif
 
 @endsection
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const paymentMethodSelect = document.getElementById('payment_method');
+        const paymentDetailsContainer = document.getElementById('payment-details-container');
+
+        paymentMethodSelect.addEventListener('change', function() {
+            const selectedMethod = this.value;
+            paymentDetailsContainer.innerHTML = ''; // Clear previous input fields
+
+            if (selectedMethod === 'Bank Transfer') {
+                paymentDetailsContainer.innerHTML = `
+                    <label for="bank_name" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                        Bank Name <span class="text-danger-600">*</span>
+                    </label>
+                    <input type="text" class="form-control radius-8" id="bank_name" name="bank_name"
+                        placeholder="Enter Bank Name" required>
+
+                    <label for="account_number" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                        Account Number <span class="text-danger-600">*</span>
+                    </label>
+                    <input type="text" class="form-control radius-8" id="account_number" name="account_number"
+                        placeholder="Enter Account Number" required>
+                `;
+            } else if (selectedMethod === 'Mobile Payment') {
+                paymentDetailsContainer.innerHTML = `
+                    <label for="mobile_number" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                        Mobile Number <span class="text-danger-600">*</span>
+                    </label>
+                    <input type="text" class="form-control radius-8" id="mobile_number" name="mobile_number"
+                        placeholder="Enter Mobile Number" required>
+                `;
+            }
+        });
+    });
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const descriptionSelect = document.getElementById('description');
@@ -234,7 +275,7 @@
 
             if (selectedType) {
                 fetchPaymentAmount(selectedType);
-                console.log(selectedType);  // Logs the selected payment type
+                console.log(selectedType); // Logs the selected payment type
             } else {
                 paymentAmountInput.value = '';
             }
@@ -244,7 +285,7 @@
             const tenantId = '{{ $tenant->id ?? '' }}'; // Ensure the tenant ID is passed correctly
             const url = `/payment/get-payment-amount/${tenantId}/${paymentType}`;
 
-            fetch(url)  // Removed the extra closing parenthesis
+            fetch(url) // Removed the extra closing parenthesis
                 .then(response => response.json())
                 .then(data => {
                     if (data && data.payment_amount) {

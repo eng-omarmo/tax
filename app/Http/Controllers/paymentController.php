@@ -17,7 +17,7 @@ class paymentController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Payment::with('rent')->whereNotNull('rent_id');
+        $query = Payment::with('rent', 'paymentDetail')->whereNotNull('rent_id');
 
         if (auth()->user()->role == 'rent') {
             $query->whereHas('rent.property.landlord', function ($q) {
@@ -29,13 +29,24 @@ class paymentController extends Controller
             $query->where('reference', 'like', '%' . $request->search . '%')
                 ->orWhere('amount', 'like', '%' . $request->search . '%');
         }
-        if(auth()->user()->role == 'Landlord'){
+        if (auth()->user()->role == 'Landlord') {
             $query->whereHas('rent.property.landlord', function ($q) {
                 $q->where('user_id', auth()->id());
             });
         }
 
         $payments = $query->paginate(5);
+
+        foreach ($payments as $payment) {
+
+            $paymentDetail = $payment->paymentDetail->first();
+
+            $payment->paymentDetails = [
+                'account' => $paymentDetail ? $paymentDetail->account_number : 'N/A',
+                'mobile'  => $paymentDetail ? $paymentDetail->mobile_number : 'N/A',
+                'bank'    => $paymentDetail ? $paymentDetail->bank_name : 'N/A',
+            ];
+        }
 
         return view('payment.index', [
             'payments' => $payments
@@ -49,7 +60,7 @@ class paymentController extends Controller
         // Apply search condition if it exists.
         if ($request->has('search') && $request->search) {
             $query->where('reference', 'like', '%' . $request->search . '%')
-                  ->orWhere('amount', 'like', '%' . $request->search . '%');
+                ->orWhere('amount', 'like', '%' . $request->search . '%');
         }
 
         // Filter by landlord if the user has the 'Landlord' role.
@@ -120,34 +131,25 @@ class paymentController extends Controller
                 'reference' => 'nullable|string|max:255',
             ]);
             DB::beginTransaction();
-            if ($request->rent_id) {
-                $rent = Rent::where('id', $request->rent_id)->first();
-                if ($rent->rent_amount < $request->amount) {
-                    return back()->with('error', 'Payment amount cannot be greater than rent amount.');
-                }
-                $payment =   Payment::create([
-                    'rent_id' => $request->rent_id,
-                    'tax_id' => null,
-                    'amount' => $request->amount,
-                    'payment_date' => now(),
-                    'reference' => 'Rent',
-                    'payment_method' => $request->payment_method,
-                    'status' => 'completed',
-                ]);
-                $dueAmount = $this->calculateMonthsBetween($rent->rent_start_date, $rent->rent_end_date) * $rent->rent_amount;
-                $this->createTransactionRent($rent, $dueAmount, $payment->amount);
-            } else {
-                $payment =   Payment::create([
-                    'rent_id' => null,
-                    'tax_id' => $request->tax_id,
-                    'amount' => $request->amount,
-                    'payment_date' => now(),
-                    'reference' => 'Tax',
-                    'payment_method' => $request->payment_method,
-                    'status' => 'completed',
-                ]);
-                $this->createTransactionTaxFee($payment->tax_id, $payment->amount);
+
+            $rent = Rent::where('id', $request->rent_id)->first();
+            if ($rent->rent_amount < $request->amount) {
+                return back()->with('error', 'Payment amount cannot be greater than rent amount.');
             }
+            $payment =   Payment::create([
+                'rent_id' => $request->rent_id,
+                'tax_id' => null,
+                'amount' => $request->amount,
+                'payment_date' => now(),
+                'reference' => 'Rent',
+                'payment_method' => $request->payment_method,
+                'status' => 'completed',
+            ]);
+            $dueAmount = $this->calculateMonthsBetween($rent->rent_start_date, $rent->rent_end_date) * $rent->rent_amount;
+            $this->createTransactionRent($rent, $dueAmount, $payment->amount);
+
+            $this->createpaymentDetail($payment, $request);
+
             DB::commit();
             return redirect()->route('payment.index')->with('success', 'Payment created successfully.');
         } catch (\Throwable $th) {
@@ -181,15 +183,8 @@ class paymentController extends Controller
                 'payment_method' => $request->payment_method,
                 'status' => 'completed',
             ]);
-            $payment->createPaymentDetail([
-                'payment_id' => $payment->id,
-                'bank_name' => $request->bank_name ?? null,
-                'account_number' => $request->account_number ?? null,
-                'mobile_number' => $request->mobile_number ?? null,
-                'additional_info' => $request->additional_info ?? null,
-            ]);
+            $this->createpaymentDetail($payment, $payment->amount);
             $this->createTransactionTaxFee($tax, $payment->amount);
-
             DB::commit();
             return redirect()->route('payment.index.tax')->with('success', 'Payment created successfully.');
         } catch (\Throwable $th) {
@@ -316,5 +311,14 @@ class paymentController extends Controller
         return view('payment.tax.create', compact('tax', 'balance'));
     }
 
-
+    private function createpaymentDetail($payment, $request)
+    {
+        $payment->createPaymentDetail([
+            'payment_id' => $payment->id,
+            'bank_name' => $request->bank_name ?? null,
+            'account_number' => $request->account_number ?? null,
+            'mobile_number' => $request->mobile_number ?? null,
+            'additional_info' => $request->additional_info ?? null,
+        ]);
+    }
 }

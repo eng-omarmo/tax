@@ -74,6 +74,8 @@
                         <th scope="col">SNO</th>
                         <th scope="col">Tenant Name</th>
                         <th scope="col">Property</th>
+                        <th scope="col">Account Name</th>
+                        <th scope="col">Account Number</th>
                         <th scope="col">Amount Paid</th>
                         <th scope="col">Payment Date</th>
                         <th scope="col" class="text-center">Status</th>
@@ -99,7 +101,14 @@
                                 </div>
                             </td>
                             <td>{{ $payment->rent->property->property_name }}</td>
-                            <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->reference }}</span></td>
+                            <td><span
+                                class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->paymentDetails['bank'] }}</span>
+                        </td>
+                        <td><span
+                            class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->paymentDetails['mobile'] ?? $payment->paymentDetails['account'] }}</span>
+                    </td>
+
+
                             <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->amount }}</span></td>
 
 
@@ -154,4 +163,41 @@
             document.getElementById('filterForm').submit();
         });
     </script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const paymentMethodSelect = document.getElementById('payment_method');
+        const paymentDetailsContainer = document.getElementById('payment-details-container');
+
+        paymentMethodSelect.addEventListener('change', function () {
+            const selectedMethod = this.value;
+            paymentDetailsContainer.innerHTML = ''; // Clear previous input fields
+
+            if (selectedMethod === 'Bank Transfer') {
+                paymentDetailsContainer.innerHTML = `
+                    <label for="bank_name" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                        Bank Name <span class="text-danger-600">*</span>
+                    </label>
+                    <input type="text" class="form-control radius-8" id="bank_name" name="bank_name"
+                        placeholder="Enter Bank Name" required>
+
+                    <label for="account_number" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                        Account Number <span class="text-danger-600">*</span>
+                    </label>
+                    <input type="text" class="form-control radius-8" id="account_number" name="account_number"
+                        placeholder="Enter Account Number" required>
+                `;
+            } else if (selectedMethod === 'Mobile Payment') {
+                paymentDetailsContainer.innerHTML = `
+                    <label for="mobile_number" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                        Mobile Number <span class="text-danger-600">*</span>
+                    </label>
+                    <input type="text" class="form-control radius-8" id="mobile_number" name="mobile_number"
+                        placeholder="Enter Mobile Number" required>
+                `;
+            }
+        });
+    });
+</script>
 @endsection
