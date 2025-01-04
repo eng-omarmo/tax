@@ -29,6 +29,42 @@
                 <div class="col-xxl-10 col-xl-12 col-lg-12">
                     <div class="card border">
                         <div class="card-body">
+                            <div class="row">
+                                <div class="col-xxl-8 col-xl-8 col-lg-8">
+                                    <h6 class="mb-0">Edit Property</h6>
+                                </div>
+                                <div class="mapouter flex justify-center">
+                                    <div class="gmap_canvas">
+                                        <iframe class="gmap_iframe" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                                            src="https://maps.google.com/maps?width=600&amp;height=400&amp;hl=en&amp;q=hodan&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
+                                        </iframe>
+                                        <a href="https://sprunkin.com/">Sprunki</a>
+                                    </div>
+                                    <style>
+                                        .mapouter {
+                                            position: relative;
+                                            text-align: center;
+                                            width: 100%; /* Set to take up full width of parent */
+                                            height: 0;
+                                            padding-bottom: 56.25%; /* Maintain aspect ratio (16:9) */
+                                        }
+                                        .gmap_canvas {
+                                            overflow: hidden;
+                                            background: none !important;
+                                            width: 100%; /* Responsive width */
+                                            height: 100%; /* Responsive height */
+                                            position: absolute; /* Absolute positioning for aspect ratio */
+                                            top: 0;
+                                            left: 0;
+                                        }
+                                        .gmap_iframe {
+                                            width: 100% !important; /* Fully responsive width */
+                                            height: 100% !important; /* Fully responsive height */
+                                        }
+                                    </style>
+
+                                </div>
+                        </div>
                             @if ($errors->any())
                             <div class="alert alert-danger">
                                 <ul>
@@ -259,6 +295,8 @@
                                     </button>
                                 </div>
                             </form>
+
+
                         </div>
                     </div>
                 </div>

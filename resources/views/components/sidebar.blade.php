@@ -308,7 +308,7 @@
 
             </li>
             @endif
-  @if(auth()->user()->role == 'Admin')
+  @if(auth()->user()->role == 'Admin' || auth()->user()->role == 'Landlord')
             <li class="dropdown">
                 <a href="javascript:void(0)">
                     <i class="ri-money-dollar-circle-fill text-success-main text-xl"></i>

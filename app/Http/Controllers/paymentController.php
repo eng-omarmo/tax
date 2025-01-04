@@ -28,6 +28,11 @@ class paymentController extends Controller
             $query->where('reference', 'like', '%' . $request->search . '%')
                 ->orWhere('amount', 'like', '%' . $request->search . '%');
         }
+        if(auth()->user()->role == 'Landlord'){
+            $query->whereHas('rent.property.landlord', function ($q) {
+                $q->where('user_id', auth()->id());
+            });
+        }
 
         $payments = $query->paginate(5);
 
@@ -43,6 +48,11 @@ class paymentController extends Controller
                 ->orWhere('amount', 'like', '%' . $request->search . '%');
         }
         $payments = $query->paginate(5);
+        if(auth()->user()->role == 'Landlord'){
+            $query->whereHas('tax.property.landlord', function ($q) {
+                $q->where('user_id', auth()->id());
+            });
+        }
         return view('payment.tax.index', [
             'payments' => $payments
         ]);

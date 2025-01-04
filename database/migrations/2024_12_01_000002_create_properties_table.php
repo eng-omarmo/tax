@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('property_name');
             $table->string('property_phone', 25)->nullable();
             $table->string('nbr', 50)->nullable();
-
             $table->unsignedBigInteger('district_id');
             $table->unsignedBigInteger('landlord_id');
             $table->string('house_code', 50)->nullable();
@@ -27,8 +26,8 @@ return new class extends Migration
             $table->decimal('house_rent', 10, 2)->nullable();
             $table->decimal('quarterly_tax_fee', 10, 2)->nullable();
             $table->decimal('yearly_tax_fee', 10, 2)->nullable();
-            $table->decimal('latitude', 10, 6);
-            $table->decimal('longitude', 10, 6);
+            $table->string('latitude');
+            $table->string('longitude');
             $table->string('dalal_company_name')->nullable();
             $table->enum('monitoring_status', ['Pending', 'Approved'])->nullable();
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
