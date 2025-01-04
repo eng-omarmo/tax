@@ -48,6 +48,8 @@ Route::controller(PropertyController::class)->prefix('property')->middleware(['a
     Route::get('/property/report/pdf', 'exportPdf')->name('property.report.print');
     Route::get('/property/{id}', 'show')->name('property.show');
 
+    Route::get('/create/property', 'propertyCreate')->name('property.create.landlord');
+
     //search property
     Route::get('/search', 'search')->name('property.lanlord.search');
 });
@@ -202,6 +204,7 @@ Route::prefix('tax')->middleware(['auth.admin'])->group(function () {
         Route::get('/edit/{tax}', 'edit')->name('tax.edit');
         Route::put('/update/{tax}', 'update')->name('tax.update');
         //show
+
 
         Route::get('/delete/{tax}', 'destroy')->name('tax.delete');
         Route::get('/property/search', 'search')->name('property.tax.search');

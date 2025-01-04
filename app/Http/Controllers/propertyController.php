@@ -199,6 +199,14 @@ class propertyController extends Controller
     }
 
 
+    public function propertyCreate()
+    {
+
+        $data['districts'] = District::select('id', 'name')->get();
+        return view('property.lanlord.create', $data);
+    }
+
+
     public function edit($id)
     {
         $property = Property::findorFail($id);

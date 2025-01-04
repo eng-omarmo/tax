@@ -192,12 +192,20 @@
                                 class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
                             Property List</a>
                     </li>
-
+                 @if (Auth::user()->role === 'Admin')
                     <li>
                         <a href="{{ route('property.create') }}"><i
                                 class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
                             Property</a>
                     </li>
+                 @endif
+
+                 <li>
+                    <a href="{{ route('property.create.landlord') }}"><i
+                            class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
+                        Property</a>
+                </li>
+
                     {{-- <li>
                         <a href="`"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Pending
                             Property</a>
