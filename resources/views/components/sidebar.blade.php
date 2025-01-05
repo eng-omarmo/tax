@@ -192,20 +192,20 @@
                                 class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
                             Property List</a>
                     </li>
-                 @if (Auth::user()->role === 'Admin')
-                    <li>
-                        <a href="{{ route('property.create') }}"><i
-                                class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
-                            Property</a>
-                    </li>
-                 @endif
-
-                 <li>
-                    <a href="{{ route('property.create.landlord') }}"><i
-                            class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
-                        Property</a>
-                </li>
-
+                    @if (Auth::user()->role === 'Admin')
+                        <li>
+                            <a href="{{ route('property.create') }}"><i
+                                    class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
+                                Property</a>
+                        </li>
+                    @endif
+                    @if (Auth::user()->role === 'lanlord')
+                        <li>
+                            <a href="{{ route('property.create.landlord') }}"><i
+                                    class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
+                                Property</a>
+                        </li>
+                    @endif
                     {{-- <li>
                         <a href="`"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Pending
                             Property</a>
@@ -221,52 +221,51 @@
 
             </li>
             @if (Auth::user()->role == 'Landlord')
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <i class="ri-user-fill text-info-main text-xl"></i>
+                        <span>Tenant</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="{{ route('tenant.index') }}"><i
+                                    class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                                Tenant List</a>
+                        </li>
 
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <i class="ri-user-fill text-info-main text-xl"></i>
-                    <span>Tenant</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="{{ route('tenant.index') }}"><i
-                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
-                            Tenant List</a>
-                    </li>
+                        <li>
+                            <a href="{{ route('tenant.create') }}"><i
+                                    class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
+                                Tenant</a>
+                        </li>
 
-                    <li>
-                        <a href="{{ route('tenant.create') }}"><i
-                                class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
-                            Tenant</a>
-                    </li>
+                    </ul>
 
-                </ul>
-
-            </li>
-
-
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <i class="ri-wallet-fill text-info-main text-xl"></i>
+                </li>
 
 
-                    <span>Rent</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="{{ route('rent.index') }}"><i
-                                class="ri-circle-fill circle-icon text-info-600 w-auto"></i>
-                            Rent List</a>
-                    </li>
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <i class="ri-wallet-fill text-info-main text-xl"></i>
 
-                    <li>
-                        <a href="{{ route('rent.create') }}"><i
-                                class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
-                            Rent</a>
-                    </li>
 
-                </ul>
-            </li>
+                        <span>Rent</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="{{ route('rent.index') }}"><i
+                                    class="ri-circle-fill circle-icon text-info-600 w-auto"></i>
+                                Rent List</a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('rent.create') }}"><i
+                                    class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
+                                Rent</a>
+                        </li>
+
+                    </ul>
+                </li>
             @endif
             <li class="dropdown">
                 <a href="javascript:void(0)">
@@ -281,86 +280,138 @@
                                 class="ri-circle-fill circle-icon text-info-600 w-auto"></i>
                             Tax List</a>
                     </li>
-             @if(auth()->user()->role == 'Admin')
-                    <li>
-                        <a href="{{ route('tax.create') }}"><i
-                                class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
-                            Tax</a>
-                    </li>
+                    @if (auth()->user()->role == 'Admin')
+                        <li>
+                            <a href="{{ route('tax.create') }}"><i
+                                    class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
+                                Tax</a>
+                        </li>
                     @endif
 
                 </ul>
             </li>
-            @if(auth()->user()->role == 'Landlord')
+            @if (auth()->user()->role == 'Landlord')
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <i class="ri-money-dollar-circle-fill text-success-main text-xl"></i>
 
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <i class="ri-money-dollar-circle-fill text-success-main text-xl"></i>
+                        <span>Rent Payment</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="{{ route('payment.index') }}"><i
+                                    class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                                Payment List</a>
+                        </li>
 
-                    <span>Rent Payment</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="{{ route('payment.index') }}"><i
-                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
-                            Payment List</a>
-                    </li>
+                        <li>
+                            <a href="{{ route('payment.create') }}"><i
+                                    class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
+                                Payment</a>
+                        </li>
 
-                    <li>
-                        <a href="{{ route('payment.create') }}"><i
-                                class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
-                            Payment</a>
-                    </li>
+                    </ul>
 
-                </ul>
-
-            </li>
+                </li>
             @endif
-  @if(auth()->user()->role == 'Admin' || auth()->user()->role == 'Landlord')
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <i class="ri-money-dollar-circle-fill text-success-main text-xl"></i>
+            @if (auth()->user()->role == 'Admin' || auth()->user()->role == 'Landlord')
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <i class="ri-money-dollar-circle-fill text-success-main text-xl"></i>
 
-                    <span>Tax Payment</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="{{ route('payment.index.tax') }}"><i
-                                class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
-                            Payment List</a>
-                    </li>
+                        <span>Tax Payment</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="{{ route('payment.index.tax') }}"><i
+                                    class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                                Payment List</a>
+                        </li>
 
-                    <li>
-                        <a href="{{ route('payment.create.tax') }}"><i
-                                class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
-                            Payment</a>
-                    </li>
+                        <li>
+                            <a href="{{ route('payment.create.tax') }}"><i
+                                    class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
+                                Payment</a>
+                        </li>
 
-                </ul>
+                    </ul>
 
-            </li>
+                </li>
             @endif
-   @if(auth()->user()->role == 'Admin' || auth()->user()->role == 'Tax officer')
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
-                    <span>Monitoring</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="{{ route('monitor.index') }}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
-                            Monitoring Properties </a>
-                    </li>
+            @if (auth()->user()->role == 'Admin' || auth()->user()->role == 'Tax officer')
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
+                        <span>Monitoring</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="{{ route('monitor.index') }}"><i
+                                    class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                                Monitoring Properties </a>
+                        </li>
 
-                    <li>
-                        <a href="#"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Track
-                            Appointment
-                        </a>
-                    </li>
+                        <li>
+                            <a href="#"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Track
+                                Appointment
+                            </a>
+                        </li>
 
-                </ul>
+                    </ul>
 
-            </li>
+                </li>
+            @endif
+
+
+            @if (auth()->user()->role == 'Admin' || auth()->user()->role == 'Tax officer')
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
+                        <span>Tax Rates</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="{{ route('tax.rate.index') }}"><i
+                                    class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                                Properties Tax Rate</a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('tax.rate.create') }}"><i
+                                    class="ri-circle-fill circle-icon text-info-main w-auto"></i>
+                                Add Tax Rate
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </li>
+            @endif
+
+
+            @if (auth()->user()->role == 'Admin' || auth()->user()->role == 'Tax officer')
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
+                        <span>Invoice </span>
+                    </a>
+                    <ul class="sidebar-submenu">
+
+                        <li>
+                            <a href="{{ route('invoiceList') }}"><i
+                                    class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                                Invoice List </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('invoiceAdd') }}"><i
+                                    class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                                Add Invoice </a>
+                        </li>
+
+
+                    </ul>
+
+                </li>
             @endif
 
             {{-- <li class="dropdown">

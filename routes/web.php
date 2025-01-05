@@ -14,6 +14,7 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\tenantController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\paymentController;
+use App\Http\Controllers\taxRateController;
 use App\Http\Controllers\businessController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\landlordController;
@@ -195,15 +196,29 @@ Route::prefix('lanlord')->middleware(['auth.admin'])->group(function () {
 Route::prefix('monitor')->middleware(['auth.admin'])->group(function () {
     Route::controller(monitoringContoller::class)->group(function () {
         Route::get('/index', 'index')->name('monitor.index');
+    });
+});
 
-
+Route::prefix('invoice')->middleware(['auth.admin'])->group(function () {
+    Route::controller(invoiceController::class)->group(function () {
+        Route::get('/index', 'index')->name('invoice.index');
     });
 });
 
 
 
-
 Route::prefix('tax')->middleware(['auth.admin'])->group(function () {
+    Route::prefix('rate')->group(function () {
+        Route::controller(taxRateController::class)->group(function () {
+            Route::get('/index', 'index')->name('tax.rate.index');
+            Route::get('/create', 'create')->name('tax.rate.create');
+            Route::post('/store', 'store')->name('tax.rate.store');
+            Route::get('/edit/{taxRate}', 'edit')->name('tax.rate.edit');
+            Route::put('/update/{taxRate}', 'update')->name('tax.rate.update');
+            Route::get('/delete/{taxRate}', 'destroy')->name('tax.rate.delete');
+        });
+
+    });
     Route::controller(taxController::class)->group(function () {
         Route::get('/index', 'index')->name('tax.index');
         Route::get('/create', 'create')->name('tax.create');
