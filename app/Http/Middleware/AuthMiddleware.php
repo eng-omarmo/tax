@@ -21,7 +21,7 @@ class AuthMiddleware
         }
         $user = Auth::user();
 
-        if ($user && ucfirst($user->role) != 'Admin' && ucfirst($user->role)  != 'Landlord' && $user->status != 'Active') {
+        if ($user && ucfirst($user->role) != 'Admin' && ucfirst($user->role)  != 'Landlord' && ucfirst($user->role)  != 'Tax officer' && $user->status != 'Active') {
 
             return redirect()->route('signin')->with('error', 'Access denied.');
         }

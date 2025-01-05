@@ -22,6 +22,20 @@
 @endphp
 
 @section('content')
+@if ($property->monetering_status = 'Pending')
+    <div
+        class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div class="ms-auto d-flex align-items-center gap-3 flex-wrap">
+            <a href="javascript:void(0);" id="approveAllBtn" class="btn btn-success text-sm btn-sm px-12 py-12 radius-4">
+                Approve Property
+            </a>
+            <a href="javascript:void(0);" id="rejectAllBtn" class="btn btn-danger text-sm btn-sm px-12 py-12 radius-4">
+                Reject Property
+            </a>
+        </div>
+    </div>
+@endif
+
 
     <div class="card h-100 p-0 radius-12">
         <div class="card-body p-24">
@@ -35,52 +49,65 @@
                                 </div>
                                 <div class="mapouter flex justify-center">
                                     <div class="gmap_canvas">
-                                        <iframe class="gmap_iframe" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                                        <iframe class="gmap_iframe" frameborder="0" scrolling="no" marginheight="0"
+                                            marginwidth="0"
                                             src="https://maps.google.com/maps?width=600&amp;height=400&amp;hl=en&amp;q=hodan&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed">
                                         </iframe>
-                                        <a href="https://maps.google.com/maps?width=600&amp;height=400&amp;hl=en&amp;q=olow tower&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe><a href="https://sprunkin.com/">Sprunki</a>
+                                        <a
+                                            href="https://maps.google.com/maps?width=600&amp;height=400&amp;hl=en&amp;q=olow tower&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe><a
+                                                href="https://sprunkin.com/">Sprunki</a>
                                     </div>
                                     <style>
                                         .mapouter {
                                             position: relative;
                                             text-align: center;
-                                            width: 100%; /* Set to take up full width of parent */
+                                            width: 100%;
+                                            /* Set to take up full width of parent */
                                             height: 0;
-                                            padding-bottom: 56.25%; /* Maintain aspect ratio (16:9) */
+                                            padding-bottom: 56.25%;
+                                            /* Maintain aspect ratio (16:9) */
                                         }
+
                                         .gmap_canvas {
                                             overflow: hidden;
                                             background: none !important;
-                                            width: 100%; /* Responsive width */
-                                            height: 100%; /* Responsive height */
-                                            position: absolute; /* Absolute positioning for aspect ratio */
+                                            width: 100%;
+                                            /* Responsive width */
+                                            height: 100%;
+                                            /* Responsive height */
+                                            position: absolute;
+                                            /* Absolute positioning for aspect ratio */
                                             top: 0;
                                             left: 0;
                                         }
+
                                         .gmap_iframe {
-                                            width: 100% !important; /* Fully responsive width */
-                                            height: 100% !important; /* Fully responsive height */
+                                            width: 100% !important;
+                                            /* Fully responsive width */
+                                            height: 100% !important;
+                                            /* Fully responsive height */
                                         }
                                     </style>
 
                                 </div>
-                        </div>
+                            </div>
                             @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
 
-                        @if(session('error'))
-                            <div class="alert alert-danger">
-                                {{ session('error') }}
-                            </div>
-                        @endif
-                            <form action="{{ route('property.update', $property->id) }}" method="POST" enctype="multipart/form-data">
+                            @if (session('error'))
+                                <div class="alert alert-danger">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
+                            <form action="{{ route('property.update', $property->id) }}" method="POST"
+                                enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 <div class="row">
@@ -146,8 +173,12 @@
                                             Status <span class="text-danger-600">*</span>
                                         </label>
                                         <select class="form-control radius-8 form-select" id="status" name="status">
-                                            <option value="Active" {{ old('status', $property->status) == 'Active' ? 'selected' : '' }}>Active</option>
-                                            <option value="Inactive" {{ old('status', $property->status) == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                                            <option value="Active"
+                                                {{ old('status', $property->status) == 'Active' ? 'selected' : '' }}>Active
+                                            </option>
+                                            <option value="Inactive"
+                                                {{ old('status', $property->status) == 'Inactive' ? 'selected' : '' }}>
+                                                Inactive</option>
                                         </select>
                                     </div>
                                     <div class="col-md-6 mb-20">
@@ -157,8 +188,12 @@
                                         </label>
                                         <select class="form-control radius-8 form-select" id="monitoring_status"
                                             name="monitoring_status">
-                                            <option value="Pending" {{ old('monitoring_status', $property->monitoring_status) == 'Pending' ? 'selected' : '' }}>Pending</option>
-                                            <option value="Approved" {{ old('monitoring_status', $property->monitoring_status) == 'Approved' ? 'selected' : '' }}>Approved</option>
+                                            <option value="Pending"
+                                                {{ old('monitoring_status', $property->monitoring_status) == 'Pending' ? 'selected' : '' }}>
+                                                Pending</option>
+                                            <option value="Approved"
+                                                {{ old('monitoring_status', $property->monitoring_status) == 'Approved' ? 'selected' : '' }}>
+                                                Approved</option>
                                         </select>
                                     </div>
 
@@ -168,11 +203,13 @@
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
                                             District <span class="text-danger-600">*</span>
                                         </label>
-                                        <select class="form-control radius-8 form-select" id="district_id" name="district_id">
-                                            <option value ="{{ $property->district_id }}">{{ $property->district->name }}</option>
-                                         @foreach($districts as $district)
-                                            <option value="{{ $district->id }}">{{ $district->name }}</option>
-                                         @endforeach
+                                        <select class="form-control radius-8 form-select" id="district_id"
+                                            name="district_id">
+                                            <option value ="{{ $property->district_id }}">{{ $property->district->name }}
+                                            </option>
+                                            @foreach ($districts as $district)
+                                                <option value="{{ $district->id }}">{{ $district->name }}</option>
+                                            @endforeach
 
                                         </select>
                                     </div>
@@ -185,7 +222,9 @@
                                         <select class="form-control radius-8 form-select" id="designation"
                                             name="designation">
                                             <option value="">Choose Designation</option>
-                                            <option value="Deegaan" {{ old('designation', $property->designation) == 'Deegaan' ? 'selected' : '' }}>Deegaan</option>
+                                            <option value="Deegaan"
+                                                {{ old('designation', $property->designation) == 'Deegaan' ? 'selected' : '' }}>
+                                                Deegaan</option>
                                         </select>
                                     </div>
 
@@ -194,9 +233,14 @@
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
                                             House Type <span class="text-danger-600">*</span>
                                         </label>
-                                        <select class="form-control radius-8 form-select" id="house_type" name="house_type">
-                                            <option value="Villa" {{ old('house_type', $property->house_type) == 'Villa' ? 'selected' : '' }}>Villa</option>
-                                            <option value="Apartment" {{ old('house_type', $property->house_type) == 'Apartment' ? 'selected' : '' }}>Apartment</option>
+                                        <select class="form-control radius-8 form-select" id="house_type"
+                                            name="house_type">
+                                            <option value="Villa"
+                                                {{ old('house_type', $property->house_type) == 'Villa' ? 'selected' : '' }}>
+                                                Villa</option>
+                                            <option value="Apartment"
+                                                {{ old('house_type', $property->house_type) == 'Apartment' ? 'selected' : '' }}>
+                                                Apartment</option>
                                         </select>
                                     </div>
 

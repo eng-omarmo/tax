@@ -33,6 +33,6 @@ class monitoringContoller extends Controller
                 return $transaction->debit - $transaction->credit;
             });
         }
-        return view('property.approve.index', compact('properties', 'statuses', 'monitoringStatuses'));
+        return view('property.monitor.index', compact('properties', 'statuses', 'monitoringStatuses'));
     }
 }
