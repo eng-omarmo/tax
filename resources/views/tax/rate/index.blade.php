@@ -96,7 +96,8 @@
                             </td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <span class="text-md mb-0 fw-normal text-secondary-light">{{ $taxRate->effective_date->format('Y-m-d') }}</span>
+                                    <span class="text-md mb-0 fw-normal text-secondary-light">{{
+                                        $taxRate->effective_date ? $taxRate->effective_date : 'N/A' }}</span>
                                 </div>
                             </td>
 
