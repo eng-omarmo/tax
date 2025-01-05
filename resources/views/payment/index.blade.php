@@ -108,7 +108,7 @@
                             class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->paymentDetails['mobile'] ?? $payment->paymentDetails['account'] }}</span>
                     </td>
 
-
+                      
                             <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->amount }}</span></td>
 
 

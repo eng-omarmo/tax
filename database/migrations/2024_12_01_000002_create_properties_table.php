@@ -28,7 +28,6 @@ return new class extends Migration
             $table->decimal('yearly_tax_fee', 10, 2)->nullable();
             $table->string('latitude');
             $table->string('longitude');
-            $table->string('dalal_company_name')->nullable();
             $table->enum('monitoring_status', ['Pending', 'Approved'])->nullable();
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->foreign('district_id')->references('id')->on('districts')->onDelete('cascade');

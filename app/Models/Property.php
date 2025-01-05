@@ -25,7 +25,7 @@ class Property extends Model
         'yearly_tax_fee',
         'latitude',
         'longitude',
-        'dalal_company_name',
+
         'monitoring_status',
         'status',
         'district_id',

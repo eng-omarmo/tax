@@ -339,17 +339,17 @@
                 </ul>
 
             </li>
-
-
-            {{-- <li class="dropdown">
+            @endif
+   @if(auth()->user()->role == 'Admin' || auth()->user()->role == 'Tax officer')
+            <li class="dropdown">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
                     <span>Monitoring</span>
                 </a>
                 <ul class="sidebar-submenu">
                     <li>
-                        <a href="#imagePreview"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
-                            Approve Properties </a>
+                        <a href="{{ route('monitor.index') }}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                            Monitoring Properties </a>
                     </li>
 
                     <li>
@@ -360,8 +360,9 @@
 
                 </ul>
 
-            </li> --}}
-        @endif
+            </li>
+            @endif
+
             {{-- <li class="dropdown">
                 <a  href="javascript:void(0)">
                     <iconify-icon icon="hugeicons:invoice-03" class="menu-icon"></iconify-icon>

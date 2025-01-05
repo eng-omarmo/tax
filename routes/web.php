@@ -20,12 +20,14 @@ use App\Http\Controllers\landlordController;
 use App\Http\Controllers\propertyController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\monitoringContoller;
 use App\Http\Controllers\AiapplicationController;
 use App\Http\Controllers\ComponentpageController;
 use App\Http\Controllers\RoleandaccessController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\changePasswordController;
 use App\Http\Controllers\CryptocurrencyController;
+
 
 Route::controller(AuthenticationController::class)->group(function () {
     Route::get('/', 'signin')->name('signin');
@@ -49,6 +51,7 @@ Route::controller(PropertyController::class)->prefix('property')->middleware(['a
     Route::get('/property/{id}', 'show')->name('property.show');
 
     Route::get('/create/property', 'propertyCreate')->name('property.create.landlord');
+    Route::post('/store/property', 'propertyStore')->name('property.store.landlord');
 
     //search property
     Route::get('/search', 'search')->name('property.lanlord.search');
@@ -184,10 +187,14 @@ Route::prefix('lanlord')->middleware(['auth.admin'])->group(function () {
         Route::get('/create', 'create')->name('lanlord.create');
         Route::post('/store', 'store')->name('lanlord.store');
         Route::get('/show/{lanlord}', 'show')->name('landlord.show');
-
         Route::get('/edit/{lanlord}', 'edit')->name('lanlord.edit');
         Route::put('/update/{lanlord}', 'update')->name('lanlord.update');
         Route::get('/delete/{lanlord}', 'destroy')->name('lanlord.delete');
+    });
+});
+Route::prefix('monitor')->middleware(['auth.admin'])->group(function () {
+    Route::controller(monitoringContoller::class)->group(function () {
+        Route::get('/index', 'index')->name('monitor.index');
 
 
     });
@@ -262,6 +269,9 @@ Route::prefix('dashboard')->middleware(['auth.admin'])->group(function () {
         Route::get('/wallet', 'wallet')->name('wallet');
     });
 });
+
+
+
 
 // Forms
 Route::prefix('forms')->group(function () {

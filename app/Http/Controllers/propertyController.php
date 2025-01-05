@@ -58,6 +58,52 @@ class propertyController extends Controller
         return view('property.index', compact('properties', 'statuses', 'monitoringStatuses'));
     }
 
+    public function propertyStore(Request $request)
+    {
+        $request->validate([
+            'property_name' => 'required',
+            'property_phone' => 'required',
+            'nbr' => 'required',
+            'house_code' => 'required',
+            'house_type' => 'required',
+            'house_rent' => 'required',
+
+            'branch' => 'required',
+            'district_id' => 'required',
+            'zone' => 'required',
+            'latitude' => 'required',
+        ]);
+
+        try {
+            $lanlord = Landlord::where('user_id', auth()->user()->id)->first();
+            Property::create([
+                'property_name' => $request->property_name,
+                'property_phone' => $request->property_phone,
+                'nbr' => $request->nbr,
+                'house_code' => $request->house_code,
+                'branch' => $request->branch,
+                'zone' => $request->zone,
+                'house_type' => $request->house_type,
+                'house_rent' => $request->house_rent,
+                'quarterly_tax_fee' => 0,
+                'yearly_tax_fee' => 0,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+                'monitoring_status' => $request->monitoring_status,
+                'status' => $request->status,
+                'district_id' => $request->district_id,
+                'landlord_id' => $lanlord->id,
+                'designation' => 'Owner',
+                'monitoring_status' => 'Pending',
+                'status' => 'InActive',
+            ]);
+            return  redirect()->route('property.index')->with('success', 'Property created successfully.');
+        } catch (Exception $e) {
+            Log::error($e);
+            return redirect()->back()->with('error', 'Failed to create property.'. $e->getMessage());
+        }
+    }
+
     public function ReportDetails(Request $request)
     {
 
@@ -149,7 +195,7 @@ class propertyController extends Controller
                 'house_type' => 'nullable|string|max:255',
                 'latitude' => 'required',
                 'longitude' => 'required',
-                'dalal_company_name' => 'nullable|string|max:255',
+
                 'designation' => 'nullable|string|max:255',
                 'monitoring_status' => 'required|in:Pending,Approved',
                 'status' => 'required|in:Active,Inactive',
@@ -177,7 +223,6 @@ class propertyController extends Controller
                 'house_type' => $request->house_type,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
-                'dalal_company_name' => $request->dalal_company_name,
                 'designation' => $request->designation,
                 'monitoring_status' => $request->monitoring_status,
                 'status' => $request->status,
@@ -266,7 +311,10 @@ class propertyController extends Controller
                 'monitoring_status' => $request->monitoring_status,
                 'status' => $request->status,
             ]);
-            return redirect()->route('property.index')->with('success', 'Property updated successfully.');
+            if(auth()->user()->role == 'Admin'){
+                return redirect()->route('property.index')->with('success', 'Property updated successfully.');
+            }
+            return redirect()->route('monitor.index')->with('success', 'Property updated successfully.');
         } catch (Exception $th) {
             return back()->with('error', $th->getMessage());
             Log::info($th->getMessage());

@@ -46,7 +46,7 @@
                             @endif
 
 
-                            <form action="{{ route('property.store') }}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('property.store.landlord') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
 
 
@@ -87,9 +87,6 @@
                                             value="{{ old('house_code') }}">
                                     </div>
 
-
-
-
                                     <div class="col-md-6 mb-20">
                                         <label for="designation"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
@@ -123,30 +120,6 @@
                                             value="{{ old('house_rent') }}">
 
                                     </div>
-
-                                    <div class="col-md-6 mb-20">
-                                        <label for="quarterly_tax_fee"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Quarterly Tax Fee
-                                        </label>
-                                        <input type="number" class="form-control radius-8" id="quarterly_tax_fee"
-                                            name="quarterly_tax_fee" placeholder="Enter house rent"
-                                            value="{{ old('quarterly_tax_fee') }}">
-
-                                    </div>
-
-                                    <div class="col-md-6 mb-20">
-                                        <label for="yearly_tax_fee"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Yearly Tax Fee
-                                        </label>
-                                        <input type="number" class="form-control radius-8" id="yearly_tax_fee"
-                                            name="yearly_tax_fee" placeholder="Enter house rent"
-                                            value="{{ old('yearly_tax_fee') }}">
-
-                                    </div>
-
-
 
 
                                     <div class="col-md-6 mb-20">
