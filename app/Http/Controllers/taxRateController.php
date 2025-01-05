@@ -31,7 +31,10 @@ class taxRateController extends Controller
                 'date' => 'required|date',
                 'status' => 'required|string',
             ]);
-
+            $checkifexists = TaxRate::where('tax_type', $request->name)->first();
+            if ($checkifexists) {
+                return back()->with('error', 'Tax rate already exists.')->withInput($request->all());
+            }
             TaxRate::create([
                 'tax_type' => $request->name,
                 'rate' => $request->rate,
