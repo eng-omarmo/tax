@@ -148,7 +148,7 @@
                                             <option value="Bank Transfer"
                                                 {{ old('payment_method') == 'Bank Transfer' ? 'selected' : '' }}>Bank
                                                 Transfer</option>
-                                            <option value="Mobile Payment"
+                                            <option value="Mobile Money"
                                                 {{ old('payment_method') == 'Mobile Money' ? 'selected' : '' }}>Mobile
                                                 Payment</option>
                                             <!-- Add more payment methods if necessary -->
