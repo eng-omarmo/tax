@@ -147,7 +147,7 @@ class paymentController extends Controller
             ]);
             $dueAmount = $this->calculateMonthsBetween($rent->rent_start_date, $rent->rent_end_date) * $rent->rent_amount;
             $this->createTransactionRent($rent, $dueAmount, $payment->amount);
-        
+
 
             $this->createpaymentDetail($payment, $request);
 
@@ -318,7 +318,7 @@ class paymentController extends Controller
 
         return Payment::createPaymentDetail([
             'payment_id' => $payment->id,
-            'bank_name' => $request->bank_name ,
+            'bank_name' => $request->bank_name ??  $payment->payment_method,
             'account_number' => $request->account_number,
             'mobile_number' => $request->mobile_number ,
             'additional_info' => $request->additional_info,
