@@ -56,6 +56,7 @@ class taxRateController extends Controller
 
     public function update(Request $request, $id)
     {
+
         try {
             $request->validate([
                 'name' => 'required|string|max:255',

@@ -70,8 +70,10 @@
                                         Status <span class="text-danger-600">*</span>
                                     </label>
                                     <select class="form-control radius-8 form-select" id="status" name="status" required>
-                                        <option value="{{$taxRate->status}}" {{ $taxRate->status == 'Active' ? 'selected' : '' }}>Active</option>
-                                        <option value="{{$taxRate->status}}" {{ $taxRate->status == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                                        <option value="{{$taxRate->status }}"> {{ $taxRate->status }}</option>
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+
                                     </select>
                                 </div>
 
