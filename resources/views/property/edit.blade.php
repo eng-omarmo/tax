@@ -3,38 +3,23 @@
 @php
     $title = 'Edit Property';
     $subTitle = 'Edit Property Details';
-    $script = '<script>
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    $("#imagePreview").css("background-image", "url(" + e.target.result + ")");
-                    $("#imagePreview").hide();
-                    $("#imagePreview").fadeIn(650);
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-        $("#imageUpload").change(function() {
-            readURL(this);
-        });
-    </script>';
 @endphp
 
 @section('content')
-@if ($property->monetering_status = 'Pending')
-    <div
-        class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center justify-content-between flex-wrap gap-3">
-        <div class="ms-auto d-flex align-items-center gap-3 flex-wrap">
-            <a href="javascript:void(0);" id="approveAllBtn" class="btn btn-success text-sm btn-sm px-12 py-12 radius-4">
-                Approve Property
-            </a>
-            <a href="javascript:void(0);" id="rejectAllBtn" class="btn btn-danger text-sm btn-sm px-12 py-12 radius-4">
-                Reject Property
-            </a>
+<meta name="csrf-token" content="{{ csrf_token() }}">
+    @if($property->monetering_status != 'Approved' && $property->status == 'Inactive')
+        <div
+            class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="ms-auto d-flex align-items-center gap-3 flex-wrap">
+                <button id="approveBtn" class="btn btn-success text-sm btn-sm px-12 py-12 radius-4">
+                    Approve Property
+                </button>
+                <a href="javascript:void(0);" id="rejectAllBtn" class="btn btn-danger text-sm btn-sm px-12 py-12 radius-4">
+                    Reject Property
+                </a>
+            </div>
         </div>
-    </div>
-@endif
+    @endif
 
 
     <div class="card h-100 p-0 radius-12">
@@ -277,16 +262,6 @@
 
                                     </div>
 
-                                    <div class="col-md-6 mb-20">
-                                        <label for="dalal_company_name"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Dalal Company Name
-                                        </label>
-                                        <input type="text" class="form-control radius-8" id="dalal_company_name"
-                                            name="dalal_company_name" placeholder="Enter dalal company name"
-                                            value="{{ old('dalal_company_name', $property->dalal_company_name) }}">
-
-                                    </div>
 
 
                                     <div class="col-md-6 mb-20">
@@ -347,5 +322,135 @@
             </div>
         </div>
     </div>
+    <!-- Include jQuery before any script that uses it -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Include SweetAlert2 after jQuery -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function() {
+            $('#approveBtn').on('click', function() {
+                Swal.fire({
+
+                    title: 'Are you sure?',
+                    text: 'Do you want to approve this property?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, approve it!',
+                    cancelButtonText: 'No, cancel!',
+                    reverseButtons: true,
+
+                    willOpen: () => {
+                        Swal.showLoading();
+                    },
+                    didClose: () => {
+                        Swal.hideLoading();
+                    },
+                    customClass: {
+                        popup: 'custom-swal-popup',
+                        title: 'custom-swal-title',
+                        confirmButton: 'custom-swal-confirm-button',
+                        cancelButton: 'custom-swal-cancel-button'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch("{{ route('monitor.approve') }}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            body: JSON.stringify({
+                                property_id: {{ $property->id }}
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data);
+                            if (data.success) {
+                                Swal.fire('Approved!', 'The property has been approved.', 'success');
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 2000);
+
+                            } else {
+                                Swal.fire('Failed!', 'Approval failed: ' + data.message, 'error');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire('Error!', 'There was an error with the request.', 'error');
+                        });
+                    } else {
+                        Swal.fire('Cancelled', 'The approval has been cancelled.', 'info');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <style>
+        /* Custom SweetAlert Popup Styling */
+        .custom-swal-popup {
+            background: #fefefe;
+            border-radius: 12px;
+            border: 2px solid #6c757d;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        /* Title styling */
+        .custom-swal-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0056b3;
+        }
+
+        /* Confirm Button Styling */
+        .custom-swal-confirm-button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .custom-swal-confirm-button:hover {
+            background-color: #218838;
+            transform: translateY(-3px);
+        }
+
+        /* Cancel Button Styling */
+        .custom-swal-cancel-button {
+            background-color: #dc3545;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .custom-swal-cancel-button:hover {
+            background-color: #c82333;
+            transform: translateY(-3px);
+        }
+
+        /* Animation for fade-in effect */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+
+
 
 @endsection

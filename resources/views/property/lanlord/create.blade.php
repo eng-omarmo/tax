@@ -39,14 +39,15 @@
                                 </div>
                             @endif
 
-                            @if(session('error'))
+                            @if (session('error'))
                                 <div class="alert alert-danger">
                                     {{ session('error') }}
                                 </div>
                             @endif
 
 
-                            <form action="{{ route('property.store.landlord') }}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('property.store.landlord') }}" method="POST"
+                                enctype="multipart/form-data">
                                 @csrf
 
 
@@ -118,30 +119,27 @@
                                         <input type="number" class="form-control radius-8" id="house_rent"
                                             name="house_rent" placeholder="Enter house rent"
                                             value="{{ old('house_rent') }}">
-
                                     </div>
-
 
                                     <div class="col-md-6 mb-20">
                                         <label for="branch"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
                                             Branch
                                         </label>
-                                        <input type="text" class="form-control radius-8" id="branch"
-                                            name="branch" placeholder="Enter branch name" value="{{ old('branch') }}">
+                                        <input type="text" class="form-control radius-8" id="branch" name="branch"
+                                            placeholder="Enter branch name" value="{{ old('branch') }}">
                                     </div>
-
-
                                     <div class="col-md-6 mb-20">
                                         <label for="district"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
                                             District <span class="text-danger-600">*</span>
                                         </label>
-                                        <select class="form-control radius-8 form-select" id="district_id" name="district_id">
+                                        <select class="form-control radius-8 form-select" id="district_id"
+                                            name="district_id">
                                             <option value="">Choose District</option>
-                                         @foreach($districts as $district)
-                                            <option value="{{ $district->id }}">{{ $district->name }}</option>
-                                         @endforeach
+                                            @foreach ($districts as $district)
+                                                <option value="{{ $district->id }}">{{ $district->name }}</option>
+                                            @endforeach
 
                                         </select>
                                     </div>
@@ -150,8 +148,8 @@
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
                                             Zone
                                         </label>
-                                        <input type="text" class="form-control radius-8" id="zone"
-                                            name="zone" placeholder="Enter zone name" value="{{ old('zone') }}">
+                                        <input type="text" class="form-control radius-8" id="zone" name="zone"
+                                            placeholder="Enter zone name" value="{{ old('zone') }}">
                                     </div>
                                     <div class="col-md-6 mb-20">
                                         <label for="latitude"

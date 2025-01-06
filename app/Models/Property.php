@@ -53,13 +53,12 @@ class Property extends Model
 
     public static function calculateTax($houseType, $monthlyRent)
     {
-        $message='';
+        $message = '';
 
         $taxRate = TaxRate::where('tax_type', $houseType)->first();
 
         if (!$taxRate) {
             $message = 'Tax rate not found for house type: ' . $houseType;
-
         }
 
         $monthlyTax = $monthlyRent * ($taxRate->rate / 100);
