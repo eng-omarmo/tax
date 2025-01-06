@@ -18,6 +18,8 @@ class PaymentDetail extends Model
         'additional_info',
     ];
 
+
+
     public function payment()
     {
         return $this->belongsTo(Payment::class);
