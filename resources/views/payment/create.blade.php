@@ -185,7 +185,7 @@
                                             <option value="Mobile Payment"
                                                 {{ old('payment_method') == 'Mobile Payment' ? 'selected' : '' }}>Mobile
                                                 Payment</option>
-                                            <!-- Add more payment methods if necessary -->
+
                                         </select>
                                     </div>
 
@@ -253,7 +253,7 @@
                     <input type="text" class="form-control radius-8" id="account_number" name="account_number"
                         placeholder="Enter Account Number" required>
                 `;
-            } else if (selectedMethod === 'Mobile Payment') {
+            } else if (selectedMethod === 'Mobile Money') {
                 paymentDetailsContainer.innerHTML = `
                     <label for="mobile_number" class="form-label fw-semibold text-primary-light text-sm mb-8">
                         Mobile Number <span class="text-danger-600">*</span>
@@ -263,39 +263,5 @@
                 `;
             }
         });
-    });
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const descriptionSelect = document.getElementById('description');
-        const paymentAmountInput = document.getElementById('payment_amount');
-
-        descriptionSelect.addEventListener('change', function() {
-            const selectedType = this.value;
-
-            if (selectedType) {
-                fetchPaymentAmount(selectedType);
-                console.log(selectedType); // Logs the selected payment type
-            } else {
-                paymentAmountInput.value = '';
-            }
-        });
-
-        function fetchPaymentAmount(paymentType) {
-            const tenantId = '{{ $tenant->id ?? '' }}'; // Ensure the tenant ID is passed correctly
-            const url = `/payment/get-payment-amount/${tenantId}/${paymentType}`;
-
-            fetch(url) // Removed the extra closing parenthesis
-                .then(response => response.json())
-                .then(data => {
-                    if (data && data.payment_amount) {
-                        paymentAmountInput.value = data.payment_amount;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching payment amount:', error);
-                });
-        }
-
     });
 </script>

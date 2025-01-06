@@ -50,8 +50,7 @@
                         <form action="{{ route('tax.payment.search') }}" method="GET" class="d-flex align-items-center">
                             <div class="d-flex flex-grow-1 align-items-center">
                                 <input type="text" class="form-control radius-8 me-2 flex-grow-1" id="tax_code"
-                                    name="tax_code" placeholder="Enter Tax Code"
-                                    value="{{ old('tax_code') }}" required>
+                                    name="tax_code" placeholder="Enter Tax Code" value="{{ old('tax_code') }}" required>
                             </div>
                             <!-- Add New Tenant Button -->
                             <button type="submit"
@@ -84,7 +83,7 @@
                                 <form action="{{ route('tax.payment.store') }}" method="POST">
                                     @csrf
 
-                                    <input type="hidden" name="tax_id" value="{{isset($tax->id) ? $tax->id : '' }}">
+                                    <input type="hidden" name="tax_id" value="{{ isset($tax->id) ? $tax->id : '' }}">
                                     <div class="mb-20">
                                         <label for="property_name"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
@@ -120,9 +119,8 @@
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
                                             Current Balance <span class="text-danger-600">*</span>
                                         </label>
-                                        <input type="number" step="0.01" class="form-control radius-8"
-                                            id="balance" name="balance" value ="{{ $balance }}"
-                                            readonly required>
+                                        <input type="number" step="0.01" class="form-control radius-8" id="balance"
+                                            name="balance" value ="{{ $balance }}" readonly required>
                                     </div>
 
                                     <div class="mb-20">
@@ -130,9 +128,9 @@
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
                                             Payment Amount <span class="text-danger-600">*</span>
                                         </label>
-                                        <input type="number" step="0.01" class="form-control radius-8"
-                                            id="amount" name="amount" value="{{ old('amount') }}" placeholder="Enter Payment Amount"
-                                             required>
+                                        <input type="number" step="0.01" class="form-control radius-8" id="amount"
+                                            name="amount" value="{{ old('amount') }}" placeholder="Enter Payment Amount"
+                                            required>
                                     </div>
 
                                     <div class="mb-20">
@@ -142,16 +140,16 @@
                                         </label>
                                         <select class="form-control radius-8 form-select" id="payment_method"
                                             name="payment_method" required>
-                                            @if(auth()->user()->role == 'Admin')
-                                            <option value="Cash" {{ old('payment_method') == 'Cash' ? 'selected' : '' }}>
-                                                Cash</option>
-
+                                            @if (auth()->user()->role == 'Admin')
+                                                <option value="Cash"
+                                                    {{ old('payment_method') == 'Cash' ? 'selected' : '' }}>
+                                                    Cash</option>
                                             @endif
                                             <option value="Bank Transfer"
                                                 {{ old('payment_method') == 'Bank Transfer' ? 'selected' : '' }}>Bank
                                                 Transfer</option>
                                             <option value="Mobile Payment"
-                                                {{ old('payment_method') == 'Mobile Payment' ? 'selected' : '' }}>Mobile
+                                                {{ old('payment_method') == 'Mobile Money' ? 'selected' : '' }}>Mobile
                                                 Payment</option>
                                             <!-- Add more payment methods if necessary -->
                                         </select>
@@ -206,7 +204,7 @@
 
             if (selectedType) {
                 fetchPaymentAmount(selectedType);
-                console.log(selectedType);  // Logs the selected payment type
+                console.log(selectedType); // Logs the selected payment type
             } else {
                 paymentAmountInput.value = '';
             }
@@ -216,7 +214,7 @@
             const tenantId = '{{ $tenant->id ?? '' }}'; // Ensure the tenant ID is passed correctly
             const url = `/payment/get-payment-amount/${tenantId}/${paymentType}`;
 
-            fetch(url)  // Removed the extra closing parenthesis
+            fetch(url) // Removed the extra closing parenthesis
                 .then(response => response.json())
                 .then(data => {
                     if (data && data.payment_amount) {
@@ -231,14 +229,13 @@
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const paymentMethodSelect = document.getElementById('payment_method');
         const paymentDetailsContainer = document.getElementById('payment-details-container');
 
-        paymentMethodSelect.addEventListener('change', function () {
+        paymentMethodSelect.addEventListener('change', function() {
             const selectedMethod = this.value;
-            paymentDetailsContainer.innerHTML = ''; // Clear previous input fields
-
+            paymentDetailsContainer.innerHTML = '';
             if (selectedMethod === 'Bank Transfer') {
                 paymentDetailsContainer.innerHTML = `
                     <label for="bank_name" class="form-label fw-semibold text-primary-light text-sm mb-8">
@@ -253,7 +250,7 @@
                     <input type="text" class="form-control radius-8" id="account_number" name="account_number"
                         placeholder="Enter Account Number" required>
                 `;
-            } else if (selectedMethod === 'Mobile Payment') {
+            } else if (selectedMethod === 'Mobile Money') {
                 paymentDetailsContainer.innerHTML = `
                     <label for="mobile_number" class="form-label fw-semibold text-primary-light text-sm mb-8">
                         Mobile Number <span class="text-danger-600">*</span>

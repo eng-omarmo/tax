@@ -185,7 +185,7 @@ class paymentController extends Controller
                 'status' => 'completed',
             ]);
 
-            $this->createpaymentDetail($payment, $request);
+
             $this->createTransactionTaxFee($tax, $payment->amount);
             DB::commit();
             return redirect()->route('payment.index.tax')->with('success', 'Payment created successfully.');
@@ -320,7 +320,7 @@ class paymentController extends Controller
             'payment_id' => $payment->id,
             'bank_name' => $request->bank_name ??  $payment->payment_method,
             'account_number' => $request->account_number,
-            'mobile_number' => $request->mobile_number ,
+            'mobile_number' => $request->mobile_number,
             'additional_info' => $request->additional_info,
         ]);
     }
