@@ -128,6 +128,32 @@
 
                 </li>
 
+                @if (auth()->user()->role == 'Admin' || auth()->user()->role == 'Tax officer')
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="mdi:percent" class="menu-icon"></iconify-icon>
+
+                        <span>Tax Rates</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="{{ route('tax.rate.index') }}"><i
+                                    class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                                Properties Tax Rate</a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('tax.rate.create') }}"><i
+                                    class="ri-circle-fill circle-icon text-info-main w-auto"></i>
+                                Add Tax Rate
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </li>
+            @endif
+
                 <li class="dropdown">
                     <a href="javascript:void(0)">
                         <iconify-icon icon="mdi:account-cog" class="menu-icon"></iconify-icon>
@@ -364,31 +390,7 @@
             @endif
 
 
-            @if (auth()->user()->role == 'Admin' || auth()->user()->role == 'Tax officer')
-                <li class="dropdown">
-                    <a href="javascript:void(0)">
-                        <iconify-icon icon="mdi:percent" class="menu-icon"></iconify-icon>
 
-                        <span>Tax Rates</span>
-                    </a>
-                    <ul class="sidebar-submenu">
-                        <li>
-                            <a href="{{ route('tax.rate.index') }}"><i
-                                    class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
-                                Properties Tax Rate</a>
-                        </li>
-
-                        <li>
-                            <a href="{{ route('tax.rate.create') }}"><i
-                                    class="ri-circle-fill circle-icon text-info-main w-auto"></i>
-                                Add Tax Rate
-                            </a>
-                        </li>
-
-                    </ul>
-
-                </li>
-            @endif
 
 
             @if (auth()->user()->role == 'Admin' || auth()->user()->role == 'Tax officer')
