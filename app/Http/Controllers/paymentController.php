@@ -148,7 +148,6 @@ class paymentController extends Controller
             $dueAmount = $this->calculateMonthsBetween($rent->rent_start_date, $rent->rent_end_date) * $rent->rent_amount;
             $this->createTransactionRent($rent, $dueAmount, $payment->amount);
 
-
             $this->createpaymentDetail($payment, $request);
 
             DB::commit();
@@ -187,6 +186,8 @@ class paymentController extends Controller
 
 
             $this->createTransactionTaxFee($tax, $payment->amount);
+
+            $this->createpaymentDetail($payment, $request);
             DB::commit();
             return redirect()->route('payment.index.tax')->with('success', 'Payment created successfully.');
         } catch (\Throwable $th) {
@@ -315,13 +316,26 @@ class paymentController extends Controller
 
     private function createpaymentDetail($payment, $request)
     {
+        $provider = null;
 
+
+        $phone = $request->mobile_number;
+        if (str_starts_with($phone, '+252')) {
+            $phone = substr($phone, 4);
+        }
+        if (str_starts_with($phone, '61')) {
+            $provider = 'Hormuud';
+        }
+
+
+        // Proceed to create the payment detail
         return Payment::createPaymentDetail([
             'payment_id' => $payment->id,
-            'bank_name' => $request->bank_name ??  $payment->payment_method,
+            'bank_name' => $request->bank_name ?? $provider,  // Default to $provider if bank_name is not provided
             'account_number' => $request->account_number,
             'mobile_number' => $request->mobile_number,
             'additional_info' => $request->additional_info,
         ]);
     }
+
 }
