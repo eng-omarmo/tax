@@ -313,7 +313,7 @@ class paymentController extends Controller
 
     private function createpaymentDetail($payment, $request)
     {
-        $payment->createPaymentDetail([
+        return Payment::createPaymentDetail([
             'payment_id' => $payment->id,
             'bank_name' => $request->bank_name ?? null,
             'account_number' => $request->account_number ?? null,

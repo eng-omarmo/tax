@@ -31,7 +31,7 @@ class Payment extends Model
     {
         return $this->hasMany(PaymentDetail::class);
     }
-    public function createPaymentDetail($data)
+    public static function createPaymentDetail($data)
     {
         return PaymentDetail::create([
             'payment_id' => $data['payment_id'],
