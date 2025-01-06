@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
 {
-    public function addUser()
+    public function create()
     {
-        return view('users/addUser');
+        return view('users.create');
     }
 
     public function store(Request $request)
@@ -36,7 +36,7 @@ class UsersController extends Controller
         // } else {
         //     $imagePath = null;
         // }
-     
+
         User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -48,7 +48,7 @@ class UsersController extends Controller
         ]);
 
 
-        return redirect()->route('usersList')->with('success', 'User created successfully!');
+        return redirect()->route('user.index')->with('success', 'User created successfully!');
     }
 
     public function edit($id)
@@ -63,7 +63,7 @@ class UsersController extends Controller
         return view('users/usersGrid');
     }
 
-    public function usersList(Request $request)
+    public function index(Request $request)
     {
         $request->validate([
             'search' => 'nullable|string|max:255',
@@ -88,7 +88,7 @@ class UsersController extends Controller
         }
 
         $users = $query->paginate(5);
-        return view('users.usersList', compact('users', 'roles'));
+        return view('users.index', compact('users', 'roles'));
     }
         public function viewProfile()
     {
@@ -99,7 +99,7 @@ class UsersController extends Controller
     {
         $user = User::findOrFail($id);
         $user->delete();
-        return redirect()->route('usersList')->with('success', 'User deleted successfully!');
+        return redirect()->route('user.index')->with('success', 'User deleted successfully!');
     }
 
     public function update(Request $request, $id)
@@ -113,10 +113,10 @@ class UsersController extends Controller
                 'role' => $request->role,
                 'status' => $request->status
             ]);
-            return redirect()->route('usersList')->with('success', 'User Updated successfully!');
+            return redirect()->route('user.index')->with('success', 'User Updated successfully!');
         } catch (\Throwable $th) {
             Log::info($th->getMessage());
-            return redirect()->route('usersList')->with('error', $th->getMessage());
+            return redirect()->route('user.index')->with('error', $th->getMessage());
         }
     }
 }

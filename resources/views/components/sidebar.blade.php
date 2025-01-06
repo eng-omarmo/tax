@@ -85,14 +85,14 @@
                     </a>
                     <ul class="sidebar-submenu">
                         <li>
-                            <a href="{{ route('usersList') }}"><i
+                            <a href="{{ route('user.index') }}"><i
                                     class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Users List</a>
                         </li>
                         {{-- <li>
                         <a  href="{{ route('usersGrid') }}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Users Grid</a>
                     </li> --}}
                         <li>
-                            <a href="{{ route('addUser') }}"><i
+                            <a href="{{ route('user.create') }}"><i
                                     class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add User</a>
                         </li>
                         {{-- <li>

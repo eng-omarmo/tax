@@ -332,9 +332,9 @@ Route::prefix('table')->group(function () {
 // Users
 Route::prefix('users')->middleware(['auth.admin'])->group(function () {
     Route::controller(UsersController::class)->group(function () {
-        Route::get('/add-user', 'addUser')->name('addUser');
+        Route::get('/add-user', 'create')->name('user.create');
         Route::get('/users-grid', 'usersGrid')->name('usersGrid');
-        Route::get('/users-list', 'usersList')->name('usersList');
+        Route::get('/users-list', 'index')->name('user.index');
         Route::get('/users-edit/{id}', 'edit')->name('user.edit');
         Route::get('/users-delete/{id}', 'delete')->name('user.delete');
         Route::put('/users-update/{id}', 'update')->name('user.update');
