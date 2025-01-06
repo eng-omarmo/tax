@@ -30,7 +30,7 @@ class PropertyFactory extends Factory
             'yearly_tax_fee' => $this->faker->numberBetween(2000, 12000),
             'latitude' => $this->faker->latitude,
             'longitude' => $this->faker->longitude,
-            'dalal_company_name' => $this->faker->company,
+       
             'monitoring_status' => $this->faker->randomElement(['Pending', 'Approved']),
             'status' => $this->faker->randomElement(['Active', 'Inactive']),
             'created_at' => now(),
