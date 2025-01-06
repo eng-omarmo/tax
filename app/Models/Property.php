@@ -50,4 +50,29 @@ class Property extends Model
     {
         return $this->hasMany(Transaction::class);
     }
+
+    public static function calculateTax($houseType, $monthlyRent)
+    {
+        $message='';
+
+        $taxRate = TaxRate::where('tax_type', $houseType)->first();
+
+        if (!$taxRate) {
+            $message = 'Tax rate not found for house type: ' . $houseType;
+
+        }
+
+        $monthlyTax = $monthlyRent * ($taxRate->rate / 100);
+        $quarterlyTax = $monthlyTax * 3;
+        $yearlyTax = $monthlyTax * 12;
+
+        $data = [
+            'quarterly_tax' => $quarterlyTax,
+            'yearly_tax' => $yearlyTax,
+            'message' => $message
+
+        ];
+
+        return $data;
+    }
 }

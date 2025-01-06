@@ -202,38 +202,6 @@
 
                                     </div>
 
-                                    <div class="col-md-6 mb-20">
-                                        <label for="quarterly_tax_fee"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Quarterly Tax Fee
-                                        </label>
-                                        <input type="number" class="form-control radius-8" id="quarterly_tax_fee"
-                                            name="quarterly_tax_fee" placeholder="Enter house rent"
-                                            value="{{ old('quarterly_tax_fee') }}">
-
-                                    </div>
-
-                                    <div class="col-md-6 mb-20">
-                                        <label for="yearly_tax_fee"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Yearly Tax Fee
-                                        </label>
-                                        <input type="number" class="form-control radius-8" id="yearly_tax_fee"
-                                            name="yearly_tax_fee" placeholder="Enter house rent"
-                                            value="{{ old('yearly_tax_fee') }}">
-
-                                    </div>
-
-                                    <div class="col-md-6 mb-20">
-                                        <label for="dalal_company_name"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Dalal Company Name
-                                        </label>
-                                        <input type="text" class="form-control radius-8" id="dalal_company_name"
-                                            name="dalal_company_name"placeholder="Enter house rent"
-                                            value="{{ old('dalal_company_name') }}">
-
-                                    </div>
 
 
                                     <div class="col-md-6 mb-20">

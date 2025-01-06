@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Property;
 use App\Models\Tax;
+use App\Models\TaxRate;
 use Illuminate\Http\Request;
 
 class taxController extends Controller
@@ -19,7 +20,7 @@ class taxController extends Controller
             $search = request('search');
             $query->whereHas('property', function ($q) use ($search) {
                 $q->where('property_name', 'like', "%{$search}%")
-                  ->orWhere('property_phone', 'like', "%{$search}%");
+                    ->orWhere('property_phone', 'like', "%{$search}%");
             });
         }
 
@@ -80,7 +81,7 @@ class taxController extends Controller
                 'property_id' => $request->property_id,
                 'tax_amount' => $request->tax_amount,
                 'due_date' => $request->due_date,
-                'tax_code' => 'T' . rand(1000, 9999).rand(1000, 9999),
+                'tax_code' => 'T' . rand(1000, 9999) . rand(1000, 9999),
                 'status' => 'Pending',
             ]);
 
@@ -126,4 +127,6 @@ class taxController extends Controller
 
         return view('tax.create', compact('property'));
     }
+
+    
 }

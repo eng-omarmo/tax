@@ -100,7 +100,7 @@ class propertyController extends Controller
             return  redirect()->route('property.index')->with('success', 'Property created successfully.');
         } catch (Exception $e) {
             Log::error($e);
-            return redirect()->back()->with('error', 'Failed to create property.'. $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to create property.' . $e->getMessage());
         }
     }
 
@@ -195,22 +195,32 @@ class propertyController extends Controller
                 'house_type' => 'nullable|string|max:255',
                 'latitude' => 'required',
                 'longitude' => 'required',
-
                 'designation' => 'nullable|string|max:255',
                 'monitoring_status' => 'required|in:Pending,Approved',
                 'status' => 'required|in:Active,Inactive',
                 'district_id' => 'required|exists:districts,id',
                 'house_rent' => 'nullable|numeric',
-                'quarterly_tax_fee' => 'nullable|numeric',
-                'yearly_tax_fee' => 'nullable|numeric',
+
             ]);
 
-            $checkProperty = Property::where('property_name', $request->property_name)
+
+
+            $properties = Property::where('property_name', $request->property_name)
                 ->where('property_phone', $request->property_phone)
                 ->first();
 
-            if ($checkProperty) {
+            if ($properties) {
                 return back()->with('error', 'Property name and phone already exists.');
+            }
+
+            $data = Property::calculateTax($request->house_type, $request->house_rent);
+
+
+            if($data['message'] !== ''){
+                return back()->with('error', $data['message']);
+            }
+            if ($data['quarterly_tax'] < 0 || $data['yearly_tax'] < 0) {
+                return back()->with('error', 'Tax fee for the property cannot be negative.');
             }
 
             $property =  Property::create([
@@ -228,8 +238,8 @@ class propertyController extends Controller
                 'status' => $request->status,
                 'district_id' => $request->district_id,
                 'house_rent' => $request->house_rent,
-                'quarterly_tax_fee' => $request->quarterly_tax_fee,
-                'yearly_tax_fee' => $request->yearly_tax_fee,
+                'quarterly_tax_fee' => $data['quarterly_tax'],
+                'yearly_tax_fee' => $data['yearly_tax'],
                 'landlord_id' => $request->lanlord_id
             ]);
             $this->recordTaxFee($property);
@@ -311,7 +321,7 @@ class propertyController extends Controller
                 'monitoring_status' => $request->monitoring_status,
                 'status' => $request->status,
             ]);
-            if(auth()->user()->role == 'Admin'){
+            if (auth()->user()->role == 'Admin') {
                 return redirect()->route('property.index')->with('success', 'Property updated successfully.');
             }
             return redirect()->route('monitor.index')->with('success', 'Property updated successfully.');
