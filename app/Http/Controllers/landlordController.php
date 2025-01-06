@@ -16,7 +16,7 @@ class landlordController extends Controller
         if (request()->has('search') && request()->search) {
             $query->where('name', 'like', '%' . request()->search . '%');
         }
-        $landlords = $query->paginate(10);
+        $landlords = $query->paginate(5);
         return view('landlord.index', [
             'landlords' => $landlords
         ]);

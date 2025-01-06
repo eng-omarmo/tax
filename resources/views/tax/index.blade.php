@@ -96,12 +96,56 @@
             </table>
         </div>
 
-        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">
+
+
+        <div class="d-flex align-items-center  bg-base px-24 py-12 justify-content-between flex-wrap gap-2 mt-24">
             <span>Showing {{ $taxes->firstItem() }} to {{ $taxes->lastItem() }} of {{ $taxes->total() }} entries</span>
             <div class="pagination-container">
-                {{ $taxes->links() }}
+                <div class="card-body p-24">
+                    <ul class="pagination d-flex flex-wrap bg-base align-items-center gap-2 justify-content-center">
+                        @if ($taxes->onFirstPage())
+                            <li class="page-item disabled">
+                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="javascript:void(0)">First</a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="javascript:void(0)">Previous</a>
+                            </li>
+                        @else
+                            <li class="page-item">
+                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $taxes->url(1) }}">First</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $taxes->previousPageUrl() }}">Previous</a>
+                            </li>
+                        @endif
+
+                        @foreach ($taxes->getUrlRange(1, $taxes->lastPage()) as $page => $url)
+                            <li class="page-item {{ $taxes->currentPage() == $page ? 'active' : '' }}">
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px w-48-px {{ $taxes->currentPage() == $page ? 'bg-primary-600 text-white' : '' }}" href="{{ $url }}">{{ $page }}</a>
+                            </li>
+                        @endforeach
+
+                        @if ($taxes->hasMorePages())
+                            <li class="page-item">
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $taxes->nextPageUrl() }}">Next</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $taxes->url($taxes->lastPage()) }}">Last</a>
+                            </li>
+                        @else
+                            <li class="page-item disabled">
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px " href="javascript:void(0)">Next</a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="javascript:void(0)">Last</a>
+                            </li>
+                        @endif
+                    </ul>
+                </div>
             </div>
         </div>
+
+    </div>
     </div>
 
     <script>

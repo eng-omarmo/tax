@@ -180,10 +180,51 @@
             </table>
         </div>
 
-        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">
+
+        <div class="d-flex align-items-center  bg-base px-24 py-12 justify-content-between flex-wrap gap-2 mt-24">
             <span>Showing {{ $rents->firstItem() }} to {{ $rents->lastItem() }} of {{ $rents->total() }} entries</span>
             <div class="pagination-container">
-                {{ $rents->links() }}
+                <div class="card-body p-24">
+                    <ul class="pagination d-flex flex-wrap bg-base align-items-center gap-2 justify-content-center">
+                        @if ($rents->onFirstPage())
+                            <li class="page-item disabled">
+                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="javascript:void(0)">First</a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="javascript:void(0)">Previous</a>
+                            </li>
+                        @else
+                            <li class="page-item">
+                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $rents->url(1) }}">First</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $rents->previousPageUrl() }}">Previous</a>
+                            </li>
+                        @endif
+
+                        @foreach ($rents->getUrlRange(1, $rents->lastPage()) as $page => $url)
+                            <li class="page-item {{ $rents->currentPage() == $page ? 'active' : '' }}">
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px w-48-px {{ $rents->currentPage() == $page ? 'bg-primary-600 text-white' : '' }}" href="{{ $url }}">{{ $page }}</a>
+                            </li>
+                        @endforeach
+
+                        @if ($rents->hasMorePages())
+                            <li class="page-item">
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $rents->nextPageUrl() }}">Next</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $rents->url($rents->lastPage()) }}">Last</a>
+                            </li>
+                        @else
+                            <li class="page-item disabled">
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px " href="javascript:void(0)">Next</a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="javascript:void(0)">Last</a>
+                            </li>
+                        @endif
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
