@@ -341,8 +341,9 @@
             @if (auth()->user()->role == 'Admin' || auth()->user()->role == 'Tax officer')
                 <li class="dropdown">
                     <a href="javascript:void(0)">
-                        <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
+                        <iconify-icon icon="bi:people" class="menu-icon"></iconify-icon>
                         <span>Monitoring</span>
+
                     </a>
                     <ul class="sidebar-submenu">
                         <li>
@@ -366,7 +367,8 @@
             @if (auth()->user()->role == 'Admin' || auth()->user()->role == 'Tax officer')
                 <li class="dropdown">
                     <a href="javascript:void(0)">
-                        <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
+                        <iconify-icon icon="mdi:percent" class="menu-icon"></iconify-icon>
+
                         <span>Tax Rates</span>
                     </a>
                     <ul class="sidebar-submenu">
@@ -392,7 +394,8 @@
             @if (auth()->user()->role == 'Admin' || auth()->user()->role == 'Tax officer')
                 <li class="dropdown">
                     <a href="javascript:void(0)">
-                        <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
+                        <iconify-icon icon="mdi:file-document-outline" class="menu-icon"></iconify-icon>
+
                         <span>Invoice </span>
                     </a>
                     <ul class="sidebar-submenu">
