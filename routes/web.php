@@ -197,7 +197,6 @@ Route::prefix('monitor')->middleware(['auth.admin'])->group(function () {
     Route::controller(monitoringContoller::class)->group(function () {
         Route::get('/index', 'index')->name('monitor.index');
         Route::post('/approve', 'approve')->name('monitor.approve');
-
     });
 });
 
@@ -231,7 +230,6 @@ Route::prefix('tax')->middleware(['auth.admin'])->group(function () {
             Route::put('/update/{taxRate}', 'update')->name('tax.rate.update');
             Route::get('/delete/{taxRate}', 'destroy')->name('tax.rate.delete');
         });
-
     });
     Route::controller(taxController::class)->group(function () {
         Route::get('/index', 'index')->name('tax.index');
@@ -298,8 +296,6 @@ Route::prefix('dashboard')->middleware(['auth.admin'])->group(function () {
         Route::get('/wallet', 'wallet')->name('wallet');
     });
 });
-
-
 
 
 // Forms

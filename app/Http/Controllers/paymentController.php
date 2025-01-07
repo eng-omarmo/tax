@@ -265,6 +265,7 @@ class paymentController extends Controller
                 'tenant_id' => $rent->tenant_id ?? null,
                 'property_id' => $rent->property_id ?? null,
                 'transaction_type' => 'Rent',
+                'unit_id' => $rent->unit_id ?? null,
                 'amount' => $dueAmount,
                 'description' => 'Tenant Paid Rent',
                 'credit' => $paidAmount,
@@ -282,6 +283,7 @@ class paymentController extends Controller
             return Transaction::create([
                 'tenant_id' => $tax->property->tenant_id ?? null,
                 'property_id' => $tax->property_id ?? null,
+                'unit_id' => null,
                 'transaction_type' => 'Tax',
                 'amount' => $tax->tax_amount,
                 'description' => 'Paid Tax Fee',
@@ -326,8 +328,6 @@ class paymentController extends Controller
         if (str_starts_with($phone, '61')) {
             $provider = 'Hormuud';
         }
-
-
         // Proceed to create the payment detail
         return Payment::createPaymentDetail([
             'payment_id' => $payment->id,

@@ -48,7 +48,6 @@ class rentController extends Controller
                 ->where('transaction_type', 'Rent')
                 ->sum('credit');
 
-
             $rent->total_rent_amount =  $this->calculateMonthsBetween($rent->rent_start_date, $rent->rent_end_date) * $rent->rent_amount;
         }
 
@@ -80,12 +79,12 @@ class rentController extends Controller
                 'status' => 'required',
             ]);
             DB::beginTransaction();
+
             $rent_code = 'R' . rand(1000, 9999) . rand(1000, 9999);
             $rent = Rent::create([
                 'tenant_id' => $request->tenant_id,
                 'unit_id' => $request->unit_id,
                 'rent_code' => $rent_code,
-
                 'property_id' => $request->property_id,
                 'rent_amount' => $request->rent_amount,
                 'rent_start_date' => $request->rent_start_date,
@@ -94,6 +93,7 @@ class rentController extends Controller
 
             ]);
             $rent->rent_amount = $this->calculateMonthsBetween($rent->rent_start_date, $rent->rent_end_date) * $rent->rent_amount;
+            $rent->unit->update(['is_availabe' => 0]);
             $this->createTransaction($rent);
             DB::commit();
             return redirect()->route('rent.index')->with('success', 'Rent created successfully.');
@@ -114,9 +114,13 @@ class rentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Rent $rent)
+    public function edit(Request $request, $rent)
+
     {
-        //
+        $tenants = Tenant::with('user')->where('registered_by', auth()->user()->id)->get();
+        $rent = Rent::where('id', $rent)->first();
+
+        return view('rent.edit', compact('rent', 'tenants'));
     }
 
     /**
@@ -132,7 +136,7 @@ class rentController extends Controller
      */
     public function destroy($rent)
     {
-        $rent = Rent::find($rent);
+        $rent = Rent::with('property','unit')->find($rent);
         $rent->delete();
         return redirect()->route('rent.index')->with('success', 'Rent deleted successfully.');
     }

@@ -127,7 +127,30 @@
                                             class="bg-gray-100 border border-gray-300 p-4 rounded-md shadow-sm text-sm text-gray-800">
                                             {{ $rent->property->property_phone }}
                                         </div>
+
+
+                                        <label for="property_name"
+                                        class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                        Property unit type <span class="text-danger-600">*</span>
+                                    </label>
+                                    <div
+                                        class="bg-gray-100 border border-gray-300 p-4 rounded-md shadow-sm text-sm text-gray-800">
+                                        {{ $rent->unit->unit_type}}
                                     </div>
+
+                                    <label for="property_name"
+                                    class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                    Property unit Area <span class="text-danger-600">*</span>
+                                </label>
+                                <div
+                                    class="bg-gray-100 border border-gray-300 p-4 rounded-md shadow-sm text-sm text-gray-800">
+                                    {{ $rent->unit->unit_area . '  Sqft' }}
+                                </div>
+
+                                    </div>
+
+
+
                                     {{-- @if (auth()->user()->role == 'Admin')
                                     <div class="mb-20">
                                         <label for="description"

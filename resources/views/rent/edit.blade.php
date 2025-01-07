@@ -1,12 +1,12 @@
 @extends('layout.layout')
 
 @php
-    $title = 'Edit Tenant';
-    $subTitle = 'Edit tenant details';
+    $title = 'Edit Rent';
+    $subTitle = 'Edit rent details';
 @endphp
 
 @section('content')
-    <!-- Tenant Edit Form -->
+    <!-- Rent Edit Form -->
     <div class="card h-100 p-0 radius-12">
         <div class="card-body p-24">
             <div class="row justify-content-center">
@@ -30,39 +30,86 @@
                                 </div>
                             @endif
 
-                            <!-- Tenant Edit Form -->
-                            <form action="{{ route('tenant.update', $tenant->id) }}" method="POST">
+                            <!-- Rent Edit Form -->
+                            <form action="{{ route('rent.update', $rent->id) }}" method="POST">
                                 @csrf
-                                @method('PUT') <!-- Indicating this is an update request -->
+                                @method('PUT')
 
-                                <!-- Name -->
                                 <div class="mb-20">
-                                    <label for="name" class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                        Full Name <span class="text-danger-600">*</span>
+                                    <label for="property_id" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                        Property ID <span class="text-danger-600">*</span>
                                     </label>
-                                    <input type="text" class="form-control radius-8" id="name"
-                                        name="name" placeholder="Enter Full Name"
-                                        value="{{ old('name', $tenant->user->name) }}" required>
+                                    <input type="number" class="form-control radius-8" id="property_id"
+                                        name="property_id" placeholder="Enter Property ID"
+                                        value="{{$rent->property->property_name) }}" readonly required>
                                 </div>
 
-                                <!-- Email -->
+
                                 <div class="mb-20">
-                                    <label for="email" class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                        Email Address <span class="text-danger-600">*</span>
+                                    <label for="property_id" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                        Property unit <span class="text-danger-600">*</span>
                                     </label>
-                                    <input type="email" class="form-control radius-8" id="email"
-                                        name="email" placeholder="Enter Email Address"
-                                        value="{{ old('email', $tenant->user->email) }}" required>
+                                    <input type="number" class="form-control radius-8" id="property_id"
+                                        name="property_id" placeholder="Enter Property ID"
+                                        value="{{ $rent->unit->unit_type) }}" readonly required>
+                                </div>
+                                <div class="mb-20">
+                                    <label for="tenant_id" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                        Tenant ID <span class="text-danger-600">*</span>
+                                    </label>
+                                    <input type="number" class="form-control radius-8" id="tenant_id"
+                                        name="tenant_id" placeholder="Enter Tenant ID"
+                                        value="{{ old('tenant_id', $rent->tenant_id) }}" required>
                                 </div>
 
-                                <!-- Phone -->
+                                <!-- Unit ID -->
                                 <div class="mb-20">
-                                    <label for="phone" class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                        Phone Number <span class="text-danger-600">*</span>
+                                    <label for="unit_id" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                        Unit ID <span class="text-danger-600">*</span>
                                     </label>
-                                    <input type="text" class="form-control radius-8" id="phone"
-                                        name="phone" placeholder="Enter Phone Number"
-                                        value="{{ old('phone', $tenant->user->phone) }}" required>
+                                    <input type="number" class="form-control radius-8" id="unit_id"
+                                        name="unit_id" placeholder="Enter Unit ID"
+                                        value="{{ old('unit_id', $rent->unit_id) }}" required>
+                                </div>
+
+                                <!-- Rent Code -->
+                                <div class="mb-20">
+                                    <label for="rent_code" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                        Rent Code <span class="text-danger-600">*</span>
+                                    </label>
+                                    <input type="text" class="form-control radius-8" id="rent_code"
+                                        name="rent_code" placeholder="Enter Rent Code"
+                                        value="{{ old('rent_code', $rent->rent_code) }}" required>
+                                </div>
+
+                                <!-- Rent Amount -->
+                                <div class="mb-20">
+                                    <label for="rent_amount" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                        Rent Amount <span class="text-danger-600">*</span>
+                                    </label>
+                                    <input type="number" class="form-control radius-8" id="rent_amount"
+                                        name="rent_amount" placeholder="Enter Rent Amount"
+                                        value="{{ old('rent_amount', $rent->rent_amount) }}" required>
+                                </div>
+
+                                <!-- Rent Start Date -->
+                                <div class="mb-20">
+                                    <label for="rent_start_date" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                        Rent Start Date <span class="text-danger-600">*</span>
+                                    </label>
+                                    <input type="date" class="form-control radius-8" id="rent_start_date"
+                                        name="rent_start_date"
+                                        value="{{ old('rent_start_date', $rent->rent_start_date) }}" required>
+                                </div>
+
+                                <!-- Rent End Date -->
+                                <div class="mb-20">
+                                    <label for="rent_end_date" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                        Rent End Date <span class="text-danger-600">*</span>
+                                    </label>
+                                    <input type="date" class="form-control radius-8" id="rent_end_date"
+                                        name="rent_end_date"
+                                        value="{{ old('rent_end_date', $rent->rent_end_date) }}" required>
                                 </div>
 
                                 <!-- Status -->
@@ -71,18 +118,18 @@
                                         Status <span class="text-danger-600">*</span>
                                     </label>
                                     <select class="form-control radius-8 form-select" id="status" name="status" required>
-                                        <option value="Active" {{ old('status', $tenant->status) == 'Active' ? 'selected' : '' }}>Active</option>
-                                        <option value="Inactive" {{ old('status', $tenant->status) == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                                        <option value="Active" {{ old('status', $rent->status) == 'Active' ? 'selected' : '' }}>Active</option>
+                                        <option value="Inactive" {{ old('status', $rent->status) == 'Inactive' ? 'selected' : '' }}>Inactive</option>
                                     </select>
                                 </div>
 
                                 <!-- Submit Button -->
                                 <div class="d-flex align-items-center justify-content-center gap-3">
-                                    <a href="{{ route('tenant.index') }}" class="border border-danger-600 bg-hover-danger-200 text-danger-600 text-md px-56 py-11 radius-8">
+                                    <a href="{{ route('rent.index') }}" class="border border-danger-600 bg-hover-danger-200 text-danger-600 text-md px-56 py-11 radius-8">
                                         Cancel
                                     </a>
                                     <button type="submit" class="btn btn-primary border border-primary-600 text-md px-56 py-12 radius-8">
-                                        Update Tenant
+                                        Update Rent
                                     </button>
                                 </div>
                             </form>
