@@ -7,7 +7,7 @@ use App\Models\Rent;
 use App\Models\Tenant;
 use App\Models\Property;
 use App\Models\Transaction;
-
+use App\Models\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -21,7 +21,7 @@ class rentController extends Controller
     public function index(Request $request)
     {
 
-        $query = Rent::with('property', 'tenant')
+        $query = Rent::with('property', 'tenant', 'unit')
             ->whereHas('tenant', function ($query) {
                 $query->where('registered_by', auth()->user()->id);
             });
@@ -38,11 +38,13 @@ class rentController extends Controller
             $rent->balance =
                 Transaction::where('tenant_id', $rent->tenant_id)
                 ->where('property_id', $rent->property_id)
+                ->where('unit_id', $rent->unit_id)
                 ->where('transaction_type', 'Rent')
                 ->sum('debit')
                 -
                 Transaction::where('tenant_id', $rent->tenant_id)
                 ->where('property_id', $rent->property_id)
+                ->where('unit_id', $rent->unit_id)
                 ->where('transaction_type', 'Rent')
                 ->sum('credit');
 
@@ -71,16 +73,19 @@ class rentController extends Controller
             $request->validate([
                 'tenant_id' => 'required|exists:tenants,id',
                 'property_id' => 'required|exists:properties,id',
+                'unit_id' => 'required|exists:units,id',
                 'rent_amount' => 'required|numeric|min:0',
                 'rent_start_date' => 'required|date',
                 'rent_end_date' => 'required|date',
                 'status' => 'required',
             ]);
             DB::beginTransaction();
-            $rent_code = 'R' . rand(1000, 9999).rand(1000, 9999);
+            $rent_code = 'R' . rand(1000, 9999) . rand(1000, 9999);
             $rent = Rent::create([
                 'tenant_id' => $request->tenant_id,
+                'unit_id' => $request->unit_id,
                 'rent_code' => $rent_code,
+
                 'property_id' => $request->property_id,
                 'rent_amount' => $request->rent_amount,
                 'rent_start_date' => $request->rent_start_date,
@@ -153,7 +158,7 @@ class rentController extends Controller
 
 
         if ($start->greaterThan($end)) {
-            throw new \InvalidArgumentException("Start date cannot be after the end date.");
+            return redirect()->route('rent.index')->with('error', 'Start date is greater than end date');
         }
 
         $months = $start->diffInMonths($end) + 1;
@@ -164,11 +169,11 @@ class rentController extends Controller
     {
 
         $request->validate([
-            'search_property' => 'required',
+            'search_unit_number' => 'required',
         ]);
 
-        $property = Property::where('property_phone', $request->search_property)
-            ->select('id', 'property_name', 'property_phone', 'house_rent')->first();
+        $unit = Unit::with('property')->where('unit_number', $request->search_unit_number)->first();
+
         $tenants = Tenant::with('user')
             ->where(
                 'registered_by',
@@ -177,12 +182,12 @@ class rentController extends Controller
             )
             ->get();
 
-        if (!$property || !$tenants) {
-            return back()->with('error', 'property not found');
+        if (!$unit || !$tenants) {
+            return back()->with('error', 'unit property not found');
         }
 
         return view('rent.create', [
-            'property' => $property,
+            'unit' => $unit,
             'tenants' => $tenants
         ]);
     }
@@ -194,6 +199,7 @@ class rentController extends Controller
             return Transaction::create([
                 'tenant_id' => $rent->tenant_id,
                 'property_id' => $rent->property_id,
+                'unit_id' => $rent->unit_id,
                 'transaction_type' => 'Rent',
                 'amount' => $rent->rent_amount,
                 'description' => 'Tenant Rent',
@@ -222,7 +228,4 @@ class rentController extends Controller
             Log::info($th->getMessage());
         }
     }
-
-
-
 }

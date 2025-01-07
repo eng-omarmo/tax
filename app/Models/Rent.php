@@ -14,6 +14,7 @@ class Rent extends Model
         'rent_start_date',
         'rent_end_date',
         'status',
+        'unit_id',
         'rent_code',
     ];
 
@@ -25,5 +26,9 @@ class Rent extends Model
     public function tenant()
     {
         return $this->belongsTo(Tenant::class);
+    }
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
     }
 }

@@ -20,6 +20,7 @@ class Transaction extends Model
         'description',
         'property_id',
         'status',
+        'unit_id'
     ];
 
     public function tenant()
@@ -29,5 +30,9 @@ class Transaction extends Model
     public function property()
     {
         return $this->belongsTo(Property::class);
+    }
+    public function units ()
+    {
+        return $this->belongsTo(Unit::class);
     }
 }

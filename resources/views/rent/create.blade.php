@@ -7,7 +7,7 @@
 
 @section('content')
 
-    @if (empty($property))
+    @if (empty($unit))
         <!-- Search Form -->
         <div class="card h-100 p-0 radius-12 mb-4">
             <div class="card-body p-24">
@@ -15,9 +15,9 @@
                     <div class="col-xxl-6 col-xl-8 col-lg-10">
                         <form action="{{ route('rent.property.search') }}" method="GET" class="d-flex align-items-center">
                             <div class="d-flex flex-grow-1 align-items-center">
-                                <input type="text" class="form-control radius-8 me-2 flex-grow-1" id="search_property"
-                                    name="search_property" placeholder="Enter Property Phone Number"
-                                    value="{{ old('search_property') }}" required>
+                                <input type="text" class="form-control radius-8 me-2 flex-grow-1" id="search_unit_number"
+                                    name="search_unit_number" placeholder="Enter Property Phone Number"
+                                    value="{{ old('search_unit_number') }}" required>
                             </div>
                             <button type="submit"
                                 class="btn btn-primary text-sm btn-medium px-4 py-2 d-flex align-items-center ms-2">
@@ -55,7 +55,8 @@
 
                                 <form action="{{ route('rent.store') }}" method="POST">
                                     @csrf
-                                    <input type="hidden" name="property_id" value="{{ $property->id }}">
+                                    <input type="hidden" name="unit_id" value="{{ $unit->id }}">
+                                    <input type="hidden" name="property_id" value="{{ $unit->property->id }}">
                                     <div class="row">
                                         <div class="col-md-6 mb-20">
                                             <label for="property_name"
@@ -63,7 +64,7 @@
                                                 Property Name
                                             </label>
                                             <input type="text" class="form-control radius-8" id="property_name"
-                                                name="property_name" value="{{ $property->property_name }}" readonly>
+                                                name="property_name" value="{{ $unit->property->property_name }}" readonly>
                                         </div>
                                         <div class="col-md-6 mb-20">
                                             <label for="property_phone"
@@ -71,7 +72,7 @@
                                                 Property Phone
                                             </label>
                                             <input type="text" class="form-control radius-8" id="property_phone"
-                                                name="property_phone" value="{{ $property->property_phone }}" readonly>
+                                                name="property_phone" value="{{ $unit->property->property_phone }}" readonly>
                                         </div>
 
                                         <!-- Rent Amount -->
@@ -81,7 +82,7 @@
                                                 Rent Amount <span class="text-danger-600">*</span>
                                             </label>
                                             <input type="text" class="form-control radius-8" id="rent_amount"
-                                                name="rent_amount" value="{{ $property->house_rent }}" readonly>
+                                                name="rent_amount" value="{{ $unit->unit_price }}" readonly>
                                         </div>
 
                                     </div>

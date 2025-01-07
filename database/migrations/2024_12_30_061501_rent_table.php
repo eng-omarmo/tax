@@ -10,6 +10,7 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('property_id');
             $table->unsignedBigInteger('tenant_id');
+            $table->unsignedBigInteger('unit_id');
             $table->string('rent_code');
             $table->decimal('rent_amount', 10, 2);
             $table->date('rent_start_date');
@@ -18,6 +19,7 @@ return new class extends Migration {
             $table->timestamps();
             $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
             $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
+            $table->foreign('unit_id')->references('id')->on('units')->onDelete('cascade');
 
             $table->index(['property_id', 'tenant_id']);
         });

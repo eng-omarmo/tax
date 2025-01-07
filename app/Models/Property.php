@@ -51,6 +51,10 @@ class Property extends Model
         return $this->hasMany(Transaction::class);
     }
 
+    public function units()
+    {
+        return $this->hasMany(Unit::class);
+    }
     public static function calculateTax($houseType, $monthlyRent)
     {
         $message = '';

@@ -268,7 +268,27 @@
                     </ul>
 
                 </li>
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <i class="ri-user-fill text-info-main text-xl"></i>
+                        <span>Property Units</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="{{ route('unit.index') }}"><i
+                                    class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                                Unit List</a>
+                        </li>
 
+                        <li>
+                            <a href="{{ route('unit.create') }}"><i
+                                    class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
+                                Unit</a>
+                        </li>
+
+                    </ul>
+
+                </li>
 
                 <li class="dropdown">
                     <a href="javascript:void(0)">

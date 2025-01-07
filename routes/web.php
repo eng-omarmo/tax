@@ -6,6 +6,7 @@ use App\Http\Controllers\taxController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\rentController;
+use App\Http\Controllers\unitController;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\FormsController;
 use App\Http\Controllers\TableController;
@@ -67,7 +68,6 @@ Route::controller(rentController::class)->prefix('rent')->middleware(['auth.admi
     Route::get('/report', 'report')->name('rent.report');
     Route::get('/report-details', 'reportDetails')->name('rent.report.fech');
     Route::get('/rent/report/pdf', 'exportPdf')->name('rent.report.print');
-
     Route::get('/rent/property/search', 'search')->name('rent.property.search');
 });
 
@@ -201,6 +201,18 @@ Route::prefix('monitor')->middleware(['auth.admin'])->group(function () {
     });
 });
 
+Route::prefix('unit')->middleware(['auth.admin'])->group(function () {
+    Route::controller(unitController::class)->group(function () {
+        Route::get('/index', 'index')->name('unit.index');
+        Route::get('/create', 'create')->name('unit.create');
+        Route::post('/store', 'store')->name('unit.store');
+        Route::get('/show/{unit}', 'show')->name('unit.show');
+        Route::get('/edit/{unit}', 'edit')->name('unit.edit');
+        Route::put('/update/{unit}', 'update')->name('unit.update');
+        Route::get('/delete/{unit}', 'destroy')->name('unit.delete');
+        Route::get('/search', 'search')->name('unit.property.search');
+    });
+});
 Route::prefix('invoice')->middleware(['auth.admin'])->group(function () {
     Route::controller(invoiceController::class)->group(function () {
         Route::get('/index', 'index')->name('invoice.index');
