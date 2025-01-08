@@ -224,6 +224,11 @@
                                     class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
                                 Property</a>
                         </li>
+                        <li>
+                            <a href="{{ route('property.report') }}"><i
+                                    class="ri-circle-fill circle-icon text-info-main w-auto"></i> Property
+                                Report</a>
+                        </li>
                     @endif
                     @if (Auth::user()->role === 'lanlord')
                         <li>
@@ -237,11 +242,7 @@
                             Property</a>
                     </li> --}}
 
-                    <li>
-                        <a href="{{ route('property.report') }}"><i
-                                class="ri-circle-fill circle-icon text-info-main w-auto"></i> Property
-                            Report</a>
-                    </li>
+
 
                 </ul>
 

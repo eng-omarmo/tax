@@ -271,11 +271,8 @@ class propertyController extends Controller
     }
 
     public function show($id)
-    {
-        $property = Property::findorFail($id);
-        $districts = District::select('id', 'name')->get();
-
-        return view('property.edit', compact('property', 'districts'));
+    { $property = Property::findorFail($id);
+        return view('property.show', compact('property'));
     }
     public function update(Request $request, $property)
     {

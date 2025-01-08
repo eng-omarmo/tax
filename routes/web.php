@@ -46,6 +46,7 @@ Route::controller(PropertyController::class)->prefix('property')->middleware(['a
     Route::get('/create', 'create')->name('property.create');
     Route::post('/store', 'store')->name('property.store');
     Route::get('/edit/{id}', 'edit')->name('property.edit');
+    Route::get('/show/{id}', 'show')->name('property.show');
     Route::put('/update/{id}', 'update')->name('property.update');
     Route::get('/delete/{id}', 'destroy')->name('property.delete');
     Route::get('/report', 'report')->name('property.report');

@@ -11,6 +11,7 @@ class Rent extends Model
         'tenant_id',
         'property_id',
         'rent_amount',
+        'rent_total_amount',
         'rent_start_date',
         'rent_end_date',
         'status',

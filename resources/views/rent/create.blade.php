@@ -9,14 +9,20 @@
 
     @if (empty($unit))
         <!-- Search Form -->
+        @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
         <div class="card h-100 p-0 radius-12 mb-4">
             <div class="card-body p-24">
                 <div class="row justify-content-center">
                     <div class="col-xxl-6 col-xl-8 col-lg-10">
+
                         <form action="{{ route('rent.property.search') }}" method="GET" class="d-flex align-items-center">
                             <div class="d-flex flex-grow-1 align-items-center">
                                 <input type="text" class="form-control radius-8 me-2 flex-grow-1" id="search_unit_number"
-                                    name="search_unit_number" placeholder="Enter Property Phone Number"
+                                    name="search_unit_number" placeholder="Enter Property Unit Number"
                                     value="{{ old('search_unit_number') }}" required>
                             </div>
                             <button type="submit"
@@ -29,6 +35,7 @@
                 </div>
             </div>
         </div>
+
     @else
         <!-- Rent Registration Form -->
         <div class="card h-100 p-0 radius-12">
@@ -37,22 +44,18 @@
                     <div class="col-xxl-6 col-xl-8 col-lg-10">
                         <div class="card border">
                             <div class="card-body">
-                                @if ($errors->any())
-                                    <div class="alert alert-danger">
-                                        <ul>
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                @endif
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
 
-                                @if (session('error'))
-                                    <div class="alert alert-danger">
-                                        {{ session('error') }}
-                                    </div>
-                                @endif
 
+                @if(session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
                                 <form action="{{ route('rent.store') }}" method="POST">
                                     @csrf
                                     <input type="hidden" name="unit_id" value="{{ $unit->id }}">

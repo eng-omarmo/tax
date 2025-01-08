@@ -61,10 +61,12 @@
                         <iconify-icon icon="ic:baseline-filter-alt-off" class="icon text-xl line-height-1"></iconify-icon>
                         Reset
                     </a>
-                    <a href="{{ auth()->user()->role == 'Admin' ? route('property.create') : route('property.create.landlord') }}  "  class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
+                    @if(Auth::user()->role == 'Admin')
+                    <a href="{{ route('property.create') }}"  class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
                         <iconify-icon icon="ic:baseline-plus" class="icon text-xl line-height-1"></iconify-icon>
                         Add Property
                     </a>
+                    @endif
 
                 </div>
             </div>
@@ -103,7 +105,10 @@
                         <th scope="col">Monitoring Status</th>
                         <th scope="col">Tax Balance</th>
                         <th scope="col">Status</th>
-                        <th scope="col" class="text-center">Action</th>
+
+                        <th scope="col">Action</th>
+                     
+
                     </tr>
                 </thead>
                 <tbody>
@@ -143,6 +148,7 @@
                                     {{ ucfirst($property->status) }}
                                 </span>
                             </td>
+                            @if(Auth::user()->role == 'Admin')
 
                             <td class="text-center">
                                 <div class="d-flex align-items-center gap-10 justify-content-center">
@@ -157,6 +163,16 @@
                                     </a>
                                 </div>
                             </td>
+                            @else
+                            <td class="text-center">
+                                <div class="d-flex align-items-center gap-10 justify-content-center">
+                                    <a href="{{ route('property.show', $property->id) }}"
+                                        class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
+                                        <iconify-icon icon="lucide:eye" class="menu-icon"></iconify-icon>
+                                    </a>
+                                </div>
+                            </td>
+                            @endif
                         </tr>
                     @endforeach
                 </tbody>

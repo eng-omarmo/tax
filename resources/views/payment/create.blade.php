@@ -179,7 +179,7 @@
                                             Payment Due <span class="text-danger-600">*</span>
                                         </label>
                                         <input type="number" step="0.01" class="form-control radius-8"
-                                            id="payment_amount" name="payment_amount" value ="{{ $rent->rent_amount }}"
+                                            id="payment_amount" name="payment_amount" value ="{{ $rent->rent_total_amount - $rent->total_paid }}" placeholder="Enter Payment Amount"
                                             readonly required>
                                     </div>
 

@@ -144,7 +144,7 @@
                                 <div class="d-flex align-items-center">
                                     <span
                                         class="text-md mb-0 fw-normal text-secondary-light">{{
-                                        number_format($rent->total_rent_amount, 2) ?? $rent->total_rent_amount }}</span>
+                                        number_format ($rent->rent_total_amount, 2) ?? $rent->rent_total_amount }}</span>
                                 </div>
                             </td>
 

@@ -13,6 +13,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('unit_id');
             $table->string('rent_code');
             $table->decimal('rent_amount', 10, 2);
+            $table->decimal('rent_total_amount', 10, 2);
             $table->date('rent_start_date');
             $table->date('rent_end_date')->nullable();
             $table->enum('status', ['active', 'terminated'])->default('active');

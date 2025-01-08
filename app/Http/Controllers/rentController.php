@@ -47,8 +47,6 @@ class rentController extends Controller
                 ->where('unit_id', $rent->unit_id)
                 ->where('transaction_type', 'Rent')
                 ->sum('credit');
-
-            $rent->total_rent_amount =  $this->calculateMonthsBetween($rent->rent_start_date, $rent->rent_end_date) * $rent->rent_amount;
         }
 
         return view('rent.index', compact('rents'));
@@ -89,11 +87,16 @@ class rentController extends Controller
                 'rent_amount' => $request->rent_amount,
                 'rent_start_date' => $request->rent_start_date,
                 'rent_end_date' => $request->rent_end_date,
+                'rent_total_amount' => $this->calculateRent($request->rent_start_date, $request->rent_end_date, $request->rent_amount),
                 'status' => $request->status
 
             ]);
-            $rent->rent_amount = $this->calculateMonthsBetween($rent->rent_start_date, $rent->rent_end_date) * $rent->rent_amount;
-            $rent->unit->update(['is_availabe' => 0]);
+            $rent->rent_amount = $this->calculateRent($rent->rent_start_date, $rent->rent_end_date, $rent->rent_amount);
+
+
+            if ($rent->status == 'active') {
+                Unit::where('id', $request->unit_id)->update(['is_available' => false]);
+            }
             $this->createTransaction($rent);
             DB::commit();
             return redirect()->route('rent.index')->with('success', 'Rent created successfully.');
@@ -136,7 +139,7 @@ class rentController extends Controller
      */
     public function destroy($rent)
     {
-        $rent = Rent::with('property','unit')->find($rent);
+        $rent = Rent::with('property', 'unit')->find($rent);
         $rent->delete();
         return redirect()->route('rent.index')->with('success', 'Rent deleted successfully.');
     }
@@ -154,21 +157,28 @@ class rentController extends Controller
     }
 
 
-    function calculateMonthsBetween($startDate, $endDate)
+    function calculateRent($startDate, $endDate, $monthlyRent)
     {
-
         $start = Carbon::parse($startDate);
         $end = Carbon::parse($endDate);
-
 
         if ($start->greaterThan($end)) {
             return redirect()->route('rent.index')->with('error', 'Start date is greater than end date');
         }
 
-        $months = $start->diffInMonths($end) + 1;
 
-        return $months;
+        $totalDays = $start->diffInDays($end) + 1;
+        $daysInMonth = $start->daysInMonth;
+
+
+        $dailyRent = $monthlyRent / $daysInMonth;
+
+
+        $totalRent = $dailyRent * $totalDays;
+
+        return $totalRent;
     }
+
     public function search(Request $request)
     {
 
@@ -176,7 +186,11 @@ class rentController extends Controller
             'search_unit_number' => 'required',
         ]);
 
+
         $unit = Unit::with('property')->where('unit_number', $request->search_unit_number)->first();
+        if ($unit && $unit->is_available == false) {
+            return back()->withInput()->with('error', 'unit is not available');
+        }
 
         $tenants = Tenant::with('user')
             ->where(

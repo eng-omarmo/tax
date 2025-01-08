@@ -28,6 +28,12 @@
 
 @if(!isset($lanlord) || empty($lanlord->id))
  <!-- Search Form -->
+
+ @if(session('error'))
+ <div class="alert alert-danger">
+     {{ session('error') }}
+ </div>
+@endif
  <div class="card h-100 p-0 radius-12 mb-4">
     <div class="card-body p-24">
         <div class="row justify-content-center">

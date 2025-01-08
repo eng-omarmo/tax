@@ -60,7 +60,10 @@
                         <th scope="col">Balance</th>
 
                         <th scope="col" class="text-center">Status</th>
+                        @if(auth()->user()->role == 'Admin')
                         <th scope="col" class="text-center">Action</th>
+                        @endif
+         
                     </tr>
                 </thead>
                 <tbody>
@@ -79,6 +82,7 @@
                                     {{ ucfirst($tax->status) }}
                                 </span>
                             </td>
+                            @if(auth()->user()->role == 'Admin')
                             <td class="text-center">
                                 <div class="d-flex align-items-center gap-10 justify-content-center">
                                     <a href="{{ route('tax.edit', $tax->id) }}" class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
@@ -90,6 +94,7 @@
                                     </a>
                                 </div>
                             </td>
+                            @endif
                         </tr>
                     @endforeach
                 </tbody>
