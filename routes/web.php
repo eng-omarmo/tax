@@ -323,7 +323,9 @@ Route::prefix('invoice')->group(function () {
 // receipt
 Route::prefix('receipt')->group(function () {
     Route::controller(receiptController::class)->group(function () {
-        Route::get('/receipt/{id}', 'receipt')->name('receipt.index');
+        Route::get('tax/receipt/{id}', 'taxReceipt')->name('receipt.tax');
+        Route::get('tax/rent/{id}', 'rentReceipt')->name('receipt.rent');
+
 
     });
 });

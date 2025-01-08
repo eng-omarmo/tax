@@ -141,7 +141,7 @@ class paymentController extends Controller
                 'tax_id' => null,
                 'amount' => $request->amount,
                 'payment_date' => now(),
-                'reference' => 'Rent',
+                'reference' => 'Rent'.rand(1000, 9999).rand(1000, 9999),
                 'payment_method' => $request->payment_method,
                 'status' => 'completed',
             ]);
@@ -151,7 +151,7 @@ class paymentController extends Controller
             $this->createpaymentDetail($payment, $request);
 
             DB::commit();
-            return redirect()->route('receipt.index', ['id' => $payment->id]);
+            return redirect()->route('receipt.rent', ['id' => $payment->id]);
         } catch (\Throwable $th) {
             DB::rollBack();
             return back()->with('error', $th->getMessage());
@@ -189,7 +189,7 @@ class paymentController extends Controller
 
             $this->createpaymentDetail($payment, $request);
             DB::commit();
-            return redirect()->route('receipt.index', ['id' => $payment->id]);
+            return redirect()->route('receipt.tax', ['id' => $payment->id]);
         } catch (\Throwable $th) {
             DB::rollBack();
             return back()->with('error', $th->getMessage());
