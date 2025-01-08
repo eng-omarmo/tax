@@ -29,8 +29,9 @@ class Payment extends Model
     }
     public function paymentDetail()
     {
-        return $this->hasMany(PaymentDetail::class);
+        return $this->hasOne(PaymentDetail::class); // or belongsTo if PaymentDetail holds the foreign key
     }
+
     public static function createPaymentDetail($data)
     {
         return PaymentDetail::create([

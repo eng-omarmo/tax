@@ -151,7 +151,7 @@ class paymentController extends Controller
             $this->createpaymentDetail($payment, $request);
 
             DB::commit();
-            return redirect()->route('payment.index')->with('success', 'Payment created successfully.');
+            return redirect()->route('receipt.index', ['id' => $payment->id]);
         } catch (\Throwable $th) {
             DB::rollBack();
             return back()->with('error', $th->getMessage());
@@ -179,7 +179,7 @@ class paymentController extends Controller
                 'tax_id' => $request->tax_id,
                 'amount' => $request->amount,
                 'payment_date' => now(),
-                'reference' => 'Tax',
+                'reference' => 'Tax'.rand(1000, 9999).rand(1000, 9999),
                 'payment_method' => $request->payment_method,
                 'status' => 'completed',
             ]);
@@ -189,7 +189,7 @@ class paymentController extends Controller
 
             $this->createpaymentDetail($payment, $request);
             DB::commit();
-            return redirect()->route('payment.index.tax')->with('success', 'Payment created successfully.');
+            return redirect()->route('receipt.index', ['id' => $payment->id]);
         } catch (\Throwable $th) {
             DB::rollBack();
             return back()->with('error', $th->getMessage());

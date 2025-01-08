@@ -103,7 +103,7 @@
                 </li>
 
 
-                <li class="dropdown">
+                {{-- <li class="dropdown">
                     <a href="javascript:void(0)">
                         <iconify-icon icon="mdi:briefcase-outline" class="menu-icon"></iconify-icon>
 
@@ -126,7 +126,7 @@
 
                     </ul>
 
-                </li>
+                </li> --}}
 
                 @if (auth()->user()->role == 'Admin' || auth()->user()->role == 'Tax officer')
                 <li class="dropdown">

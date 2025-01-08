@@ -15,6 +15,7 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\tenantController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\paymentController;
+use App\Http\Controllers\receiptController;
 use App\Http\Controllers\taxRateController;
 use App\Http\Controllers\businessController;
 use App\Http\Controllers\DistrictController;
@@ -308,6 +309,8 @@ Route::prefix('forms')->group(function () {
     });
 });
 
+
+
 // invoice/invoiceList
 Route::prefix('invoice')->group(function () {
     Route::controller(InvoiceController::class)->group(function () {
@@ -317,7 +320,13 @@ Route::prefix('invoice')->group(function () {
         Route::get('/invoice-preview', 'invoicePreview')->name('invoicePreview');
     });
 });
+// receipt
+Route::prefix('receipt')->group(function () {
+    Route::controller(receiptController::class)->group(function () {
+        Route::get('/receipt/{id}', 'receipt')->name('receipt.index');
 
+    });
+});
 // Settings
 Route::prefix('settings')->group(function () {
     Route::controller(SettingsController::class)->group(function () {
