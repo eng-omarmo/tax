@@ -16,7 +16,7 @@ class Property extends Model
         'property_phone',
         'nbr',
         'house_code',
-        'branch',
+        'branch_id',
         'zone',
         'designation',
         'house_type',
@@ -25,7 +25,6 @@ class Property extends Model
         'yearly_tax_fee',
         'latitude',
         'longitude',
-
         'monitoring_status',
         'status',
         'district_id',
@@ -34,6 +33,11 @@ class Property extends Model
     public function district()
     {
         return $this->belongsTo(District::class);
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
     }
 
     public function taxs()

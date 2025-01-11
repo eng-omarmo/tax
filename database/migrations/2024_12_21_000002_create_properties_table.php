@@ -18,8 +18,9 @@ return new class extends Migration
             $table->string('nbr', 50)->nullable();
             $table->unsignedBigInteger('district_id');
             $table->unsignedBigInteger('landlord_id');
+            $table->unsignedBigInteger('branch_id')->nullable();
             $table->string('house_code', 50)->nullable();
-            $table->string('branch')->nullable();
+
             $table->string('zone', 100)->nullable();
             $table->string('designation', 100)->nullable();
             $table->string('house_type', 100)->nullable();
@@ -32,6 +33,7 @@ return new class extends Migration
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->foreign('district_id')->references('id')->on('districts')->onDelete('cascade');
             $table->foreign('landlord_id')->references('id')->on('landlords')->onDelete('cascade');
+            $table->foreign('branch_id')->references('id')->on('branches')->onDelete('cascade');
 
             $table->timestamps();
         });

@@ -269,9 +269,13 @@
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
                                             Branch
                                         </label>
-                                        <input type="text" class="form-control radius-8" id="branch"
-                                            name="branch" placeholder="Enter branch name"
-                                            value="{{ old('branch', $property->branch) }}">
+                                       <select class="form-control radius-8 form-select" id="branch"
+                                            name="branch">
+                                            <option value="{{ $property->branch_id }}">{{ $property->branch->name }}</option>
+                                            @foreach ($branches as $branch)
+                                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     <div class="col-md-6 mb-20">
                                         <label for="zone"

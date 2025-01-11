@@ -200,10 +200,12 @@ class propertyController extends Controller
                 'property_phone' => 'nullable|string|max:45',
                 'nbr' => 'nullable|string|max:100',
                 'house_code' => 'nullable|string|max:50',
-                'branch' => 'nullable|string|max:255',
+
                 'zone' => 'nullable|string|max:255',
                 'house_type' => 'nullable|string|max:255',
                 'latitude' => 'required',
+                'district_id' => 'required|exists:districts,id',
+                'branch' => 'required|exists:branches,id',
                 'longitude' => 'required',
                 'designation' => 'nullable|string|max:255',
                 'monitoring_status' => 'required|in:Pending,Approved',
@@ -238,7 +240,7 @@ class propertyController extends Controller
                 'property_phone' => $request->property_phone,
                 'nbr' => $request->nbr,
                 'house_code' => $request->house_code,
-                'branch' => $request->branch,
+                'branch_id' => $request->branch,
                 'zone' => $request->zone,
                 'house_type' => $request->house_type,
                 'latitude' => $request->latitude,
@@ -276,8 +278,9 @@ class propertyController extends Controller
     {
         $property = Property::findorFail($id);
         $districts = District::select('id', 'name')->get();
+        $branches = Branch::where('district_id', $property->district_id)->get();
 
-        return view('property.edit', compact('property', 'districts'));
+        return view('property.edit', compact('property', 'districts', 'branches'));
     }
 
     public function show($id)
