@@ -25,14 +25,14 @@
                             <iconify-icon icon="pepicons-pencil:paper-plane" class="text-xl"></iconify-icon>
                             Send Invoice
                         </a>
-                        <a href="javascript:void(0)" class="btn btn-sm btn-warning radius-8 d-inline-flex align-items-center gap-1">
+                        {{-- <a href="javascript:void(0)" class="btn btn-sm btn-warning radius-8 d-inline-flex align-items-center gap-1">
                             <iconify-icon icon="solar:download-linear" class="text-xl"></iconify-icon>
                             Download
-                        </a>
-                        <a href="javascript:void(0)" class="btn btn-sm btn-success radius-8 d-inline-flex align-items-center gap-1">
+                        </a> --}}
+                        {{-- <a href="javascript:void(0)" class="btn btn-sm btn-success radius-8 d-inline-flex align-items-center gap-1">
                             <iconify-icon icon="uil:edit" class="text-xl"></iconify-icon>
                             Edit
-                        </a>
+                        </a> --}}
                         <button type="button" class="btn btn-sm btn-danger radius-8 d-inline-flex align-items-center gap-1" onclick="printInvoice()">
                             <iconify-icon icon="basil:printer-outline" class="text-xl"></iconify-icon>
                             Print

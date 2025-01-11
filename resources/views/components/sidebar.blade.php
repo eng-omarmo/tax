@@ -399,11 +399,11 @@
                                 Monitoring Properties </a>
                         </li>
 
-                        <li>
+                        {{-- <li>
                             <a href="#"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Track
                                 Appointment
                             </a>
-                        </li>
+                        </li> --}}
 
                     </ul>
 
