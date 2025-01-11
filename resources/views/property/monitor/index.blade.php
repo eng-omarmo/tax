@@ -59,7 +59,7 @@
                                 <td>{{ $property->property_name }}</td>
                                 <td>{{ $property->property_phone }}</td>
                                 <td><a href="{{ route('landlord.show', $property->landlord->id) }}">{{ $property->landlord->name }}</a></td>
-                                <td>{{ $property->branch }}</td>
+                                <td>{{ $property->branch->name }}</td>
                                 <td>{{ $property->house_type }}</td>
                                 <td>{{ $property->zone }}</td>
                                 <td class="text-center">
