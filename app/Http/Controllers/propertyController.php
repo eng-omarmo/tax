@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Tax;
+use App\Models\Branch;
 use App\Models\District;
 use App\Models\Landlord;
 use App\Models\Property;
@@ -56,6 +57,15 @@ class propertyController extends Controller
             });
         }
         return view('property.index', compact('properties', 'statuses', 'monitoringStatuses'));
+    }
+
+    public function getBranches($districtId)
+    {
+        $branches = Branch::where('district_id', $districtId)->get();
+        if($branches->isEmpty()){
+            return response()->json(['error' => 'No branches found for the selected district.']);
+        }
+        return response()->json($branches);
     }
 
     public function propertyStore(Request $request)
@@ -216,7 +226,7 @@ class propertyController extends Controller
             $data = Property::calculateTax($request->house_type, $request->house_rent);
 
 
-            if($data['message'] !== ''){
+            if ($data['message'] !== '') {
                 return back()->with('error', $data['message']);
             }
             if ($data['quarterly_tax'] < 0 || $data['yearly_tax'] < 0) {
@@ -271,7 +281,8 @@ class propertyController extends Controller
     }
 
     public function show($id)
-    { $property = Property::findorFail($id);
+    {
+        $property = Property::findorFail($id);
         return view('property.show', compact('property'));
     }
     public function update(Request $request, $property)
@@ -290,8 +301,6 @@ class propertyController extends Controller
                 'house_type' => 'nullable|string|max:255',
                 'house_rent' => 'nullable|numeric',
                 'latitude' => 'required|numeric',
-                'quarterly_tax_fee' => 'required|numeric',
-                'yearly_tax_fee' => 'required|numeric',
                 'longitude' => 'required|numeric',
                 'dalal_company_name' => 'nullable|string|max:255',
                 'designation' => 'nullable|string|max:255',
@@ -299,7 +308,52 @@ class propertyController extends Controller
                 'status' => 'required|in:Active,Inactive',
                 'district_id' => 'required|exists:districts,id',
             ]);
-            Property::find($property)->update([
+
+            $property = Property::find($property);
+
+            if (!$property) {
+                return back()->with('error', 'Property not found.');
+            }
+
+            if ($request->house_rent > 0) {
+                $data = Property::calculateTax($request->house_type, $request->house_rent);
+
+                if ($data['message'] !== '') {
+                    return back()->with('error', $data['message']);
+                }
+
+                if ($data['quarterly_tax'] < 0 || $data['yearly_tax'] < 0) {
+                    return back()->with('error', 'Tax fee for the property cannot be negative.');
+                }
+
+                $request->merge([
+                    'quarterly_tax_fee' => $data['quarterly_tax'],
+                    'yearly_tax_fee' => $data['yearly_tax'],
+                ]);
+
+                $tax = Tax::where('property_id', $property->id)->first();
+                if ($tax) {
+                    $tax->update([
+
+                        'tax_amount' => $request->yearly_tax_fee,
+                    ]);
+                }
+
+                $transaction = Transaction::where([
+                    'property_id' => $tax->property->id,
+                    'transaction_type' => 'Tax',
+
+                ])->whereNotNull('debit')->first();
+
+                if ($transaction) {
+                    $transaction->update([
+                        'amount' => $request->yearly_tax_fee,
+                        'debit' => $request->yearly_tax_fee,
+                    ]);
+                }
+            }
+
+            $property->update([
                 'property_name' => $request->property_name,
                 'property_phone' => $request->property_phone,
                 'nbr' => $request->nbr,
@@ -318,6 +372,7 @@ class propertyController extends Controller
                 'monitoring_status' => $request->monitoring_status,
                 'status' => $request->status,
             ]);
+            //update the transaction if any changes happen to the tax fee
             if (auth()->user()->role == 'Admin') {
                 return redirect()->route('property.index')->with('success', 'Property updated successfully.');
             }
@@ -375,6 +430,7 @@ class propertyController extends Controller
         }
     }
 
+
     private function recordTaxFee($property)
     {
 
@@ -383,7 +439,7 @@ class propertyController extends Controller
                 'property_id' => $property->id,
                 'tax_amount' => $property->yearly_tax_fee,
                 'due_date' => now()->addMonths(1),
-                'status' => 'Pending',
+                'status' => 'Completed',
                 'tax_code' => 'T' . rand(1000, 9999) . rand(1000, 9999),
             ]);
         } catch (\Throwable $th) {

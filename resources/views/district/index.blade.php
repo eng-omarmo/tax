@@ -65,7 +65,7 @@
                     <a href="{{ route('district.create') }}"
                         class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
                         <iconify-icon icon="ic:baseline-plus" class="icon text-xl line-height-1"></iconify-icon>
-                        Add New User
+                        Add New district
                     </a>
                 </div>
             </div>

@@ -34,7 +34,7 @@
             </a>
 
                 <a href="{{ route('branch.create') }}"   class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
-                    <iconify-icon icon="ic:baseline-plus" class="icon text-xl"></iconify-icon> Add New User
+                    <iconify-icon icon="ic:baseline-plus" class="icon text-xl"></iconify-icon> Add New Branch
                 </a>
             </div>
         </div>

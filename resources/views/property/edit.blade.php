@@ -246,7 +246,7 @@
                                             Quarterly Tax Fee
                                         </label>
                                         <input type="text" class="form-control radius-8" id="quarterly_tax_fee"
-                                            name="quarterly_tax_fee" placeholder="Enter quarterly tax fee"
+                                            name="quarterly_tax_fee" placeholder="Enter quarterly tax fee" readonly
                                             value="{{ old('quarterly_tax_fee', $property->quarterly_tax_fee) }}">
 
                                     </div>
@@ -258,7 +258,7 @@
                                         </label>
                                         <input type="text" class="form-control radius-8" id="yearly_tax_fee"
                                             name="yearly_tax_fee" placeholder="Enter yearly tax fee"
-                                            value="{{ old('yearly_tax_fee', $property->yearly_tax_fee) }}">
+                                            value="{{ old('yearly_tax_fee', $property->yearly_tax_fee)  }}" readonly>
 
                                     </div>
 

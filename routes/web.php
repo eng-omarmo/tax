@@ -53,7 +53,7 @@ Route::controller(PropertyController::class)->prefix('property')->middleware(['a
     Route::get('/report-details', 'reportDetails')->name('property.report.fech');
     Route::get('/property/report/pdf', 'exportPdf')->name('property.report.print');
     Route::get('/property/{id}', 'show')->name('property.show');
-
+    Route::get('/branches/{districtId}', 'getBranches')->name('property.branches');
     Route::get('/create/property', 'propertyCreate')->name('property.create.landlord');
     Route::post('/store/property', 'propertyStore')->name('property.store.landlord');
 
