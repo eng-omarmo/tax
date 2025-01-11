@@ -319,19 +319,17 @@ class paymentController extends Controller
     private function createpaymentDetail($payment, $request)
     {
         $provider = null;
-
-
         $phone = $request->mobile_number;
         if (str_starts_with($phone, '+252')) {
             $phone = substr($phone, 4);
         }
+        
         if (str_starts_with($phone, '61')) {
             $provider = 'Hormuud';
         }
-        // Proceed to create the payment detail
         return Payment::createPaymentDetail([
             'payment_id' => $payment->id,
-            'bank_name' => $request->bank_name ?? $provider,  // Default to $provider if bank_name is not provided
+            'bank_name' => $request->bank_name ?? $provider,
             'account_number' => $request->account_number,
             'mobile_number' => $request->mobile_number,
             'additional_info' => $request->additional_info,

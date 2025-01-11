@@ -12,10 +12,7 @@ class taxController extends Controller
     //
     public function index()
     {
-        // Initialize the query with property and transaction relationships
         $query = Tax::with(['property.transactions']);
-
-        // Apply search filter if provided
         if (request()->filled('search')) {
             $search = request('search');
             $query->whereHas('property', function ($q) use ($search) {
@@ -23,8 +20,6 @@ class taxController extends Controller
                     ->orWhere('property_phone', 'like', "%{$search}%");
             });
         }
-
-        // Apply status filter if provided
         if (request()->filled('status')) {
             $status = request('status');
             if ($status === 'Overdue') {
@@ -34,25 +29,22 @@ class taxController extends Controller
             }
         }
 
-        // Restrict data based on user role
         if (auth()->user()->role === 'Landlord') {
             $query->whereHas('property.landlord', function ($q) {
                 $q->where('user_id', auth()->id());
             });
         }
 
-        // Paginate results with a default value for per_page
         $perPage = request('per_page', 5);
         $taxes = $query->paginate($perPage);
 
-        // Calculate balance for each tax entry
+
         foreach ($taxes as $tax) {
             $tax->balance = $tax->property->transactions->sum(function ($transaction) {
                 return $transaction->debit - $transaction->credit;
             });
         }
 
-        // Return view with data
         return view('tax.index', [
             'taxes' => $taxes,
         ]);
@@ -127,6 +119,4 @@ class taxController extends Controller
 
         return view('tax.create', compact('property'));
     }
-
-    
 }

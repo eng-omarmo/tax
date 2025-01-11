@@ -214,11 +214,13 @@ Route::prefix('unit')->middleware(['auth.admin'])->group(function () {
         Route::get('/search', 'search')->name('unit.property.search');
     });
 });
-Route::prefix('invoice')->middleware(['auth.admin'])->group(function () {
-    Route::controller(invoiceController::class)->group(function () {
-        Route::get('/index', 'index')->name('invoice.index');
-    });
-});
+// Route::prefix('invoice')->middleware(['auth.admin'])->group(function () {
+//     Route::controller(invoiceController::class)->group(function () {
+//         Route::get('/index', 'index')->name('invoice.index');
+//         Route::get('/index', 'index')->name('invoice.index');
+
+//     });
+// });
 
 
 
@@ -316,9 +318,14 @@ Route::prefix('forms')->group(function () {
 Route::prefix('invoice')->group(function () {
     Route::controller(InvoiceController::class)->group(function () {
         Route::get('/invoice-add', 'invoiceAdd')->name('invoiceAdd');
+        Route::get('/search', 'search')->name('invoice.search');
+        Route::post('/tax/generate', 'generateTaxInvoice')->name('generate.invoice.tax');
+        Route::get('/store', 'store')->name('invoice.store');
+        Route::get('/create', 'create')->name('invoice.create');
         Route::get('/invoice-edit', 'invoiceEdit')->name('invoiceEdit');
         Route::get('/invoice-list', 'invoiceList')->name('invoiceList');
         Route::get('/invoice-preview', 'invoicePreview')->name('invoicePreview');
+
     });
 });
 // receipt
