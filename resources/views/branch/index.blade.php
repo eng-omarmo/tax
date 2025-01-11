@@ -93,12 +93,53 @@
             </table>
         </div>
 
-        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">
+        <div class="d-flex align-items-center  bg-base px-24 py-12 justify-content-between flex-wrap gap-2 mt-24">
             <span>Showing {{ $branchs->firstItem() }} to {{ $branchs->lastItem() }} of {{ $branchs->total() }} entries</span>
             <div class="pagination-container">
-                {{ $branchs->links() }}
+                <div class="card-body p-24">
+                    <ul class="pagination d-flex flex-wrap bg-base align-items-center gap-2 justify-content-center">
+                        @if ($branchs->onFirstPage())
+                            <li class="page-item disabled">
+                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="javascript:void(0)">First</a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="javascript:void(0)">Previous</a>
+                            </li>
+                        @else
+                            <li class="page-item">
+                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $branchs->url(1) }}">First</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $branchs->previousPageUrl() }}">Previous</a>
+                            </li>
+                        @endif
+
+                        @foreach ($branchs->getUrlRange(1, $branchs->lastPage()) as $page => $url)
+                            <li class="page-item {{ $branchs->currentPage() == $page ? 'active' : '' }}">
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px w-48-px {{ $branchs->currentPage() == $page ? 'bg-primary-600 text-white' : '' }}" href="{{ $url }}">{{ $page }}</a>
+                            </li>
+                        @endforeach
+
+                        @if ($branchs->hasMorePages())
+                            <li class="page-item">
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $branchs->nextPageUrl() }}">Next</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $branchs->url($branchs->lastPage()) }}">Last</a>
+                            </li>
+                        @else
+                            <li class="page-item disabled">
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px " href="javascript:void(0)">Next</a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="javascript:void(0)">Last</a>
+                            </li>
+                        @endif
+                    </ul>
+                </div>
             </div>
         </div>
+
     </div>
 </div>
 
