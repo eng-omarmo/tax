@@ -423,15 +423,15 @@
                     </a>
                     <ul class="sidebar-submenu">
 
-                        <li>
+                        {{-- <li>
                             <a href="{{ route('invoiceList') }}"><i
                                     class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
                                 Invoice List </a>
-                        </li>
+                        </li> --}}
                         <li>
                             <a href="{{ route('invoice.create') }}"><i
                                     class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
-                                Add Invoice </a>
+                                Generate Invoice </a>
                         </li>
 
 
