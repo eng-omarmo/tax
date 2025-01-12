@@ -35,13 +35,12 @@ class InvoiceController extends Controller
 
     public function search(Request $request)
     {
-
+dd($request->all());
         $request->validate([
             'tax_code' => 'required|string',
         ]);
 
         try {
-
             $tax = Tax::with(['property.transactions', 'property.landlord.user'])
                 ->where('tax_code', $request->tax_code)
                 ->firstOrFail();
