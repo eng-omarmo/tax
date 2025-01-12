@@ -859,7 +859,7 @@
                 </div>
             </div>
         </div> --}}
-        <<div class="col-xxl-12 col-lg-12">
+        <div class="col-xxl-12 col-lg-12">
             <div class="card h-100">
                 <div class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center justify-content-between">
                     <h6 class="text-lg fw-semibold mb-0">Last Transaction</h6>
@@ -874,17 +874,22 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Transaction ID</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Status</th>
+
+
                                     <th scope="col">Credit</th>
                                     <th scope="col">Debit</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Date</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($transactions as $transaction)
                                     <tr>
                                         <td>{{ $transaction->id }}</td>
-                                        <td>{{ $transaction->created_at }}</td>
+
+                                        <td>{{ '$' . number_format($transaction->credit, 2)??' 0 ' }}</td>
+                                        <td>{{ '$' . number_format($transaction->debit, 2) ?? ' 0 ' }}</td>
+
                                         <td>
                                             <span class="px-24 py-4 rounded-pill fw-medium text-sm
                                                 @if($transaction->status == 'Pending') bg-warning-focus text-warning-main
@@ -894,8 +899,7 @@
                                                 {{ $transaction->status }}
                                             </span>
                                         </td>
-                                        <td>{{ '$' . number_format($transaction->credit, 2)??' 0 ' }}</td>
-                                        <td>{{ '$' . number_format($transaction->debit, 2) ?? ' 0 ' }}</td>
+                                        <td>{{ $transaction->created_at->format('Y-m-d') }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -905,7 +909,7 @@
             </div>
         </div>
 
-        <!-- Latest Performance End -->
+
     </div>
 
 @endsection

@@ -1,7 +1,7 @@
 @extends('layout.layout')
 
 @php
-    $title = 'invoice Registration';
+    $title = 'invoice Generation';
     $subTitle = 'Manage invoice';
 @endphp
 
@@ -16,7 +16,7 @@
                         <form action="{{ route('invoice.search') }}" method="GET" class="d-flex align-items-center">
                             <div class="d-flex flex-grow-1 align-items-center">
                                 <input type="text" class="form-control radius-8 me-2 flex-grow-1" id="tax_code"
-                                    name="tax_code" placeholder="Enter Property Phone Number" value="{{ old('tax_code') }}"
+                                    name="tax_code" placeholder="Enter Property Tax Code" value="{{ old('tax_code') }}"
                                     required>
                             </div>
                             <button type="submit"
