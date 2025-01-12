@@ -43,7 +43,6 @@ class receiptController extends Controller
         if (!$payment) {
             return redirect()->back()->with('error', 'Payment not found');
         }
-
         $data = [
             'amount' => $payment->amount,
             'rent_code' => $payment->rent->rent_code,

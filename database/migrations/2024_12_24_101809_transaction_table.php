@@ -15,6 +15,8 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('tenant_id')->nullable();
+
+            $table->string('transaction_id')->unique();
             $table->unsignedBigInteger('property_id')->nullable()->nullable();
             $table->unsignedBigInteger('unit_id')->nullable()->nullable();
             $table->decimal('amount', 10, 2);

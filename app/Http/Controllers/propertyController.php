@@ -421,6 +421,7 @@ class propertyController extends Controller
         try {
             return Transaction::create([
                 'tenant_id' => null,
+                'transaction_id' => 'Tran' . rand(1000, 9999) . rand(1000, 9999),
                 'property_id' => $property->id,
                 'transaction_type' => 'Tax',
                 'amount' => $property->yearly_tax_fee,

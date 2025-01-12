@@ -78,12 +78,12 @@
                                         <!-- Unit Name -->
                                         <div class="mb-20">
                                             <label for="unit_name"
-                                                class="form-label fw-semibold text-primary-light text-sm mb-8" >
+                                                class="form-label fw-semibold text-primary-light text-sm mb-8">
                                                 Unit Name <span class="text-danger-600">*</span>
                                             </label>
                                             <input type="text" class="form-control radius-8" id="unit_name"
-                                            placeholder="Enter Unit Name"
-                                                name="unit_name" value="{{ old('unit_name') }}" required>
+                                                placeholder="Enter Unit Name" name="unit_name"
+                                                value="{{ old('unit_name') }}" required>
                                         </div>
 
                                         <div class="mb-20">
@@ -91,11 +91,10 @@
                                                 class="form-label fw-semibold text-primary-light text-sm mb-8">
                                                 Unit price <span class="text-danger-600">*</span>
                                             </label>
-                                            <input type="text" class="form-control radius-8" id="unit_price" placeholder="Enter Unit Price"
-                                                name="unit_price" value="{{ old('unit_name') }}" required>
+                                            <input type="text" class="form-control radius-8" id="unit_price"
+                                                placeholder="Enter Unit Price" name="unit_price"
+                                                value="{{ old('unit_name') }}" required>
                                         </div>
-
-
                                         <!-- Unit Type -->
                                         <div class="mb-20">
                                             <label for="unit_type"
@@ -121,16 +120,18 @@
                                         <!-- Unit Area -->
                                         <div class="mb-20">
                                             <label for="unit_area"
-                                                class="form-label fw-semibold text-primary-light text-sm mb-8" place="Enter Unit Area">
-                                                Unit Area (sq ft) <span class="text-danger-600" >*</span>
+                                                class="form-label fw-semibold text-primary-light text-sm mb-8"
+                                                place="Enter Unit Area">
+                                                Unit Area (sq ft) <span class="text-danger-600">*</span>
                                             </label>
-                                            <input type="number" class="form-control radius-8" id="unit_area" placeholder="Enter Unit Area"
-                                                name="unit_area" value="{{ old('unit_area') }}" step="0.01" required>
+                                            <input type="number" class="form-control radius-8" id="unit_area"
+                                                placeholder="Enter Unit Area" name="unit_area"
+                                                value="{{ old('unit_area') }}" step="0.01" required>
                                         </div>
 
                                         <div class="d-flex align-items-center justify-content-center gap-3">
                                             <button type="button"
-                                                class="border border-danger-600 bg-hover-danger-200 text-danger-600  text-md px-56 py-11 radius-8" >
+                                                class="border border-danger-600 bg-hover-danger-200 text-danger-600  text-md px-56 py-11 radius-8">
                                                 Cancel
                                             </button>
                                             <button type="submit"

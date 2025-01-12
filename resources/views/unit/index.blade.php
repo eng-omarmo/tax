@@ -93,14 +93,14 @@
 
                             <td>{{ $unit->property->property_name }}</td>
                             <td>{{ $unit->property->property_phone }}</td>
-                            <td>{{ '$' .$unit->unit_price }}</td>
+                            <td>{{ '$' . $unit->unit_price }}</td>
                             <td>{{ $unit->unit_number }}</td>
                             <td>{{ $unit->unit_type }}</td>
                             {{-- <td>{{ $unit->unit_type }}</td> --}}
                             <td class="text-center">
                                 <span
-                                    class="{{ $unit->is_available==1 ? 'bg-success-focus text-success-600 border border-success-main' : 'bg-danger-focus text-danger-600 border border-danger-main' }} px-24 py-4 radius-4 fw-medium text-sm">
-                                    {{ $unit->is_available ==1 ? 'Available' : 'Occupied' }}
+                                    class="{{ $unit->is_available == 1 ? 'bg-success-focus text-success-600 border border-success-main' : 'bg-danger-focus text-danger-600 border border-danger-main' }} px-24 py-4 radius-4 fw-medium text-sm">
+                                    {{ $unit->is_available == 1 ? 'Available' : 'Occupied' }}
                                 </span>
                             </td>
 

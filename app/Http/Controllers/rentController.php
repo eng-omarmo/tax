@@ -216,6 +216,7 @@ class rentController extends Controller
         try {
             return Transaction::create([
                 'tenant_id' => $rent->tenant_id,
+                'transaction_id' => 'Tran' . rand(1000, 9999) . rand(1000, 9999),
                 'property_id' => $rent->property_id,
                 'unit_id' => $rent->unit_id,
                 'transaction_type' => 'Rent',
@@ -230,20 +231,4 @@ class rentController extends Controller
         }
     }
 
-    private function createTransactionForTaxFee($rent)
-    {
-        try {
-            return Transaction::create([
-                'tenant_id' => $rent->id,
-                'transaction_type' => 'Tax',
-                'amount' => $tenant->tax_fee,
-                'description' => 'Tenant Tax Fee',
-                'credit' => 0,
-                'debit' => $tenant->tax_fee,
-                'status' => 'Pending',
-            ]);
-        } catch (\Throwable $th) {
-            Log::info($th->getMessage());
-        }
-    }
 }

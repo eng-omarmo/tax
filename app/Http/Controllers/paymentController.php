@@ -263,6 +263,7 @@ class paymentController extends Controller
         try {
             return Transaction::create([
                 'tenant_id' => $rent->tenant_id ?? null,
+                'transaction_id' => 'Tran' . rand(1000, 9999) . rand(1000, 9999),
                 'property_id' => $rent->property_id ?? null,
                 'transaction_type' => 'Rent',
                 'unit_id' => $rent->unit_id ?? null,
@@ -323,7 +324,7 @@ class paymentController extends Controller
         if (str_starts_with($phone, '+252')) {
             $phone = substr($phone, 4);
         }
-        
+
         if (str_starts_with($phone, '61')) {
             $provider = 'Hormuud';
         }

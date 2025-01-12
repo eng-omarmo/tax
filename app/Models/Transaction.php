@@ -13,6 +13,7 @@ class Transaction extends Model
     protected $fillable = [
         'tenant_id',
         'property_id',
+        'transaction_id',
         'amount',
         'credit',
         'debit',
