@@ -41,7 +41,7 @@
                             <option value="">Select Branch</option>
                             <option value="">All</option>
                             @foreach ($data['branches'] as $branch)
-                                <option value="{{ $branch }}">{{ $branch }}</option>
+                                <option value="{{ $branch }}">{{ $branch->name }}</option>
                             @endforeach
                         </select>
 
@@ -91,8 +91,7 @@
                                         <th scope="col">Propery phone </th>
                                         <th scope="col">Branch</th>
                                         <th scope="col">Zone</th>
-                                        <th scope="col">Latitude</th>
-                                        <th scope="col">Longitude</th>
+
                                         <th scope="col">status</th>
 {{--
                                         <th scope="col" class="text-center">Action</th> --}}
@@ -112,12 +111,11 @@
                                             </td>
                                             <td>{{ $property->property_name }}</td>
                                             <td>{{ $property->nbr }}</td>
-                                            <td>{{ $property->tenant_phone }}</td>
+                                            <td>{{ $property->property_phone }}</td>
 
-                                            <td>{{ $property->branch }}</td>
+                                            <td>{{ $property->branch->name }}</td>
                                             <td>{{ $property->zone }}</td>
-                                            <td>{{ $property->latitude }}</td>
-                                            <td>{{ $property->longitude }}</td>
+
                                             <td class="text-center">
                                                 <span
                                                     class="{{ $property->status == 'Available' ? 'bg-success-focus text-success-600' : 'bg-danger-focus text-danger-600' }} border px-24 py-4 radius-4 fw-medium text-sm">
@@ -143,11 +141,50 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">
-                            <span>Showing {{ $properties->firstItem() }} to {{ $properties->lastItem() }} of
-                                {{ $properties->total() }} entries</span>
+                        <div class="d-flex align-items-center  bg-base px-24 py-12 justify-content-between flex-wrap gap-2 mt-24">
+                            <span>Showing {{ $properties->firstItem() }} to {{ $properties->lastItem() }} of {{ $properties->total() }} entries</span>
                             <div class="pagination-container">
-                                {{ $properties->links() }}
+                                <div class="card-body p-24">
+                                    <ul class="pagination d-flex flex-wrap bg-base align-items-center gap-2 justify-content-center">
+                                        @if ($properties->onFirstPage())
+                                            <li class="page-item disabled">
+                                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="javascript:void(0)">First</a>
+                                            </li>
+                                            <li class="page-item disabled">
+                                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="javascript:void(0)">Previous</a>
+                                            </li>
+                                        @else
+                                            <li class="page-item">
+                                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $properties->url(1) }}">First</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $properties->previousPageUrl() }}">Previous</a>
+                                            </li>
+                                        @endif
+
+                                        @foreach ($properties->getUrlRange(1, $properties->lastPage()) as $page => $url)
+                                            <li class="page-item {{ $properties->currentPage() == $page ? 'active' : '' }}">
+                                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px w-48-px {{ $properties->currentPage() == $page ? 'bg-primary-600 text-white' : '' }}" href="{{ $url }}">{{ $page }}</a>
+                                            </li>
+                                        @endforeach
+
+                                        @if ($properties->hasMorePages())
+                                            <li class="page-item">
+                                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $properties->nextPageUrl() }}">Next</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $properties->url($properties->lastPage()) }}">Last</a>
+                                            </li>
+                                        @else
+                                            <li class="page-item disabled">
+                                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px " href="javascript:void(0)">Next</a>
+                                            </li>
+                                            <li class="page-item disabled">
+                                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="javascript:void(0)">Last</a>
+                                            </li>
+                                        @endif
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -397,11 +397,12 @@ class propertyController extends Controller
         $getDistrictIDs = Property::pluck('district_id');
         $data['statuses'] = Property::pluck('status')
             ->unique();
-        $data['branches'] = Property::pluck('branch')
+            $getBranchIDs = Property::with('branch')->pluck('branch_id')
             ->unique();
         $data['zones'] = Property::pluck('zone')
             ->unique();
         $data['districts'] = District::whereIn('id', $getDistrictIDs)->select('name', 'id')->get();
+        $data['branches'] = Branch::whereIn('id', $getBranchIDs)->select('name', 'id')->get();
         return $data;
     }
 

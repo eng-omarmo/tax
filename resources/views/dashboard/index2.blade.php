@@ -22,13 +22,13 @@
                                     </span>
                                     <div>
                                         <span class="mb-2 fw-medium text-secondary-light text-sm">All properties</span>
-                                        <h6 class="fw-semibold">12</h6>
+                                        <h6 class="fw-semibold">{{$noProperties}}</h6>
                                     </div>
                                 </div>
 
                                 <div id="new-user-chart" class="remove-tooltip-title rounded-tooltip-value"></div>
                             </div>
-                            <p class="text-sm mb-0">Increase by <span class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">+2</span> this week</p>
+                            <p class="text-sm mb-0">Increase by <span class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">{{$IncreaseByThisWeek}}</span> this week</p>
                         </div>
                     </div>
                 </div>
@@ -43,14 +43,14 @@
                                         <iconify-icon icon="mingcute:user-follow-fill" class="icon"></iconify-icon>
                                     </span>
                                     <div>
-                                        <span class="mb-2 fw-medium text-secondary-light text-sm">Total Unpaid Rent</span>
-                                        <h6 class="fw-semibold">8,000</h6>
+                                        <span class="mb-2 fw-medium text-secondary-light text-sm">Total Unpaid Tax</span>
+                                        <h6 class="fw-semibold">{{$totalUnpaidTax}}</h6>
                                     </div>
                                 </div>
 
                                 <div id="active-user-chart" class="remove-tooltip-title rounded-tooltip-value"></div>
                             </div>
-                            <p class="text-sm mb-0">Increase by <span class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">+2</span> this week</p>
+                            <p class="text-sm mb-0">Increase by <span class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">{{$unpaidTaxIncreaseByThisWeek}}</span> this week</p>
                         </div>
                     </div>
                 </div>
@@ -65,14 +65,14 @@
                                         <iconify-icon icon="iconamoon:discount-fill" class="icon"></iconify-icon>
                                     </span>
                                     <div>
-                                        <span class="mb-2 fw-medium text-secondary-light text-sm">Total Paid Rent</span>
-                                        <h6 class="fw-semibold">$5,00,000</h6>
+                                        <span class="mb-2 fw-medium text-secondary-light text-sm">Total Paid Tax</span>
+                                        <h6 class="fw-semibold">{{$totalPaidTax}}</h6>
                                     </div>
                                 </div>
 
                                 <div id="total-sales-chart" class="remove-tooltip-title rounded-tooltip-value"></div>
                             </div>
-                            <p class="text-sm mb-0">Increase by <span class="bg-danger-focus px-1 rounded-2 fw-medium text-danger-main text-sm">-$10k</span> this week</p>
+                            <p class="text-sm mb-0">Increase by <span class="bg-danger-focus px-1 rounded-2 fw-medium text-danger-main text-sm">{{$totalPaidTaxIncreaseByThisWeek}}</span> this week</p>
                         </div>
                     </div>
                 </div>
@@ -88,13 +88,13 @@
                                     </span>
                                     <div>
                                         <span class="mb-2 fw-medium text-secondary-light text-sm">All Tenants</span>
-                                        <h6 class="fw-semibold">25</h6>
+                                        <h6 class="fw-semibold">{{$totalTenants}}</h6>
                                     </div>
                                 </div>
 
                                 <div id="conversion-user-chart" class="remove-tooltip-title rounded-tooltip-value"></div>
                             </div>
-                            <p class="text-sm mb-0">Increase by <span class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">+5%</span> this week</p>
+                            <p class="text-sm mb-0">Increase by <span class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">{{$totalTenantsIncreaseByThisWeek}}</span> this week</p>
                         </div>
                     </div>
                 </div>
@@ -109,14 +109,14 @@
                                         <iconify-icon icon="mdi:leads" class="icon"></iconify-icon>
                                     </span>
                                     <div>
-                                        <span class="mb-2 fw-medium text-secondary-light text-sm">Total Paid Tax </span>
-                                        <h6 class="fw-semibold">250</h6>
+                                        <span class="mb-2 fw-medium text-secondary-light text-sm">Total Paid Rent </span>
+                                        <h6 class="fw-semibold">{{$totalPaidRent}}</h6>
                                     </div>
                                 </div>
 
                                 <div id="leads-chart" class="remove-tooltip-title rounded-tooltip-value"></div>
                             </div>
-                            <p class="text-sm mb-0">Increase by <span class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">+20</span> this week</p>
+                            <p class="text-sm mb-0">Increase by <span class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">{{$totalPaidRentIncreaseByThisWeek}}</span> this week</p>
                         </div>
                     </div>
                 </div>
@@ -132,13 +132,13 @@
                                     </span>
                                     <div>
                                         <span class="mb-2 fw-medium text-secondary-light text-sm">Total UnPaid Tax</span>
-                                        <h6 class="fw-semibold">$3,00,700</h6>
+                                        <h6 class="fw-semibold">{{$totalUnpaidTax}}</h6>
                                     </div>
                                 </div>
 
                                 <div id="total-profit-chart" class="remove-tooltip-title rounded-tooltip-value"></div>
                             </div>
-                            <p class="text-sm mb-0">Increase by <span class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">+$15k</span> this week</p>
+                            <p class="text-sm mb-0">Increase by <span class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">{{$totalPaidTaxIncreaseByThisWeek}}</span> this week</p>
                         </div>
                     </div>
                 </div>
@@ -191,8 +191,8 @@
                                 <iconify-icon icon="fluent:cart-16-filled" class="icon"></iconify-icon>
                             </span>
                             <div>
-                                <span class="text-secondary-light text-sm fw-medium">Sales</span>
-                                <h6 class="text-md fw-semibold mb-0">$200k</h6>
+                                <span class="text-secondary-light text-sm fw-medium">Transaction</span>
+                                <h6 class="text-md fw-semibold mb-0">{{$noTransaction}}</h6>
                             </div>
                         </div>
 
@@ -202,7 +202,7 @@
                             </span>
                             <div>
                                 <span class="text-secondary-light text-sm fw-medium">Income</span>
-                                <h6 class="text-md fw-semibold mb-0">$200k</h6>
+                                <h6 class="text-md fw-semibold mb-0">{{$noIncome}}</h6>
                             </div>
                         </div>
 
@@ -212,7 +212,7 @@
                             </span>
                             <div>
                                 <span class="text-secondary-light text-sm fw-medium">Profit</span>
-                                <h6 class="text-md fw-semibold mb-0">$200k</h6>
+                                <h6 class="text-md fw-semibold mb-0">{{$profit}}</h6>
                             </div>
                         </div>
                     </div>
@@ -221,12 +221,10 @@
                 </div>
             </div>
         </div>
-        <!-- Earning Static End -->
-
         <!-- Campaign Static start -->
         <div class="col-xxl-4">
             <div class="row gy-4">
-                <div class="col-xxl-12 col-sm-6">
+                {{-- <div class="col-xxl-12 col-sm-6">
                     <div class="card h-100 radius-8 border-0">
                         <div class="card-body p-24">
                             <div class="d-flex align-items-center flex-wrap gap-2 justify-content-between">
@@ -315,12 +313,12 @@
 
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <div class="col-xxl-12 col-sm-6">
                     <div class="card h-100 radius-8 border-0 overflow-hidden">
                         <div class="card-body p-24">
                             <div class="d-flex align-items-center flex-wrap gap-2 justify-content-between">
-                                <h6 class="mb-2 fw-bold text-lg">Customer Overview</h6>
+                                <h6 class="mb-2 fw-bold text-lg">Properties Overview</h6>
                                 <div class="">
                                     <select class="form-select form-select-sm w-auto bg-base border text-secondary-light">
                                         <option>Yearly</option>
@@ -335,15 +333,15 @@
                                 <ul class="flex-shrink-0">
                                     <li class="d-flex align-items-center gap-2 mb-28">
                                         <span class="w-12-px h-12-px rounded-circle bg-success-main"></span>
-                                        <span class="text-secondary-light text-sm fw-medium">Total: 500</span>
+                                        <span class="text-secondary-light text-sm fw-medium">Total: {{ $noProperties }}</span>
                                     </li>
                                     <li class="d-flex align-items-center gap-2 mb-28">
                                         <span class="w-12-px h-12-px rounded-circle bg-warning-main"></span>
-                                        <span class="text-secondary-light text-sm fw-medium">New: 500</span>
+                                        <span class="text-secondary-light text-sm fw-medium">New: {{ $noNewProperties }}</span>
                                     </li>
                                     <li class="d-flex align-items-center gap-2">
                                         <span class="w-12-px h-12-px rounded-circle bg-primary-600"></span>
-                                        <span class="text-secondary-light text-sm fw-medium">Active: 1500</span>
+                                        <span class="text-secondary-light text-sm fw-medium">Active: {{ $noActiveProperties }}</span>
                                     </li>
                                 </ul>
                                 <div id="donutChart" class="flex-grow-1 apexcharts-tooltip-z-none title-style circle-none"></div>
@@ -354,9 +352,8 @@
                 </div>
             </div>
         </div>
-        <!-- Campaign Static End -->
 
-        <!-- Client Payment Status Start -->
+        {{-- <!-- Client Payment Status Start -->
         <div class="col-xxl-4 col-sm-6">
             <div class="card h-100 radius-8 border-0">
                 <div class="card-body p-24">
@@ -382,11 +379,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <!-- Client Payment Status End -->
 
         <!-- Country Status Start -->
-        <div class="col-xxl-4 col-sm-6">
+        {{-- <div class="col-xxl-4 col-sm-6">
             <div class="card radius-8 border-0">
 
                 <div class="card-body">
@@ -484,11 +481,11 @@
 
                 </div>
             </div>
-        </div>
+        </div> --}}
         <!-- Country Status End -->
 
         <!-- Top performance Start -->
-        <div class="col-xxl-4">
+        {{-- <div class="col-xxl-4">
             <div class="card">
 
                 <div class="card-body">
@@ -572,11 +569,11 @@
 
                 </div>
             </div>
-        </div>
+        </div> --}}
         <!-- Top performance End -->
 
         <!-- Latest Performance Start -->
-        <div class="col-xxl-6">
+        {{-- <div class="col-xxl-6">
             <div class="card h-100">
                 <div class="card-header border-bottom bg-base ps-0 py-0 pe-24 d-flex align-items-center justify-content-between">
                     <ul class="nav bordered-tab nav-pills mb-0" id="pills-tab" role="tablist">
@@ -861,13 +858,12 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="col-xxl-6">
+        </div> --}}
+        <<div class="col-xxl-12 col-lg-12">
             <div class="card h-100">
                 <div class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center justify-content-between">
                     <h6 class="text-lg fw-semibold mb-0">Last Transaction</h6>
-                    <a  href="javascript:void(0)" class="text-primary-600 hover-text-primary d-flex align-items-center gap-1">
+                    <a href="javascript:void(0)" class="text-primary-600 hover-text-primary d-flex align-items-center gap-1">
                         View All
                         <iconify-icon icon="solar:alt-arrow-right-linear" class="icon"></iconify-icon>
                     </a>
@@ -880,46 +876,35 @@
                                     <th scope="col">Transaction ID</th>
                                     <th scope="col">Date</th>
                                     <th scope="col">Status</th>
-                                    <th scope="col">Amount</th>
+                                    <th scope="col">Credit</th>
+                                    <th scope="col">Debit</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>5986124445445</td>
-                                    <td>27 Mar 2024</td>
-                                    <td> <span class="bg-warning-focus text-warning-main px-24 py-4 rounded-pill fw-medium text-sm">Pending</span> </td>
-                                    <td>$20,000.00</td>
-                                </tr>
-                                <tr>
-                                    <td>5986124445445</td>
-                                    <td>27 Mar 2024</td>
-                                    <td> <span class="bg-danger-focus text-danger-main px-24 py-4 rounded-pill fw-medium text-sm">Rejected</span> </td>
-                                    <td>$20,000.00</td>
-                                </tr>
-                                <tr>
-                                    <td>5986124445445</td>
-                                    <td>27 Mar 2024</td>
-                                    <td> <span class="bg-success-focus text-success-main px-24 py-4 rounded-pill fw-medium text-sm">Completed</span> </td>
-                                    <td>$20,000.00</td>
-                                </tr>
-                                <tr>
-                                    <td>5986124445445</td>
-                                    <td>27 Mar 2024</td>
-                                    <td> <span class="bg-success-focus text-success-main px-24 py-4 rounded-pill fw-medium text-sm">Completed</span> </td>
-                                    <td>$20,000.00</td>
-                                </tr>
-                                <tr>
-                                    <td>5986124445445</td>
-                                    <td>27 Mar 2024</td>
-                                    <td> <span class="bg-success-focus text-success-main px-24 py-4 rounded-pill fw-medium text-sm">Completed</span> </td>
-                                    <td>$20,000.00</td>
-                                </tr>
+                                @foreach($transactions as $transaction)
+                                    <tr>
+                                        <td>{{ $transaction->id }}</td>
+                                        <td>{{ $transaction->created_at }}</td>
+                                        <td>
+                                            <span class="px-24 py-4 rounded-pill fw-medium text-sm
+                                                @if($transaction->status == 'Pending') bg-warning-focus text-warning-main
+                                                @elseif($transaction->status == 'Rejected') bg-danger-focus text-danger-main
+                                                @elseif($transaction->status == 'Completed') bg-success-focus text-success-main
+                                                @endif">
+                                                {{ $transaction->status }}
+                                            </span>
+                                        </td>
+                                        <td>{{ '$' . number_format($transaction->credit, 2)??' 0 ' }}</td>
+                                        <td>{{ '$' . number_format($transaction->debit, 2) ?? ' 0 ' }}</td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
+
         <!-- Latest Performance End -->
     </div>
 
