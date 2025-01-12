@@ -82,6 +82,6 @@ class InvoiceController extends Controller
     public function generateTaxInvoice(Request $request)
     {
         $data = session()->get('data');
-        return view('invoice.preview', compact('data'));
+        return view('Invoice.preview', compact('data'));
     }
 }
