@@ -35,7 +35,7 @@ class InvoiceController extends Controller
 
     public function search(Request $request)
     {
-dd($request->all());
+
         $request->validate([
             'tax_code' => 'required|string',
         ]);
@@ -68,7 +68,7 @@ dd($request->all());
                 'issue_date' => now(),
             ]);
 
-            return view('invoice.create', [
+            return view('Invoice.create', [
                 'tax' => $tax,
                 'balance' => $balance,
             ]);
