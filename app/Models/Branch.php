@@ -15,4 +15,9 @@ class Branch extends Model
     {
         return $this->belongsTo(District::class);
     }
+
+    public function properties()
+    {
+        return $this->hasMany(Property::class);
+    }
 }

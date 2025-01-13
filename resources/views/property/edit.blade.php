@@ -142,15 +142,7 @@
                                         <input type="text" class="form-control radius-8" id="nbr" name="nbr"
                                             placeholder="Enter NBR" value="{{ old('nbr', $property->nbr) }}">
                                     </div>
-                                    <div class="col-md-6 mb-20">
-                                        <label for="house_code"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            House Code
-                                        </label>
-                                        <input type="text" class="form-control radius-8" id="house_code"
-                                            name="house_code" placeholder="Enter house code"
-                                            value="{{ old('house_code', $property->house_code) }}">
-                                    </div>
+
 
                                     <div class="col-md-6 mb-20">
                                         <label for="status"
@@ -269,13 +261,17 @@
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
                                             Branch
                                         </label>
-                                       <select class="form-control radius-8 form-select" id="branch"
-                                            name="branch">
-                                            <option value="{{ $property->branch_id }}">{{ $property->branch->name }}</option>
+                                        <select class="form-control radius-8 form-select" id="branch" name="branch">
+
+                                            <option value="{{ $property->branch_id }}" selected>{{ $property->branch->name }}</option>
+
                                             @foreach ($branches as $branch)
-                                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                                @if ($branch->id !== $property->branch_id)
+                                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                                @endif
                                             @endforeach
                                         </select>
+
                                     </div>
                                     <div class="col-md-6 mb-20">
                                         <label for="zone"

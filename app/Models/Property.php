@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\Tenant;
+use App\Models\Branch;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 

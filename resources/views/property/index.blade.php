@@ -96,6 +96,8 @@
                         <th scope="col">NBR</th> --}}
                         {{-- <th scope="col">Designation</th> --}}
                         <th scope="col">House Type</th>
+                        <th scope="col">House code</th>
+
                         <th scope="col">House Rent</th>
                         {{-- <th scope="col">Zone</th> --}}
                         <th scope="col">Quarterly Tax Fee</th>
@@ -107,7 +109,7 @@
                         <th scope="col">Status</th>
 
                         <th scope="col">Action</th>
-                     
+
 
                     </tr>
                 </thead>
@@ -134,6 +136,7 @@
                             {{-- <td>{{ $property->nbr }}</td> --}}
                             {{-- <td>{{ $property->designation }}</td> --}}
                             <td>{{ $property->house_type }}</td>
+                            <td>{{ $property->house_code }}</td>
                             <td>{{ $property->house_rent }}</td>
                             {{-- <td>{{ $property->zone }}</td> --}}
                             <td>{{ $property->quarterly_tax_fee }}</td>

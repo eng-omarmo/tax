@@ -131,15 +131,7 @@
                                             <input type="text" class="form-control radius-8" id="nbr"
                                                 name="nbr" placeholder="Enter NBR" value="{{ old('nbr') }}">
                                         </div>
-                                        <div class="col-md-6 mb-20">
-                                            <label for="house_code"
-                                                class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                                House Code
-                                            </label>
-                                            <input type="text" class="form-control radius-8" id="house_code"
-                                                name="house_code" placeholder="Enter house code"
-                                                value="{{ old('house_code') }}">
-                                        </div>
+                                    
 
                                         <div class="col-md-6 mb-20">
                                             <label for="status"
@@ -289,7 +281,7 @@
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                
+
                     var branchSelect = document.getElementById('branch_id');
                     branchSelect.innerHTML = '<option value="">Choose Branch</option>';
                     data.forEach(branch => {
