@@ -10,6 +10,7 @@ use App\Models\District;
 use App\Models\Landlord;
 use App\Models\Property;
 use App\Models\Transaction;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +25,7 @@ class propertyController extends Controller
 
         $monitoringStatuses = Property::pluck('monitoring_status')->unique();
 
-        $query  = Property::with('transactions', 'landlord');
+        $query  = Property::with('transactions', 'landlord', 'branch');
         if ($request->filled('search')) {
             // has landlord
             $query->whereHas('landlord', function ($q) use ($request) {
@@ -62,7 +63,7 @@ class propertyController extends Controller
     public function getBranches($districtId)
     {
         $branches = Branch::where('district_id', $districtId)->get();
-        if($branches->isEmpty()){
+        if ($branches->isEmpty()) {
             return response()->json(['error' => 'No branches found for the selected district.']);
         }
         return response()->json($branches);
@@ -83,6 +84,7 @@ class propertyController extends Controller
             'zone' => 'required',
             'latitude' => 'required',
         ]);
+        dd($request->all());
 
         try {
             $lanlord = Landlord::where('user_id', auth()->user()->id)->first();
@@ -195,12 +197,11 @@ class propertyController extends Controller
         try {
             DB::beginTransaction();
 
+
             $request->validate([
                 'property_name' => 'required|string|max:255',
                 'property_phone' => 'nullable|string|max:45',
                 'nbr' => 'nullable|string|max:100',
-                'house_code' => 'nullable|string|max:50',
-
                 'zone' => 'nullable|string|max:255',
                 'house_type' => 'nullable|string|max:255',
                 'latitude' => 'required',
@@ -239,8 +240,9 @@ class propertyController extends Controller
                 'property_name' => $request->property_name,
                 'property_phone' => $request->property_phone,
                 'nbr' => $request->nbr,
-                'house_code' => $request->house_code,
-                'branch_id' => $request->branch,
+                'house_code' => 'H' . rand(10000, 99999).rand(10000, 99999),
+
+                'branch_id' => $request->branch_id,
                 'zone' => $request->zone,
                 'house_type' => $request->house_type,
                 'latitude' => $request->latitude,
@@ -276,7 +278,7 @@ class propertyController extends Controller
 
     public function edit($id)
     {
-        $property = Property::findorFail($id);
+        $property = Property::with('branch')->findorFail($id);
         $districts = District::select('id', 'name')->get();
         $branches = Branch::where('district_id', $property->district_id)->get();
 
@@ -397,7 +399,7 @@ class propertyController extends Controller
         $getDistrictIDs = Property::pluck('district_id');
         $data['statuses'] = Property::pluck('status')
             ->unique();
-            $getBranchIDs = Property::with('branch')->pluck('branch_id')
+        $getBranchIDs = Property::with('branch')->pluck('branch_id')
             ->unique();
         $data['zones'] = Property::pluck('zone')
             ->unique();
