@@ -25,7 +25,7 @@ class propertyController extends Controller
 
         $monitoringStatuses = Property::pluck('monitoring_status')->unique();
 
-        $query  = Property::with('transactions', 'landlord', 'branch');
+        $query  = Property::with('transactions', 'landlord');
         if ($request->filled('search')) {
             // has landlord
             $query->whereHas('landlord', function ($q) use ($request) {
@@ -37,8 +37,8 @@ class propertyController extends Controller
             $query->where('property_name', 'like', '%' . $request->search . '%')
                 ->orWhere('property_phone', 'like', '%' . $request->search . '%')
                 ->orWhere('house_code', 'like', '%' . $request->search . '%')
-                ->orWhere('nbr', 'like', '%' . $request->search . '%')
-                ->orWhere('branch', 'like', '%' . $request->search . '%');
+                ->orWhere('nbr', 'like', '%' . $request->search . '%');
+
         }
         if ($request->filled('status')) {
             $query->where('status', $request->status);
@@ -362,7 +362,7 @@ class propertyController extends Controller
                 'property_name' => $request->property_name,
                 'property_phone' => $request->property_phone,
                 'nbr' => $request->nbr,
-                'house_code' => $request->house_code,
+           
                 'branch_id' => $request->branch,
                 'zone' => $request->zone,
                 'house_type' => $request->house_type,

@@ -54,6 +54,7 @@
                     <tr>
                         <th scope="col">S.L</th>
                         <th scope="col">Property</th>
+                        <th scope="col">Property Code</th>
                         <th scope="col">Tax Amount</th>
                         <th scope="col">Tax Code</th>
                         <th scope="col">Due Date</th>
@@ -63,7 +64,7 @@
                         @if(auth()->user()->role == 'Admin')
                         <th scope="col" class="text-center">Action</th>
                         @endif
-         
+
                     </tr>
                 </thead>
                 <tbody>
@@ -73,6 +74,7 @@
 
                             <td><a href="{{ route('property.show', $tax->property->id) }}">{{ $tax->property->property_name }}</a></td>
 
+                            <td>{{ $tax->property->house_code }}</td>
                             <td>${{ number_format($tax->tax_amount, 2) }}</td>
                             <td>{{ $tax->tax_code }}</td>
                             <td>{{ $tax->due_date}}</td>
