@@ -86,8 +86,7 @@
                                     <select class="form-control radius-8 form-select" id="role" name="role">
                                         <option value="admin">Admin</option>
                                         <option value="Tax Officer">Tax Officer</option>
-                                        <option value="Business Owner">Business Owner</option>
-                                        <option value="Landlord">Landlord</option>
+
                                     </select>
                                 </div>
                                 <div class="mb-20">
