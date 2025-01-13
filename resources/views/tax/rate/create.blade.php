@@ -39,9 +39,11 @@
                                     <label for="name" class="form-label fw-semibold text-primary-light text-sm mb-8">
                                         Tax Rate Type <span class="text-danger-600">*</span>
                                     </label>
-                                    <input type="text" class="form-control radius-8" id="name"
-                                        name="name" placeholder="Enter Tax Rate Name"
-                                        value="{{ old('name') }}" required>
+                                    <select class="form-control radius-8 form-select" id="name" name="name" required>
+                                        <option value=""">Choose Tax Rate Type</option</option>
+                                        <option value="Apartment" {{ old('name') == 'Villa' ? 'selected' : '' }}>Villa Tax</option>
+                                        <option value="Apartment" {{ old('name') == 'Apartment' ? 'selected' : '' }}>Apartment Tax</option>
+                                    </select>
                                 </div>
 
                                 <!-- Rate -->
