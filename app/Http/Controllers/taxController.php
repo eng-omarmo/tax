@@ -104,7 +104,7 @@ class taxController extends Controller
     public function destroy($tax)
     {
         $tax = Tax::find($tax);
-        $tax->transactions()->delete();
+        $tax->property->transactions()->delete();
         $tax->delete();
 
         return redirect()->route('tax.index');
