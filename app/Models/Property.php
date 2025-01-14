@@ -19,7 +19,7 @@ class Property extends Model
         'house_code',
         'branch_id',
         'zone',
-        'designation',
+ 
         'house_type',
         'house_rent',
         'quarterly_tax_fee',
@@ -74,10 +74,13 @@ class Property extends Model
         $quarterlyTax = $monthlyTax * 3;
         $yearlyTax = $monthlyTax * 12;
 
+        $yearlyHouseRent=  $monthlyTax * 12;
+
         $data = [
             'quarterly_tax' => $quarterlyTax,
             'yearly_tax' => $yearlyTax,
-            'message' => $message
+            'message' => $message,
+            'yearlyHouseRent' => $yearlyHouseRent
 
         ];
 

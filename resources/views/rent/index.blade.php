@@ -86,7 +86,7 @@
                         <th scope="col">Rent Start Date</th>
 
                         <th scope="col">Rent Total Amount</th>
-                        <th scope="col">Rent Balance</th>
+                        {{-- <th scope="col">Rent Balance</th> --}}
                         <th scope="col" class="text-center">Status</th>
                         <th scope="col" class="text-center">Action</th>
                     </tr>
@@ -106,7 +106,7 @@
                             <td>{{ $rent->id }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <span class="text-md mb-0 fw-normal text-secondary-light">{{ $rent->tenant->user->name }}</span>
+                                    <span class="text-md mb-0 fw-normal text-secondary-light">{{ $rent->tenant_name }}</span>
                                 </div>
                             </td>
 
@@ -149,11 +149,11 @@
                             </td>
 
 
-                            <td>
+                            {{-- <td>
                                 <div class="d-flex align-items-center">
                                     <span class="text-md mb-0 fw-normal text-secondary-light">{{$rent->balance}}</span>
                                 </div>
-                            </td>
+                            </td> --}}
 
                             <td class="text-center">
                                 <span

@@ -14,7 +14,6 @@ class Unit extends Model
         'unit_number',
         'unit_type',
         'unit_price',
-        'unit_area',
         'is_available',
     ];
 

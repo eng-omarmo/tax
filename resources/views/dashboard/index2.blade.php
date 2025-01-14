@@ -131,14 +131,14 @@
                                         <iconify-icon icon="streamline:bag-dollar-solid" class="icon"></iconify-icon>
                                     </span>
                                     <div>
-                                        <span class="mb-2 fw-medium text-secondary-light text-sm">Total UnPaid Tax</span>
-                                        <h6 class="fw-semibold">{{$totalUnpaidTax}}</h6>
+                                        <span class="mb-2 fw-medium text-secondary-light text-sm">Total UnPaid Rent</span>
+                                        <h6 class="fw-semibold">{{$totalUnpaidRent}}</h6>
                                     </div>
                                 </div>
 
                                 <div id="total-profit-chart" class="remove-tooltip-title rounded-tooltip-value"></div>
                             </div>
-                            <p class="text-sm mb-0">Increase by <span class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">{{$totalPaidTaxIncreaseByThisWeek}}</span> this week</p>
+                            <p class="text-sm mb-0">Increase by <span class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">{{$totalPaidRentIncreaseByThisWeek}}</span> this week</p>
                         </div>
                     </div>
                 </div>

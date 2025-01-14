@@ -73,8 +73,8 @@
                                             <input type="text" class="form-control radius-8" id="property_phone"
                                                 name="property_phone" value="{{ $property->property_phone }}" readonly>
                                         </div>
-
-
+                                    </div>
+                                    <div class="row">
                                         <!-- Unit Name -->
                                         <div class="mb-20">
                                             <label for="unit_name"
@@ -85,11 +85,12 @@
                                                 placeholder="Enter Unit Name" name="unit_name"
                                                 value="{{ old('unit_name') }}" required>
                                         </div>
-
+                                    </div>
+                                        <div class="row">
                                         <div class="mb-20">
                                             <label for="unit_price"
                                                 class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                                Unit price <span class="text-danger-600">*</span>
+                                                Rent Price <span class="text-danger-600">*</span>
                                             </label>
                                             <input type="text" class="form-control radius-8" id="unit_price"
                                                 placeholder="Enter Unit Price" name="unit_price"
@@ -116,17 +117,6 @@
                                                     Other</option>
                                             </select>
                                         </div>
-
-                                        <!-- Unit Area -->
-                                        <div class="mb-20">
-                                            <label for="unit_area"
-                                                class="form-label fw-semibold text-primary-light text-sm mb-8"
-                                                place="Enter Unit Area">
-                                                Unit Area (sq ft) <span class="text-danger-600">*</span>
-                                            </label>
-                                            <input type="number" class="form-control radius-8" id="unit_area"
-                                                placeholder="Enter Unit Area" name="unit_area"
-                                                value="{{ old('unit_area') }}" step="0.01" required>
                                         </div>
 
                                         <div class="d-flex align-items-center justify-content-center gap-3">

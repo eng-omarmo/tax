@@ -247,8 +247,8 @@
                 </ul>
 
             </li>
-            @if (Auth::user()->role == 'Landlord')
-                <li class="dropdown">
+            @if (Auth::user()->role == 'Landlord' || Auth::user()->role == 'Admin')
+                {{-- <li class="dropdown">
                     <a href="javascript:void(0)">
                         <i class="ri-user-fill text-info-main text-xl"></i>
                         <span>Tenant</span>
@@ -268,7 +268,7 @@
 
                     </ul>
 
-                </li>
+                </li> --}}
                 <li class="dropdown">
                     <a href="javascript:void(0)">
                         <i class="ri-user-fill text-info-main text-xl"></i>

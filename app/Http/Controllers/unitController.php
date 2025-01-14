@@ -26,7 +26,7 @@ class unitController extends Controller
             $request->validate([
                 'property_id' => 'required|exists:properties,id',
                 'unit_name' => 'required',
-                'unit_area' => 'required',
+
                 'unit_price' => 'required',
             ]);
             $unitNumber = 'U' . rand(1000, 9999) . rand(1000, 9999);
@@ -35,7 +35,7 @@ class unitController extends Controller
                 'property_id' => $request->property_id,
                 'unit_number' => $unitNumber,
                 'unit_name' => $request->unit_name,
-                'unit_area' => $request->unit_area,
+                'unit_type' => $request->unit_type,
                 'unit_price' => $request->unit_price,
                 'is_available' => 1
             ]);

@@ -131,7 +131,7 @@
                                             <input type="text" class="form-control radius-8" id="nbr"
                                                 name="nbr" placeholder="Enter NBR" value="{{ old('nbr') }}">
                                         </div>
-                                    
+
 
                                         <div class="col-md-6 mb-20">
                                             <label for="status"
@@ -157,17 +157,7 @@
 
 
 
-                                        <div class="col-md-6 mb-20">
-                                            <label for="designation"
-                                                class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                                Designation <span class="text-danger-600">*</span>
-                                            </label>
-                                            <select class="form-control radius-8 form-select" id="designation"
-                                                name="designation">
-                                                <option value="">Choose Designation</option>
-                                                <option value="Deegaan">Deegaan</option>
-                                            </select>
-                                        </div>
+
 
                                         <div class="col-md-6 mb-20">
                                             <label for="house_type"
@@ -180,7 +170,7 @@
                                                 <option value="Apartment">Apartment</option>
                                             </select>
                                         </div>
-
+{{-- 
                                         <div class="col-md-6 mb-20">
                                             <label for="house_rent"
                                                 class="form-label fw-semibold text-primary-light text-sm mb-8">
@@ -190,7 +180,7 @@
                                                 name="house_rent" placeholder="Enter house rent"
                                                 value="{{ old('house_rent') }}">
 
-                                        </div>
+                                        </div> --}}
 
 
 

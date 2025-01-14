@@ -38,7 +38,6 @@ class propertyController extends Controller
                 ->orWhere('property_phone', 'like', '%' . $request->search . '%')
                 ->orWhere('house_code', 'like', '%' . $request->search . '%')
                 ->orWhere('nbr', 'like', '%' . $request->search . '%');
-
         }
         if ($request->filled('status')) {
             $query->where('status', $request->status);
@@ -78,7 +77,6 @@ class propertyController extends Controller
             'house_code' => 'required',
             'house_type' => 'required',
             'house_rent' => 'required',
-
             'branch' => 'required',
             'district_id' => 'required',
             'zone' => 'required',
@@ -196,8 +194,6 @@ class propertyController extends Controller
     {
         try {
             DB::beginTransaction();
-
-
             $request->validate([
                 'property_name' => 'required|string|max:255',
                 'property_phone' => 'nullable|string|max:45',
@@ -213,7 +209,7 @@ class propertyController extends Controller
                 'status' => 'required|in:Active,Inactive',
                 'district_id' => 'required|exists:districts,id',
                 'house_rent' => 'nullable|numeric',
-
+                'lanlord_id' => 'nullable|exists:landlords,id',
             ]);
 
 
@@ -226,35 +222,27 @@ class propertyController extends Controller
                 return back()->with('error', 'Property name and phone already exists.');
             }
 
-            $data = Property::calculateTax($request->house_type, $request->house_rent);
 
 
-            if ($data['message'] !== '') {
-                return back()->with('error', $data['message']);
-            }
-            if ($data['quarterly_tax'] < 0 || $data['yearly_tax'] < 0) {
-                return back()->with('error', 'Tax fee for the property cannot be negative.');
-            }
 
             $property =  Property::create([
                 'property_name' => $request->property_name,
                 'property_phone' => $request->property_phone,
                 'nbr' => $request->nbr,
-                'house_code' => 'H' . rand(10000, 99999).rand(10000, 99999),
-
+                'house_code' => 'H' . rand(10000, 99999) . rand(10000, 99999),
                 'branch_id' => $request->branch_id,
                 'zone' => $request->zone,
                 'house_type' => $request->house_type,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
-                'designation' => $request->designation,
+
                 'monitoring_status' => $request->monitoring_status,
                 'status' => $request->status,
                 'district_id' => $request->district_id,
-                'house_rent' => $request->house_rent,
-                'quarterly_tax_fee' => $data['quarterly_tax'],
-                'yearly_tax_fee' => $data['yearly_tax'],
-                'landlord_id' => $request->lanlord_id
+                'house_rent' => 0,
+                'quarterly_tax_fee' => 0,
+                'yearly_tax_fee' => 0,
+                'landlord_id' => $request->lanlord_id,
             ]);
             $this->recordTaxFee($property);
             $this->createTransaction($property);
@@ -362,7 +350,7 @@ class propertyController extends Controller
                 'property_name' => $request->property_name,
                 'property_phone' => $request->property_phone,
                 'nbr' => $request->nbr,
-           
+
                 'branch_id' => $request->branch,
                 'zone' => $request->zone,
                 'house_type' => $request->house_type,
@@ -372,7 +360,7 @@ class propertyController extends Controller
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
                 'designation' => $request->designation,
-                'dalal_company_name' => $request->dalal_company_name,
+
                 'district_id' => $request->district_id,
                 'monitoring_status' => $request->monitoring_status,
                 'status' => $request->status,

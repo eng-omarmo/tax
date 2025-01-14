@@ -20,9 +20,8 @@ return new class extends Migration
             $table->unsignedBigInteger('landlord_id');
             $table->unsignedBigInteger('branch_id')->nullable();
             $table->string('house_code', 50)->nullable();
-
             $table->string('zone', 100)->nullable();
-            $table->string('designation', 100)->nullable();
+        
             $table->string('house_type', 100)->nullable();
             $table->decimal('house_rent', 10, 2)->nullable();
             $table->decimal('quarterly_tax_fee', 10, 2)->nullable();
