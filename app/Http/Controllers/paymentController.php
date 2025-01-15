@@ -40,20 +40,8 @@ class paymentController extends Controller
     public function taxIndex(Request $request)
     {
         // Build the query with eager loading and tax filtering (if needed).
-        $query = Payment::with('tax', 'paymentDetail')->whereNotNull('tax_id');
+        $query = Payment::with('invoice', 'paymentDetail')->whereNotNull('tax_id');
 
-        // Apply search condition if it exists.
-        if ($request->has('search') && $request->search) {
-            $query->where('reference', 'like', '%' . $request->search . '%')
-                ->orWhere('amount', 'like', '%' . $request->search . '%');
-        }
-
-        // Filter by landlord if the user has the 'Landlord' role.
-        if (auth()->user()->role == 'Landlord') {
-            $query->whereHas('tax.property.landlord', function ($q) {
-                $q->where('user_id', auth()->id());
-            });
-        }
 
         $payments = $query->paginate(5);
 
