@@ -40,8 +40,7 @@ class paymentController extends Controller
     public function taxIndex(Request $request)
     {
         // Build the query with eager loading and tax filtering (if needed).
-        $query = Payment::with('invoice', 'paymentDetail')->whereNotNull('tax_id');
-
+        $query = Payment::with('invoice', 'paymentDetail');
 
         $payments = $query->paginate(5);
 
@@ -114,7 +113,7 @@ class paymentController extends Controller
                 'tax_id' => null,
                 'amount' => $request->amount,
                 'payment_date' => now(),
-                'reference' => 'Rent'.rand(1000, 9999).rand(1000, 9999),
+                'reference' => 'Rent' . rand(1000, 9999) . rand(1000, 9999),
                 'payment_method' => $request->payment_method,
                 'status' => 'completed',
             ]);
@@ -152,7 +151,7 @@ class paymentController extends Controller
                 'tax_id' => $request->tax_id,
                 'amount' => $request->amount,
                 'payment_date' => now(),
-                'reference' => 'Tax'.rand(1000, 9999).rand(1000, 9999),
+                'reference' => 'Tax' . rand(1000, 9999) . rand(1000, 9999),
                 'payment_method' => $request->payment_method,
                 'status' => 'completed',
             ]);
@@ -309,5 +308,4 @@ class paymentController extends Controller
             'additional_info' => $request->additional_info,
         ]);
     }
-
 }
