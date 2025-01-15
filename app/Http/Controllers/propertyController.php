@@ -308,43 +308,7 @@ class propertyController extends Controller
                 return back()->with('error', 'Property not found.');
             }
 
-            if ($request->house_rent > 0) {
-                $data = Property::calculateTax($request->house_type, $request->house_rent);
 
-                if ($data['message'] !== '') {
-                    return back()->with('error', $data['message']);
-                }
-
-                if ($data['quarterly_tax'] < 0 || $data['yearly_tax'] < 0) {
-                    return back()->with('error', 'Tax fee for the property cannot be negative.');
-                }
-
-                $request->merge([
-                    'quarterly_tax_fee' => $data['quarterly_tax'],
-                    'yearly_tax_fee' => $data['yearly_tax'],
-                ]);
-
-                $tax = Tax::where('property_id', $property->id)->first();
-                if ($tax) {
-                    $tax->update([
-
-                        'tax_amount' => $request->yearly_tax_fee,
-                    ]);
-                }
-
-                $transaction = Transaction::where([
-                    'property_id' => $tax->property->id,
-                    'transaction_type' => 'Tax',
-
-                ])->whereNotNull('debit')->first();
-
-                if ($transaction) {
-                    $transaction->update([
-                        'amount' => $request->yearly_tax_fee,
-                        'debit' => $request->yearly_tax_fee,
-                    ]);
-                }
-            }
 
             $property->update([
                 'property_name' => $request->property_name,
@@ -365,7 +329,7 @@ class propertyController extends Controller
                 'monitoring_status' => $request->monitoring_status,
                 'status' => $request->status,
             ]);
-            //update the transaction if any changes happen to the tax fee
+
             if (auth()->user()->role == 'Admin') {
                 return redirect()->route('property.index')->with('success', 'Property updated successfully.');
             }
