@@ -17,23 +17,8 @@ class paymentController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Payment::with('rent', 'paymentDetail')->whereNotNull('rent_id');
+        $query = Payment::with('invoice', 'paymentDetail');
 
-        if (auth()->user()->role == 'rent') {
-            $query->whereHas('rent.property.landlord', function ($q) {
-                $q->where('user_id', auth()->id());
-            });
-        }
-
-        if ($request->has('search') && $request->search) {
-            $query->where('reference', 'like', '%' . $request->search . '%')
-                ->orWhere('amount', 'like', '%' . $request->search . '%');
-        }
-        if (auth()->user()->role == 'Landlord') {
-            $query->whereHas('rent.property.landlord', function ($q) {
-                $q->where('user_id', auth()->id());
-            });
-        }
 
         $payments = $query->paginate(5);
 
