@@ -316,7 +316,7 @@ Route::prefix('forms')->group(function () {
 
 
 // invoice/invoiceList
-Route::prefix('invoice')->group(function () {
+Route::prefix('invoice')->middleware(['auth.admin'])->group(function () {
     Route::controller(InvoiceController::class)->group(function () {
         Route::get('/invoice-add', 'invoiceAdd')->name('invoiceAdd');
         Route::get('/search', 'search')->name('invoice.search');
