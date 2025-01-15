@@ -12,9 +12,33 @@ class unitController extends Controller
 
     public function index()
     {
-        $units = Unit::with('property')->paginate(5);
+        $query = Unit::with('property');
+
+        if (request()->has('search') && request()->search) {
+            $searchTerm = '%' . request()->search . '%';
+
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('unit_name', 'like', $searchTerm)
+                  ->orWhere('unit_number', 'like', $searchTerm)
+                  ->orWhere('unit_price', 'like', $searchTerm);
+            })
+            ->orWhereHas('property', function ($q) use ($searchTerm) {
+                $q->where(function ($q) use ($searchTerm) {
+                    $q->where('property_name', 'like', $searchTerm)
+                      ->orWhere('property_phone', 'like', $searchTerm);
+                });
+            });
+        }
+
+        if (request()->has('status') && request()->status) {
+            $query->where('is_available', request()->status);
+        }
+
+        $units = $query->paginate(5);
+
         return view('unit.index', compact('units'));
     }
+
     public function create()
     {
         return view('unit.create');
@@ -37,15 +61,13 @@ class unitController extends Controller
                 'unit_name' => $request->unit_name,
                 'unit_type' => $request->unit_type,
                 'unit_price' => $request->unit_price,
-                'is_available' => 1
+                'is_available' => 0
             ]);
             return redirect()->route('unit.index')->with('success', 'Unit created successfully.');
         } catch (\Throwable $th) {
             return back()->with('error', 'Failed to create unit.' . $th->getMessage());
         }
     }
-
-
 
     public function search(Request $request)
     {
@@ -61,5 +83,36 @@ class unitController extends Controller
         }
 
         return view('unit.create', ['property' => $property]);
+    }
+
+    public function edit($id)
+    {
+        $unit = Unit::find($id);
+        return view('unit.edit', compact('unit'));
+    }
+
+
+    public function update(Request $request, $id)
+    {
+ 
+
+        try {
+            $request->validate([
+                'unit_name' => 'required',
+                'unit_price' => 'required',
+                'unit_type' => 'required',
+                'is_available' => 'required',
+            ]);
+            $unit = Unit::find($id);
+            $unit->update([
+                'unit_name' => $request->unit_name,
+                'unit_type' => $request->unit_type,
+                'unit_price' => $request->unit_price,
+                'is_available' => $request->is_available
+            ]);
+            return redirect()->route('unit.index')->with('success', 'Unit updated successfully.');
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Failed to update unit.' . $th->getMessage());
+        }
     }
 }

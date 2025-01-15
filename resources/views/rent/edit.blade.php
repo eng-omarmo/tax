@@ -106,7 +106,7 @@
                                     <label for="rent_document" class="form-label fw-semibold text-primary-light text-sm mb-8">
                                         Rent Document <span class="text-danger-600">*</span>
                                     </label>
-                                    <input type="file" class="form-control radius-8" id="rent_document" name="rent_document" value="{{ old('rent_document', $rent->rent_document) }}" required>
+                                    <input type="file" class="form-control radius-8" id="rent_document" name="rent_document" value="{{ old('rent_document', $rent->rent_document) }}" >
                                     @if ($rent->rent_document)
                                         <a href="{{ Storage::url($rent->rent_document) }}" target="_blank" class="text-primary-600 underline hover:text-primary-800 mt-4 block">View Rent Document</a>
                                     @endif
@@ -125,8 +125,8 @@
                                         <option value="Active"
                                             {{ old('status', $rent->status) == 'Active' ? 'selected' : '' }}>Active
                                         </option>
-                                        <option value="Inactive"
-                                            {{ old('status', $rent->status) == 'Inactive' ? 'selected' : '' }}>Inactive
+                                        <option value="terminated"
+                                            {{ old('status', $rent->status) == 'terminated' ? 'selected' : '' }}>Terminated
                                         </option>
                                     </select>
                                 </div>

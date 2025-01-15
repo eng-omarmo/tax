@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Rent;
 use App\Models\Unit;
 use App\Models\Tenant;
+use App\Models\Invoice;
 use App\Models\Property;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -97,9 +98,10 @@ class rentController extends Controller
             ]);
 
             if ($rent->status == 'active') {
-                Unit::where('id', $request->unit_id)->update(['is_available' => false]);
+                Unit::where('id', $request->unit_id)->update(['is_available' => 1]);
             }
 
+            $this->createInvoice($rent);
             $this->createTransaction($rent);
 
             DB::commit();
@@ -137,7 +139,6 @@ class rentController extends Controller
      */
     public function update(Request $request, $rent)
     {
-
         try {
             $request->validate([
                 'rent_amount' => 'required|numeric|min:0',
@@ -147,18 +148,13 @@ class rentController extends Controller
                 'tenant_name' => 'required',
                 'rent_document' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:2048',
             ]);
-
-
             $rent = Rent::find($rent);
             if (!$rent) {
                 return redirect()->route('rent.index')->with('error', 'Rent not found.');
             }
-
-
-
             $rentDocumentPath = $rent->rent_document;
 
-            if ($rent->rent_document != $request->rent_document) {
+            if ($request->hasFile('rent_document') && $rent->rent_document != $request->rent_document) {
                 Storage::disk('public')->delete($rentDocumentPath);
                 $rentDocumentPath = $request->file('rent_document')->store('uploads/rent_documents', 'public');
             }
@@ -172,7 +168,12 @@ class rentController extends Controller
                 'status' => $request->status,
                 'rent_document' => $rentDocumentPath
             ]);
-
+            if ($rent->status == 'active') {
+                Unit::where('id', $rent->unit_id)->update(['is_available' => 1]);
+            }
+            if ($rent->status == 'terminated') {
+                Unit::where('id', $rent->unit_id)->update(['is_available' => 0]);
+            }
             return redirect()->route('rent.index')->with('success', 'Rent updated successfully.');
         } catch (\Throwable $th) {
             Log::info($th->getMessage());
@@ -211,15 +212,9 @@ class rentController extends Controller
         if ($start->greaterThan($end)) {
             return redirect()->route('rent.index')->with('error', 'Start date is greater than end date');
         }
-
-
         $totalDays = $start->diffInDays($end) + 1;
         $daysInMonth = $start->daysInMonth;
-
-
         $dailyRent = $monthlyRent / $daysInMonth;
-
-
         $totalRent = $dailyRent * $totalDays;
 
         return $totalRent;
@@ -232,9 +227,8 @@ class rentController extends Controller
             'search_unit_number' => 'required',
         ]);
 
-
         $unit = Unit::with('property')->where('unit_number', $request->search_unit_number)->first();
-        if ($unit && $unit->is_available == false) {
+        if ($unit && $unit->is_available == 1) {
             return back()->withInput()->with('error', 'unit is not available');
         }
 
@@ -276,4 +270,22 @@ class rentController extends Controller
             Log::info($th->getMessage());
         }
     }
+
+    private function createInvoice($rent)
+    {
+        try {
+            return Invoice::create([
+                'unit_id' => $rent->unit_id,
+                'invoice_number' => 'Inv' . rand(1000, 9999) . rand(1000, 9999),
+                'amount' => $rent->rent_amount,
+                'invoice_date' => now(),
+                'due_date' => now()->addDays(5),
+                'payment_status' => 'Pending',
+            ]);
+        } catch (\Throwable $th) {
+            Log::info($th->getMessage());
+        }
+    }
+
+
 }

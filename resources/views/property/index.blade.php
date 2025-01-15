@@ -95,17 +95,13 @@
                         {{-- <th scope="col">Branch</th>
                         <th scope="col">NBR</th> --}}
                         {{-- <th scope="col">Designation</th> --}}
-                        <th scope="col">House Type</th>
-                        <th scope="col">House code</th>
+                        <th scope="col">Property Type</th>
+                        <th scope="col">Property code</th>
 
-                        <th scope="col">House Rent</th>
-                        {{-- <th scope="col">Zone</th> --}}
-                        <th scope="col">Quarterly Tax Fee</th>
-                        <th scope="col">Yearly Tax Fee</th>
                         {{-- <th scope="col">Latitude</th>
                         <th scope="col">Longitude</th> --}}
                         <th scope="col">Monitoring Status</th>
-                        <th scope="col">Tax Balance</th>
+                        {{-- <th scope="col">Tax Balance</th> --}}
                         <th scope="col">Status</th>
 
                         <th scope="col">Action</th>
@@ -128,23 +124,12 @@
                             <td>{{ $property->property_name }}</td>
                             <td>{{ $property->property_phone }}</td>
                             @if(Auth::user()->role == 'Admin')
-
                             <td><a href="{{ route('landlord.show', $property->landlord->id) }}">{{ $property->landlord->name }}</a></td>
-
                             @endif
-                            {{-- <td>{{ $property->branch }}</td> --}}
-                            {{-- <td>{{ $property->nbr }}</td> --}}
-                            {{-- <td>{{ $property->designation }}</td> --}}
                             <td>{{ $property->house_type }}</td>
                             <td>{{ $property->house_code }}</td>
-                            <td>{{ $property->house_rent }}</td>
-                            {{-- <td>{{ $property->zone }}</td> --}}
-                            <td>{{ $property->quarterly_tax_fee }}</td>
-                            <td>{{ $property->yearly_tax_fee }}</td>
-                            {{-- <td>{{ $property->latitude }}</td>
-                            <td>{{ $property->longitude }}</td> --}}
                             <td>{{ $property->monitoring_status }}</td>
-                            <td>{{ $property->balance ? $property->balance : '0' }}</td>
+                          {{-- //  <td>{{ $property->balance ? $property->balance : '0' }}</td> --}}
                             <td class="text-center">
                                 <span
                                     class="{{ $property->status == 'Available' ? 'bg-success-focus text-success-600' : 'bg-danger-focus text-danger-600' }} border px-24 py-4 radius-4 fw-medium text-sm">

@@ -11,13 +11,18 @@
 @endphp
 
 @section('content')
-    <div class="card h-100 p-0 radius-12">
+    <div class="card h-100  p-0 radius-12">
         @if (session()->has('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 {{ session()->get('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
+
+    
+
+
+
         <form method="GET" action="{{ route('unit.index') }}" id="filterForm">
             <div
                 class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center justify-content-between flex-wrap gap-3">
@@ -29,12 +34,13 @@
                     </div>
                     <select name="status" class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px">
                         <option value="">Status</option>
-                        <option value="Available" {{ request()->status == 'Available' ? 'selected' : '' }}>Available
+                        <option value="0" {{ request()->status == 0 ? 'selected' : '' }}>Available
                         </option>
-                        <option value="Occupied" {{ request()->status == 'Occupied' ? 'selected' : '' }}>Occupied</option>
+                        <option value="1" {{ request()->status == 1 ? 'selected' : '' }}>Occupied</option>
                     </select>
                 </div>
                 <div class="d-flex align-items-center gap-3 flex-wrap">
+
                     <a href="javascript:void(0);" id="filterLink"
                         class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
                         <iconify-icon icon="ic:baseline-filter-alt" class="icon text-xl line-height-1"></iconify-icon>
@@ -91,16 +97,24 @@
                                 </div>
                             </td>
 
-                            <td>{{ $unit->property->property_name }}</td>
-                            <td>{{ $unit->property->property_phone }}</td>
+                            <td>   <a href="{{route('property.edit', $unit->property->id)}}">
+                                {{ $unit->property->property_name }}
+                            </a></td>
+                            <td>
+                                <a href="{{route('property.edit', $unit->property->id)}}">
+                                    {{ $unit->property->property_phone }}
+                                </a>
+                            </td>
+
+
                             <td>{{ '$' . $unit->unit_price }}</td>
                             <td>{{ $unit->unit_number }}</td>
                             <td>{{ $unit->unit_type }}</td>
                             {{-- <td>{{ $unit->unit_type }}</td> --}}
                             <td class="text-center">
                                 <span
-                                    class="{{ $unit->is_available == 1 ? 'bg-success-focus text-success-600 border border-success-main' : 'bg-danger-focus text-danger-600 border border-danger-main' }} px-24 py-4 radius-4 fw-medium text-sm">
-                                    {{ $unit->is_available == 1 ? 'Available' : 'Occupied' }}
+                                    class="{{ $unit->is_available == 1 ? 'bg-danger-focus text-danger-600 border border-danger-main' : 'bg-success-focus text-success-600 border border-success-main' }} px-24 py-4 radius-4 fw-medium text-sm">
+                                    {{ $unit->is_available == 0 ? 'Available' : 'Occupied' }}
                                 </span>
                             </td>
 
@@ -180,4 +194,22 @@
         </div>
 
     </div>
+
+    <script>
+        document.getElementById('filterLink').addEventListener('click', function() {
+            document.getElementById('filterForm').submit();
+        });
+
+        document.getElementById('resetLink').addEventListener('click', function() {
+            const formElements = document.getElementById('filterForm').elements;
+            Array.from(formElements).forEach(element => {
+                if (element.type === 'select-one' || element.type === 'text') {
+                    element.value = '';
+                }
+            });
+            document.getElementById('filterForm').submit();
+        });
+
+
+    </script>
 @endsection

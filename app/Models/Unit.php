@@ -25,4 +25,8 @@ class Unit extends Model
     {
         return $this->hasMany(Transaction::class);
     }
+    public  function rents()
+    {
+        return $this->hasMany(Payment::class);
+    }
 }
