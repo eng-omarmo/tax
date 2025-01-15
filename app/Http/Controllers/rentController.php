@@ -100,10 +100,6 @@ class rentController extends Controller
             if ($rent->status == 'active') {
                 Unit::where('id', $request->unit_id)->update(['is_available' => 1]);
             }
-
-            $this->createInvoice($rent);
-            $this->createTransaction($rent);
-
             DB::commit();
             return redirect()->route('rent.index')->with('success', 'Rent created successfully.');
         } catch (\Throwable $th) {
@@ -286,6 +282,4 @@ class rentController extends Controller
             Log::info($th->getMessage());
         }
     }
-
-
 }
