@@ -5,13 +5,12 @@
 @endphp
 
 @section('content')
-
-@if(session('error'))
-<div class="alert alert-danger   alert-dismissible fade show" role="alert">
-    {{ session('error') }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-@endif
+    @if (session('error'))
+        <div class="alert alert-danger   alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
     <div class="row gy-4">
         <div class="col-lg-9">
             <div class="card h-100 p-0 radius-12">
@@ -76,9 +75,9 @@
                                     <th scope="col">Unit</th>
                                     <th scope="col">Type</th>
                                     <th scope="col">Quater</th>
-
                                     <th scope="col">Amount</th>
                                     <th scope="col"> Status</th>
+                                    <th scope="col">Pay</th>
 
                                 </tr>
                             </thead>
@@ -98,6 +97,15 @@
                                                 class="{{ $invoice->status == 'Paid' ? 'bg-danger-focus text-danger-600 border border-danger-main' : 'bg-success-focus text-success-600 border border-success-main' }} px-24 py-4 radius-4 fw-medium text-sm">
                                                 {{ $invoice->status == 'Pending' ? 'Paid' : 'Pending' }}
                                             </span>
+                                        </td>
+
+                                        <td>
+                                            <a type="submit" href="{{route('invoice.pay' , $invoice->invoice_number)}}"
+                                                class="d-flex align-items-center gap-2 px-3 py-2 border border-primary rounded text-decoration-none text-info hover:bg-light hover:text-white transition"
+                                                title="Generate invoice for the current quarter">
+                                                <iconify-icon icon="ic:baseline-money" class="icon text-xl"></iconify-icon>
+                                                <span class="fw-semibold text-sm">Pay</span>
+                                        </a>
                                         </td>
 
 

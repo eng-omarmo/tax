@@ -319,6 +319,7 @@ Route::prefix('forms')->group(function () {
 Route::prefix('invoice')->middleware(['auth.admin'])->group(function () {
     Route::controller(InvoiceController::class)->group(function () {
         Route::get('/invoice-add', 'invoiceAdd')->name('invoiceAdd');
+        Route::get('/pay/{id}', 'pay')->name('invoice.pay');
         Route::get('/search', 'search')->name('invoice.search');
         Route::post('/tax/generate', 'generateTaxInvoice')->name('generate.invoice.tax');
         Route::get('/tax/generate/{id}', 'invoice')->name('invoice.tax');
@@ -328,7 +329,6 @@ Route::prefix('invoice')->middleware(['auth.admin'])->group(function () {
         Route::get('/invoice-list', 'invoiceList')->name('invoiceList');
         Route::post('/generate', 'generateInvoice')->name('invoice.generate');
         Route::get('/invoice-preview', 'invoicePreview')->name('invoicePreview');
-
         Route::post('/invoice/q-1', 'quarter1')->name('invoice.quarter1');
 
     });

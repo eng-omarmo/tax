@@ -108,49 +108,36 @@ class InvoiceController extends Controller
         return view('Invoice.create');
     }
 
-    public function search(Request $request)
+    public function pay($id)
     {
-
-        $request->validate([
-            'tax_code' => 'required|string',
-        ]);
-
         try {
-            $tax = Tax::with(['property.transactions', 'property.landlord.user'])
-                ->where('tax_code', $request->tax_code)
-                ->firstOrFail();
 
-            $balance = $tax->property->transactions->where('transaction_type', 'Tax')->sum(function ($transaction) {
-                return $transaction->debit - $transaction->credit;
-            });
-
-            $amountPAid = $tax->property->transactions->where('transaction_type', 'Tax')->sum('credit');
+            $invoice = Invoice::with('unit')->where('invoice_number', $id)->first();
 
             //put data in an array
-
             session()->put('data', [
-                'tax_code' => $tax->tax_code,
-                'owner' => $tax->property->landlord->user->name,
-                'property' => $tax->property->house_code,
-                'propertyInfo' => $tax->property->type . ' ' . $tax->property->district->name,
-                'phone' => $tax->property->landlord->phone_number,
-                'email' => $tax->property->landlord->email,
-                'address' => $tax->property->landlord->address,
-                'balance' => $balance,
-                'amount' => $tax->tax_amount,
-                'amountPaid' => $amountPAid,
-                'due_date' => $tax->due_date,
+                'tax_code' => $invoice->tax_code,
+                'owner' => $invoice->unit->property->landlord->user->name,
+                'property' => $invoice->unit->punit_number,
+                'propertyInfo' => $invoice->unit->unit_type . ' ' . $invoice->unit->property->district->name,
+                'phone' => $invoice->unit->property->phone_number,
+                'email' => $invoice->unit->property->landlord->email,
+                'address' => $invoice->unit->property->landlord->address,
+                'balance' => 00,
+                'amount' => $invoice->tax_amount,
+                'amountPaid' => 00,
+                'due_date' => $invoice->due_date,
                 'issue_date' => now(),
             ]);
 
             return view('Invoice.create', [
-                'tax' => $tax,
-                'balance' => $balance,
+                'invoice' => $invoice,
+                'balance' => 00,
             ]);
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Tax not found');
         } catch (\Exception $e) {
-            return back()->with('error', 'An error occurred while searching for the tax record.');
+            return back()->with('error', 'An error occurred.');
         }
     }
 
