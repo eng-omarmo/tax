@@ -150,15 +150,15 @@
                                 <div class="d-flex flex-column gap-8">
                                     <div class="form-check radio-card align-items-center p-12 radius-8">
                                         <input class="form-check-input" type="radio" name="is_available"
-                                            id="available_yes" value="1"
-                                            {{ old('is_available', 1) ? 'checked' : '' }}>
+                                            id="available_yes" value="0"
+                                            {{ old('is_available', 0) ? 'checked' : '' }}>
                                         <label class="form-check-label text-sm ms-8" for="available_yes">
                                             Available
                                         </label>
                                     </div>
                                     <div class="form-check radio-card align-items-center p-12 radius-8">
                                         <input class="form-check-input" type="radio" name="is_available" id="available_no"
-                                            value="0" {{ old('is_available') == '0' ? 'checked' : '' }}>
+                                            value="1" {{ old('is_available') == '1' ? 'checked' : '' }}>
                                         <label class="form-check-label text-sm ms-8" for="available_no">
                                             Occupied
                                         </label>
@@ -174,14 +174,14 @@
                                 <div class="d-flex flex-column gap-8">
                                     <div class="form-check radio-card align-items-center p-12 radius-8">
                                         <input class="form-check-input" type="radio" name="is_owner"
-                                            id="occupant_owner" value="1" {{ old('is_owner') ? 'checked' : '' }}>
+                                            id="occupant_owner" value="yes" {{ old('is_owner') ? 'checked' : '' }}>
                                         <label class="form-check-label text-sm ms-8" for="occupant_owner">
                                             Property Owner
                                         </label>
                                     </div>
                                     <div class="form-check radio-card align-items-center p-12 radius-8">
                                         <input class="form-check-input" type="radio" name="is_owner"
-                                            id="occupant_tenant" value="0" {{ !old('is_owner') ? 'checked' : '' }}>
+                                            id="occupant_tenant" value="no" {{ !old('is_owner') ? 'checked' : '' }}>
                                         <label class="form-check-label text-sm ms-8" for="occupant_tenant">
                                             Tenant
                                         </label>

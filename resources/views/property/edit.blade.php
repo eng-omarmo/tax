@@ -6,8 +6,8 @@
 @endphp
 
 @section('content')
-<meta name="csrf-token" content="{{ csrf_token() }}">
-    @if($property->monetering_status != 'Approved' && $property->status == 'Inactive')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    @if ($property->monetering_status != 'Approved')
         <div
             class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center justify-content-between flex-wrap gap-3">
             <div class="ms-auto d-flex align-items-center gap-3 flex-wrap">
@@ -143,6 +143,10 @@
                                         </label>
                                         <select class="form-control radius-8 form-select" id="status" name="status">
                                             <option value="Active"
+                                                {{ old('status', $property->status) == 'Active' ? 'selected' : '' }}>{{$property->status}}
+                                            </option>
+                 
+                                            <option value="Active"
                                                 {{ old('status', $property->status) == 'Active' ? 'selected' : '' }}>Active
                                             </option>
                                             <option value="Inactive"
@@ -159,7 +163,12 @@
                                             name="monitoring_status">
                                             <option value="Pending"
                                                 {{ old('monitoring_status', $property->monitoring_status) == 'Pending' ? 'selected' : '' }}>
+                                                {{ $property->monitoring_status }} </option>
+                                            <option value="Approved"
+                                                {{ old('monitoring_status', $property->monitoring_status) == 'Pending' ? 'selected' : '' }}>
                                                 Pending</option>
+
+
                                             <option value="Approved"
                                                 {{ old('monitoring_status', $property->monitoring_status) == 'Approved' ? 'selected' : '' }}>
                                                 Approved</option>
@@ -208,7 +217,8 @@
                                         </label>
                                         <select class="form-control radius-8 form-select" id="branch" name="branch">
 
-                                            <option value="{{ $property->branch_id }}" selected>{{ $property->branch->name }}</option>
+                                            <option value="{{ $property->branch_id }}" selected>
+                                                {{ $property->branch->name }}</option>
 
                                             @foreach ($branches as $branch)
                                                 @if ($branch->id !== $property->branch_id)
@@ -249,10 +259,10 @@
 
                                 </div>
                                 <div class="d-flex align-items-center justify-content-center gap-3">
-                                    <a href="{{route('property.index')}}"
+                                    <a href="{{ route('property.index') }}"
                                         class="border border-danger-600 bg-hover-danger-200 text-danger-600 text-md px-56 py-11 radius-8">
                                         Cancel
-                                </a>
+                                    </a>
                                     <button type="submit"
                                         class="btn btn-primary border border-primary-600 text-md px-56 py-12 radius-8">
                                         Update
@@ -300,32 +310,35 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         fetch("{{ route('monitor.approve') }}", {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            body: JSON.stringify({
-                                property_id: {{ $property->id }}
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                body: JSON.stringify({
+                                    property_id: {{ $property->id }}
+                                })
                             })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log(data);
-                            if (data.success) {
-                                Swal.fire('Approved!', 'The property has been approved.', 'success');
-                                setTimeout(() => {
-                                    location.reload();
-                                }, 2000);
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log(data);
+                                if (data.success) {
+                                    Swal.fire('Approved!', 'The property has been approved.',
+                                        'success');
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 2000);
 
-                            } else {
-                                Swal.fire('Failed!', 'Approval failed: ' + data.message, 'error');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            Swal.fire('Error!', 'There was an error with the request.', 'error');
-                        });
+                                } else {
+                                    Swal.fire('Failed!', 'Approval failed: ' + data.message,
+                                        'error');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                Swal.fire('Error!', 'There was an error with the request.',
+                                    'error');
+                            });
                     } else {
                         Swal.fire('Cancelled', 'The approval has been cancelled.', 'info');
                     }
@@ -389,6 +402,7 @@
                 opacity: 0;
                 transform: scale(0.8);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1);

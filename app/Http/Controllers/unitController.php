@@ -47,23 +47,26 @@ class unitController extends Controller
 
     public function store(Request $request)
     {
-dd($request->all());
+
         try {
             $request->validate([
                 'property_id' => 'required|exists:properties,id',
                 'unit_name' => 'required',
                 'unit_price' => 'required',
+                'is_owner' => 'required',
+                'is_available' => 'required|boolean'
             ]);
             $unitNumber = 'U' . rand(1000, 9999) . rand(1000, 9999);
+
+
             unit::create([
                 'property_id' => $request->property_id,
                 'unit_number' => $unitNumber,
                 'unit_name' => $request->unit_name,
                 'unit_type' => $request->unit_type,
                 'unit_price' => $request->unit_price,
-                'is_owner' => $request->is_owner = 0 ? yes : no,
-                'is_available' => $request->is_available == 0 ? true : false
-
+                'is_owner' => $request->is_owner,
+                'is_available' => $request->is_available
             ]);
             return redirect()->route('unit.index')->with('success', 'Unit created successfully.');
         } catch (\Throwable $th) {
