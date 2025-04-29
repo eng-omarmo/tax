@@ -87,7 +87,7 @@ class UsersController extends Controller
             $query->where('status', ucfirst($request->status));
         }
 
-        $users = $query->paginate(5);
+        $users = $query->paginate(10);
         return view('users.index', compact('users', 'roles'));
     }
         public function viewProfile()

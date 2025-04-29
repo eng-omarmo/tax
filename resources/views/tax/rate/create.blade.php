@@ -39,9 +39,13 @@
                                     <label for="name" class="form-label fw-semibold text-primary-light text-sm mb-8">
                                         Tax Rate Type <span class="text-danger-600">*</span>
                                     </label>
-                                    <input type="text" class="form-control radius-8" id="name"
-                                        name="name" placeholder="Enter Tax Rate Type"
-                                        value="{{ old('name') }}" required>
+                                 <select class="form-control radius-8 form-select" id="name" name="name" required>
+                                
+                                        <option value="Q1">Quater 1</option>
+                                        <option value="Q2">Quater 2</option>
+                                        <option value="Q3">Quater 3</option>
+
+                                    </select>
 
                                 </div>
 

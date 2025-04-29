@@ -15,17 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('property_name');
             $table->string('property_phone', 25)->nullable();
-            $table->string('nbr', 50)->nullable();
             $table->unsignedBigInteger('district_id');
             $table->unsignedBigInteger('landlord_id');
             $table->unsignedBigInteger('branch_id')->nullable();
             $table->string('house_code', 50)->nullable();
             $table->string('zone', 100)->nullable();
-        
             $table->string('house_type', 100)->nullable();
-            $table->decimal('house_rent', 10, 2)->nullable();
-            $table->decimal('quarterly_tax_fee', 10, 2)->nullable();
-            $table->decimal('yearly_tax_fee', 10, 2)->nullable();
             $table->string('latitude');
             $table->string('longitude');
             $table->enum('monitoring_status', ['Pending', 'Approved'])->nullable();

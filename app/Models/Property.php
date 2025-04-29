@@ -15,15 +15,10 @@ class Property extends Model
     protected $fillable = [
         'property_name',
         'property_phone',
-        'nbr',
         'house_code',
         'branch_id',
         'zone',
- 
         'house_type',
-        'house_rent',
-        'quarterly_tax_fee',
-        'yearly_tax_fee',
         'latitude',
         'longitude',
         'monitoring_status',

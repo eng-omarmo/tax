@@ -12,7 +12,7 @@ class taxRateController extends Controller
     public function index()
     {
 
-        $taxRates = TaxRate::paginate(5);
+        $taxRates = TaxRate::orderby('id', 'desc')->paginate(10);
         return view('tax.rate.index', ['taxRates' => $taxRates]);
     }
 

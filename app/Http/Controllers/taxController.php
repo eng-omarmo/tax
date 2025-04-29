@@ -54,6 +54,8 @@ class taxController extends Controller
 
     public function create()
     {
+
+
         return view('tax.create');
     }
 
