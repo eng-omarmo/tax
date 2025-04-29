@@ -23,7 +23,7 @@ class PropertyFactory extends Factory
             'landlord_id' => Landlord::factory(),
             'zone' => $this->faker->word,
             'nbr' => $this->faker->word . $this->faker->numberBetween(1, 10),
-            'designation' => $this->faker->jobTitle,
+     
             'house_type' => $this->faker->word,
             'house_rent' => $this->faker->numberBetween(1000, 10000),
             'quarterly_tax_fee' => $this->faker->numberBetween(500, 3000),

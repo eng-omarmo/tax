@@ -14,8 +14,6 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('tenant_id')->nullable();
-
             $table->string('transaction_id')->unique();
             $table->unsignedBigInteger('property_id')->nullable()->nullable();
             $table->unsignedBigInteger('unit_id')->nullable()->nullable();
@@ -26,7 +24,6 @@ return new class extends Migration
             $table->decimal('debit', 10, 2)->nullable()->comment('Amount Due to Pay');
             $table->enum('status', ['Completed', 'Pending'])->default('Completed');
             $table->timestamps();
-            $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
             $table->foreign('unit_id')->references('id')->on('units')->onDelete('cascade');
             $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
         });

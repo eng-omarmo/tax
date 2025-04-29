@@ -78,12 +78,11 @@
                             </div>
                         </th>
                         <th scope="col">SNO</th>
-                        <th scope="col">Tenant Name</th>
+
                         <th scope="col">Property</th>
-
+                        <th scope="col">Tenant</th>
                         <th scope="col">Account Name</th>
-
-                        <th scope="col">Tax Code</th>
+                        <th scope="col">Invoice</th>
                         <th scope="col">Account No</th>
                         <th scope="col">Amount Paid</th>
                         <th scope="col">Payment Date</th>
@@ -107,28 +106,27 @@
                             <td>
                                 <div class="d-flex align-items-center">
                                     <span
-                                        class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->tax->property->tenant->user->name ?? 'N/A' }}</span>
+                                        class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->invoice->invoice_number ?? 'N/A' }}</span>
                                 </div>
                             </td>
 
 
 
-                            <td><a href="{{ route('property.edit', $payment->tax->property->id) }}"
+                            <td><a href="{{ route('property.edit', $payment->invoice->unit->property->id) }}"
                                     class="text-md mb-0 fw-normal text-secondary-light">
-                                    {{ $payment->tax->property->property_name ?? 'N/A' }}</a></td>
+                                    {{  $payment->invoice->unit->property->property_name ?? 'N/A' }}</a></td>
 
                             <td><span
                                     class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->paymentDetails['bank'] }}</span>
                             </td>
                             <td><span
-                                class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->tax->tax_code }}</span>
+                                class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->amount }}</span>
                         </td>
                             <td><span
                                     class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->paymentDetails['mobile'] ?? $payment->paymentDetails['account'] }}</span>
                             </td>
 
-                            <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->amount }}</span>
-                            </td>
+
 
 
                             <td><span

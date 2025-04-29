@@ -247,8 +247,8 @@
                 </ul>
 
             </li>
-            @if (Auth::user()->role == 'Landlord')
-                <li class="dropdown">
+            @if (Auth::user()->role == 'Landlord' || Auth::user()->role == 'Admin')
+                {{-- <li class="dropdown">
                     <a href="javascript:void(0)">
                         <i class="ri-user-fill text-info-main text-xl"></i>
                         <span>Tenant</span>
@@ -268,7 +268,7 @@
 
                     </ul>
 
-                </li>
+                </li> --}}
                 <li class="dropdown">
                     <a href="javascript:void(0)">
                         <i class="ri-user-fill text-info-main text-xl"></i>
@@ -290,7 +290,7 @@
                     </ul>
 
                 </li>
-
+{{-- 
                 <li class="dropdown">
                     <a href="javascript:void(0)">
                         <i class="ri-wallet-fill text-info-main text-xl"></i>
@@ -312,9 +312,9 @@
                         </li>
 
                     </ul>
-                </li>
+                </li> --}}
             @endif
-            <li class="dropdown">
+            {{-- <li class="dropdown">
                 <a href="javascript:void(0)">
                     <i class="ri-wallet-fill text-info-main text-xl"></i>
 
@@ -336,7 +336,7 @@
                     @endif
 
                 </ul>
-            </li>
+            </li> --}}
             @if (auth()->user()->role == 'Landlord')
                 <li class="dropdown">
                     <a href="javascript:void(0)">
@@ -366,7 +366,7 @@
                     <a href="javascript:void(0)">
                         <i class="ri-money-dollar-circle-fill text-success-main text-xl"></i>
 
-                        <span>Tax Payment</span>
+                        <span>Payment</span>
                     </a>
                     <ul class="sidebar-submenu">
                         <li>
@@ -419,20 +419,20 @@
                     <a href="javascript:void(0)">
                         <iconify-icon icon="mdi:file-document-outline" class="menu-icon"></iconify-icon>
 
-                        <span>Invoice </span>
+                        <span>Invoice Management</span>
                     </a>
                     <ul class="sidebar-submenu">
 
-                        {{-- <li>
+                        <li>
                             <a href="{{ route('invoiceList') }}"><i
                                     class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
-                                Invoice List </a>
-                        </li> --}}
-                        <li>
+                                Invoice  </a>
+                        </li>
+                        {{-- <li>
                             <a href="{{ route('invoice.create') }}"><i
                                     class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
                                 Generate Invoice </a>
-                        </li>
+                        </li> --}}
 
 
                     </ul>

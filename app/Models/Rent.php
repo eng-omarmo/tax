@@ -8,13 +8,14 @@ class Rent extends Model
 {
 
     protected $fillable = [
-        'tenant_id',
         'property_id',
+        'tenant_name',
         'rent_amount',
         'rent_total_amount',
         'rent_start_date',
         'rent_end_date',
         'status',
+        'rent_document',
         'unit_id',
         'rent_code',
     ];
@@ -24,10 +25,7 @@ class Rent extends Model
     {
         return $this->belongsTo(Property::class);
     }
-    public function tenant()
-    {
-        return $this->belongsTo(Tenant::class);
-    }
+
     public function unit()
     {
         return $this->belongsTo(Unit::class);

@@ -15,15 +15,10 @@ class Property extends Model
     protected $fillable = [
         'property_name',
         'property_phone',
-        'nbr',
         'house_code',
         'branch_id',
         'zone',
-        'designation',
         'house_type',
-        'house_rent',
-        'quarterly_tax_fee',
-        'yearly_tax_fee',
         'latitude',
         'longitude',
         'monitoring_status',
@@ -74,10 +69,13 @@ class Property extends Model
         $quarterlyTax = $monthlyTax * 3;
         $yearlyTax = $monthlyTax * 12;
 
+        $yearlyHouseRent=  $monthlyTax * 12;
+
         $data = [
             'quarterly_tax' => $quarterlyTax,
             'yearly_tax' => $yearlyTax,
-            'message' => $message
+            'message' => $message,
+            'yearlyHouseRent' => $yearlyHouseRent
 
         ];
 

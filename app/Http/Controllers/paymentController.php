@@ -17,23 +17,8 @@ class paymentController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Payment::with('rent', 'paymentDetail')->whereNotNull('rent_id');
+        $query = Payment::with('invoice', 'paymentDetail');
 
-        if (auth()->user()->role == 'rent') {
-            $query->whereHas('rent.property.landlord', function ($q) {
-                $q->where('user_id', auth()->id());
-            });
-        }
-
-        if ($request->has('search') && $request->search) {
-            $query->where('reference', 'like', '%' . $request->search . '%')
-                ->orWhere('amount', 'like', '%' . $request->search . '%');
-        }
-        if (auth()->user()->role == 'Landlord') {
-            $query->whereHas('rent.property.landlord', function ($q) {
-                $q->where('user_id', auth()->id());
-            });
-        }
 
         $payments = $query->paginate(5);
 
@@ -55,20 +40,7 @@ class paymentController extends Controller
     public function taxIndex(Request $request)
     {
         // Build the query with eager loading and tax filtering (if needed).
-        $query = Payment::with('tax', 'paymentDetail')->whereNotNull('tax_id');
-
-        // Apply search condition if it exists.
-        if ($request->has('search') && $request->search) {
-            $query->where('reference', 'like', '%' . $request->search . '%')
-                ->orWhere('amount', 'like', '%' . $request->search . '%');
-        }
-
-        // Filter by landlord if the user has the 'Landlord' role.
-        if (auth()->user()->role == 'Landlord') {
-            $query->whereHas('tax.property.landlord', function ($q) {
-                $q->where('user_id', auth()->id());
-            });
-        }
+        $query = Payment::with('invoice', 'paymentDetail');
 
         $payments = $query->paginate(5);
 
@@ -141,7 +113,7 @@ class paymentController extends Controller
                 'tax_id' => null,
                 'amount' => $request->amount,
                 'payment_date' => now(),
-                'reference' => 'Rent'.rand(1000, 9999).rand(1000, 9999),
+                'reference' => 'Rent' . rand(1000, 9999) . rand(1000, 9999),
                 'payment_method' => $request->payment_method,
                 'status' => 'completed',
             ]);
@@ -179,7 +151,7 @@ class paymentController extends Controller
                 'tax_id' => $request->tax_id,
                 'amount' => $request->amount,
                 'payment_date' => now(),
-                'reference' => 'Tax'.rand(1000, 9999).rand(1000, 9999),
+                'reference' => 'Tax' . rand(1000, 9999) . rand(1000, 9999),
                 'payment_method' => $request->payment_method,
                 'status' => 'completed',
             ]);
@@ -336,5 +308,4 @@ class paymentController extends Controller
             'additional_info' => $request->additional_info,
         ]);
     }
-
 }

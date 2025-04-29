@@ -4,14 +4,16 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Rent;
+use App\Models\Unit;
 use App\Models\Tenant;
+use App\Models\Invoice;
 use App\Models\Property;
 use App\Models\Transaction;
-use App\Models\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use function Laravel\Prompts\select;
+use Illuminate\Support\Facades\Storage;
 
 class rentController extends Controller
 {
@@ -21,10 +23,7 @@ class rentController extends Controller
     public function index(Request $request)
     {
 
-        $query = Rent::with('property', 'tenant', 'unit')
-            ->whereHas('tenant', function ($query) {
-                $query->where('registered_by', auth()->user()->id);
-            });
+        $query = Rent::with('property', 'unit');
 
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
@@ -36,14 +35,12 @@ class rentController extends Controller
 
         foreach ($rents as $rent) {
             $rent->balance =
-                Transaction::where('tenant_id', $rent->tenant_id)
-                ->where('property_id', $rent->property_id)
+                Transaction::where('property_id', $rent->property_id)
                 ->where('unit_id', $rent->unit_id)
                 ->where('transaction_type', 'Rent')
                 ->sum('debit')
                 -
-                Transaction::where('tenant_id', $rent->tenant_id)
-                ->where('property_id', $rent->property_id)
+                Transaction::where('property_id', $rent->property_id)
                 ->where('unit_id', $rent->unit_id)
                 ->where('transaction_type', 'Rent')
                 ->sum('credit');
@@ -68,19 +65,27 @@ class rentController extends Controller
     {
         try {
             $request->validate([
-                'tenant_id' => 'required|exists:tenants,id',
+
                 'property_id' => 'required|exists:properties,id',
                 'unit_id' => 'required|exists:units,id',
                 'rent_amount' => 'required|numeric|min:0',
                 'rent_start_date' => 'required|date',
                 'rent_end_date' => 'required|date',
                 'status' => 'required',
+                'tenant_name' => 'required',
+                'rent_document' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:2048', // Add validation for file
             ]);
+
             DB::beginTransaction();
+
+            $rentDocumentPath = null;
+            if ($request->hasFile('rent_document')) {
+                $rentDocumentPath = $request->file('rent_document')->store('uploads/rent_documents', 'public');
+            }
 
             $rent_code = 'R' . rand(1000, 9999) . rand(1000, 9999);
             $rent = Rent::create([
-                'tenant_id' => $request->tenant_id,
+                'tenant_name' => $request->tenant_name,
                 'unit_id' => $request->unit_id,
                 'rent_code' => $rent_code,
                 'property_id' => $request->property_id,
@@ -88,16 +93,13 @@ class rentController extends Controller
                 'rent_start_date' => $request->rent_start_date,
                 'rent_end_date' => $request->rent_end_date,
                 'rent_total_amount' => $this->calculateRent($request->rent_start_date, $request->rent_end_date, $request->rent_amount),
+                'rent_document' => $rentDocumentPath,
                 'status' => $request->status
-
             ]);
-            $rent->rent_amount = $this->calculateRent($rent->rent_start_date, $rent->rent_end_date, $rent->rent_amount);
-
 
             if ($rent->status == 'active') {
-                Unit::where('id', $request->unit_id)->update(['is_available' => false]);
+                Unit::where('id', $request->unit_id)->update(['is_available' => 1]);
             }
-            $this->createTransaction($rent);
             DB::commit();
             return redirect()->route('rent.index')->with('success', 'Rent created successfully.');
         } catch (\Throwable $th) {
@@ -105,6 +107,7 @@ class rentController extends Controller
             return redirect()->route('rent.index')->with('error', $th->getMessage());
         }
     }
+
 
     /**
      * Display the specified resource.
@@ -120,18 +123,58 @@ class rentController extends Controller
     public function edit(Request $request, $rent)
 
     {
-        $tenants = Tenant::with('user')->where('registered_by', auth()->user()->id)->get();
-        $rent = Rent::where('id', $rent)->first();
 
-        return view('rent.edit', compact('rent', 'tenants'));
+        $rent = Rent::with('unit', 'property')->where('id', $rent)->first();
+
+
+        return view('rent.edit', compact('rent'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Rent $rent)
+    public function update(Request $request, $rent)
     {
-        //
+        try {
+            $request->validate([
+                'rent_amount' => 'required|numeric|min:0',
+                'rent_start_date' => 'required|date',
+                'rent_end_date' => 'required|date',
+                'status' => 'required',
+                'tenant_name' => 'required',
+                'rent_document' => 'nullable|file|mimes:pdf,doc,docx,jpg,png|max:2048',
+            ]);
+            $rent = Rent::find($rent);
+            if (!$rent) {
+                return redirect()->route('rent.index')->with('error', 'Rent not found.');
+            }
+            $rentDocumentPath = $rent->rent_document;
+
+            if ($request->hasFile('rent_document') && $rent->rent_document != $request->rent_document) {
+                Storage::disk('public')->delete($rentDocumentPath);
+                $rentDocumentPath = $request->file('rent_document')->store('uploads/rent_documents', 'public');
+            }
+
+            $rent->update([
+                'tenant_name' => $request->tenant_name,
+                'rent_amount' => $request->rent_amount,
+                'rent_start_date' => $request->rent_start_date,
+                'rent_end_date' => $request->rent_end_date,
+                'rent_total_amount' => $this->calculateRent($request->rent_start_date, $request->rent_end_date, $request->rent_amount),
+                'status' => $request->status,
+                'rent_document' => $rentDocumentPath
+            ]);
+            if ($rent->status == 'active') {
+                Unit::where('id', $rent->unit_id)->update(['is_available' => 1]);
+            }
+            if ($rent->status == 'terminated') {
+                Unit::where('id', $rent->unit_id)->update(['is_available' => 0]);
+            }
+            return redirect()->route('rent.index')->with('success', 'Rent updated successfully.');
+        } catch (\Throwable $th) {
+            Log::info($th->getMessage());
+            return redirect()->route('rent.index')->with('error', $th->getMessage());
+        }
     }
 
     /**
@@ -165,15 +208,9 @@ class rentController extends Controller
         if ($start->greaterThan($end)) {
             return redirect()->route('rent.index')->with('error', 'Start date is greater than end date');
         }
-
-
         $totalDays = $start->diffInDays($end) + 1;
         $daysInMonth = $start->daysInMonth;
-
-
         $dailyRent = $monthlyRent / $daysInMonth;
-
-
         $totalRent = $dailyRent * $totalDays;
 
         return $totalRent;
@@ -186,9 +223,8 @@ class rentController extends Controller
             'search_unit_number' => 'required',
         ]);
 
-
         $unit = Unit::with('property')->where('unit_number', $request->search_unit_number)->first();
-        if ($unit && $unit->is_available == false) {
+        if ($unit && $unit->is_available == 1) {
             return back()->withInput()->with('error', 'unit is not available');
         }
 
@@ -231,4 +267,19 @@ class rentController extends Controller
         }
     }
 
+    private function createInvoice($rent)
+    {
+        try {
+            return Invoice::create([
+                'unit_id' => $rent->unit_id,
+                'invoice_number' => 'Inv' . rand(1000, 9999) . rand(1000, 9999),
+                'amount' => $rent->rent_amount,
+                'invoice_date' => now(),
+                'due_date' => now()->addDays(5),
+                'payment_status' => 'Pending',
+            ]);
+        } catch (\Throwable $th) {
+            Log::info($th->getMessage());
+        }
+    }
 }

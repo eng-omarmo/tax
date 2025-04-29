@@ -38,7 +38,6 @@ class propertyController extends Controller
                 ->orWhere('property_phone', 'like', '%' . $request->search . '%')
                 ->orWhere('house_code', 'like', '%' . $request->search . '%')
                 ->orWhere('nbr', 'like', '%' . $request->search . '%');
-
         }
         if ($request->filled('status')) {
             $query->where('status', $request->status);
@@ -51,12 +50,8 @@ class propertyController extends Controller
                 $q->where('id', auth()->id());
             });
         }
-        $properties = $query->paginate(5);
-        foreach ($properties as $property) {
-            $property->balance = $property->transactions->sum(function ($transaction) {
-                return $transaction->debit - $transaction->credit;
-            });
-        }
+        $properties = $query->orderby('id', 'desc')->paginate(10);
+
         return view('property.index', compact('properties', 'statuses', 'monitoringStatuses'));
     }
 
@@ -69,52 +64,7 @@ class propertyController extends Controller
         return response()->json($branches);
     }
 
-    public function propertyStore(Request $request)
-    {
-        $request->validate([
-            'property_name' => 'required',
-            'property_phone' => 'required',
-            'nbr' => 'required',
-            'house_code' => 'required',
-            'house_type' => 'required',
-            'house_rent' => 'required',
 
-            'branch' => 'required',
-            'district_id' => 'required',
-            'zone' => 'required',
-            'latitude' => 'required',
-        ]);
-        dd($request->all());
-
-        try {
-            $lanlord = Landlord::where('user_id', auth()->user()->id)->first();
-            Property::create([
-                'property_name' => $request->property_name,
-                'property_phone' => $request->property_phone,
-                'nbr' => $request->nbr,
-                'house_code' => $request->house_code,
-                'branch' => $request->branch,
-                'zone' => $request->zone,
-                'house_type' => $request->house_type,
-                'house_rent' => $request->house_rent,
-                'quarterly_tax_fee' => 0,
-                'yearly_tax_fee' => 0,
-                'latitude' => $request->latitude,
-                'longitude' => $request->longitude,
-                'monitoring_status' => $request->monitoring_status,
-                'status' => $request->status,
-                'district_id' => $request->district_id,
-                'landlord_id' => $lanlord->id,
-                'designation' => 'Owner',
-                'monitoring_status' => 'Pending',
-                'status' => 'InActive',
-            ]);
-            return  redirect()->route('property.index')->with('success', 'Property created successfully.');
-        } catch (Exception $e) {
-            Log::error($e);
-            return redirect()->back()->with('error', 'Failed to create property.' . $e->getMessage());
-        }
-    }
 
     public function ReportDetails(Request $request)
     {
@@ -194,29 +144,21 @@ class propertyController extends Controller
 
     public function store(Request $request)
     {
+
+
         try {
             DB::beginTransaction();
-
-
             $request->validate([
-                'property_name' => 'required|string|max:255',
-                'property_phone' => 'nullable|string|max:45',
-                'nbr' => 'nullable|string|max:100',
-                'zone' => 'nullable|string|max:255',
-                'house_type' => 'nullable|string|max:255',
+                'property_name' => 'required',
+                'property_phone' => 'required',
+                'house_type' => 'required',
+                'branch_id' => 'required',
+                'district_id' => 'required',
+                'zone' => 'required',
                 'latitude' => 'required',
-                'district_id' => 'required|exists:districts,id',
-                'branch_id' => 'required|exists:branches,id',
                 'longitude' => 'required',
-                'designation' => 'nullable|string|max:255',
-                'monitoring_status' => 'required|in:Pending,Approved',
-                'status' => 'required|in:Active,Inactive',
-                'district_id' => 'required|exists:districts,id',
-                'house_rent' => 'nullable|numeric',
-
+                'lanlord_id' => 'required',
             ]);
-
-
 
             $properties = Property::where('property_name', $request->property_name)
                 ->where('property_phone', $request->property_phone)
@@ -225,44 +167,35 @@ class propertyController extends Controller
             if ($properties) {
                 return back()->with('error', 'Property name and phone already exists.');
             }
+            $code = 'HOUSE-' . strtoupper(Str::random(3)) . '-' . rand(100, 999);
 
-            $data = Property::calculateTax($request->house_type, $request->house_rent);
+            $request->merge(['house_code' => $code]);
 
 
-            if ($data['message'] !== '') {
-                return back()->with('error', $data['message']);
-            }
-            if ($data['quarterly_tax'] < 0 || $data['yearly_tax'] < 0) {
-                return back()->with('error', 'Tax fee for the property cannot be negative.');
-            }
-
-            $property =  Property::create([
+            Property::create([
                 'property_name' => $request->property_name,
                 'property_phone' => $request->property_phone,
-                'nbr' => $request->nbr,
-                'house_code' => 'H' . rand(10000, 99999).rand(10000, 99999),
-
+                'house_code' => $request->house_code,
                 'branch_id' => $request->branch_id,
                 'zone' => $request->zone,
                 'house_type' => $request->house_type,
+                'house_rent' => $request->house_rent,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
-                'designation' => $request->designation,
                 'monitoring_status' => $request->monitoring_status,
                 'status' => $request->status,
                 'district_id' => $request->district_id,
-                'house_rent' => $request->house_rent,
-                'quarterly_tax_fee' => $data['quarterly_tax'],
-                'yearly_tax_fee' => $data['yearly_tax'],
-                'landlord_id' => $request->lanlord_id
+                'landlord_id' => $request->lanlord_id,
+                'monitoring_status' => 'Pending',
+                'status' => 'InActive',
             ]);
-            $this->recordTaxFee($property);
-            $this->createTransaction($property);
+
             DB::commit();
 
             return redirect()->route('property.index')->with('success', 'Property registered successfully.');
         } catch (\Throwable $th) {
             DB::rollBack();
+            Log::error('Error creating property: ' . $th->getMessage());
             return back()->with('error', $th->getMessage());
         }
     }
@@ -320,49 +253,13 @@ class propertyController extends Controller
                 return back()->with('error', 'Property not found.');
             }
 
-            if ($request->house_rent > 0) {
-                $data = Property::calculateTax($request->house_type, $request->house_rent);
 
-                if ($data['message'] !== '') {
-                    return back()->with('error', $data['message']);
-                }
-
-                if ($data['quarterly_tax'] < 0 || $data['yearly_tax'] < 0) {
-                    return back()->with('error', 'Tax fee for the property cannot be negative.');
-                }
-
-                $request->merge([
-                    'quarterly_tax_fee' => $data['quarterly_tax'],
-                    'yearly_tax_fee' => $data['yearly_tax'],
-                ]);
-
-                $tax = Tax::where('property_id', $property->id)->first();
-                if ($tax) {
-                    $tax->update([
-
-                        'tax_amount' => $request->yearly_tax_fee,
-                    ]);
-                }
-
-                $transaction = Transaction::where([
-                    'property_id' => $tax->property->id,
-                    'transaction_type' => 'Tax',
-
-                ])->whereNotNull('debit')->first();
-
-                if ($transaction) {
-                    $transaction->update([
-                        'amount' => $request->yearly_tax_fee,
-                        'debit' => $request->yearly_tax_fee,
-                    ]);
-                }
-            }
 
             $property->update([
                 'property_name' => $request->property_name,
                 'property_phone' => $request->property_phone,
                 'nbr' => $request->nbr,
-           
+
                 'branch_id' => $request->branch,
                 'zone' => $request->zone,
                 'house_type' => $request->house_type,
@@ -372,12 +269,12 @@ class propertyController extends Controller
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
                 'designation' => $request->designation,
-                'dalal_company_name' => $request->dalal_company_name,
+
                 'district_id' => $request->district_id,
                 'monitoring_status' => $request->monitoring_status,
                 'status' => $request->status,
             ]);
-            //update the transaction if any changes happen to the tax fee
+
             if (auth()->user()->role == 'Admin') {
                 return redirect()->route('property.index')->with('success', 'Property updated successfully.');
             }

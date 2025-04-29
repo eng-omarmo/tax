@@ -39,11 +39,14 @@
                                     <label for="name" class="form-label fw-semibold text-primary-light text-sm mb-8">
                                         Tax Rate Type <span class="text-danger-600">*</span>
                                     </label>
-                                    <select class="form-control radius-8 form-select" id="name" name="name" required>
-                                        <option value=""">Choose Tax Rate Type</option</option>
-                                        <option value="Apartment" {{ old('name') == 'Villa' ? 'selected' : '' }}>Villa Tax</option>
-                                        <option value="Apartment" {{ old('name') == 'Apartment' ? 'selected' : '' }}>Apartment Tax</option>
+                                 <select class="form-control radius-8 form-select" id="name" name="name" required>
+                                
+                                        <option value="Q1">Quater 1</option>
+                                        <option value="Q2">Quater 2</option>
+                                        <option value="Q3">Quater 3</option>
+
                                     </select>
+
                                 </div>
 
                                 <!-- Rate -->

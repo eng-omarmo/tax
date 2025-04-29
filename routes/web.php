@@ -212,6 +212,7 @@ Route::prefix('unit')->middleware(['auth.admin'])->group(function () {
         Route::put('/update/{unit}', 'update')->name('unit.update');
         Route::get('/delete/{unit}', 'destroy')->name('unit.delete');
         Route::get('/search', 'search')->name('unit.property.search');
+
     });
 });
 // Route::prefix('invoice')->middleware(['auth.admin'])->group(function () {
@@ -315,16 +316,20 @@ Route::prefix('forms')->group(function () {
 
 
 // invoice/invoiceList
-Route::prefix('invoice')->group(function () {
+Route::prefix('invoice')->middleware(['auth.admin'])->group(function () {
     Route::controller(InvoiceController::class)->group(function () {
         Route::get('/invoice-add', 'invoiceAdd')->name('invoiceAdd');
+        Route::get('/pay/{id}', 'pay')->name('invoice.pay');
         Route::get('/search', 'search')->name('invoice.search');
         Route::post('/tax/generate', 'generateTaxInvoice')->name('generate.invoice.tax');
+        Route::get('/tax/generate/{id}', 'invoice')->name('invoice.tax');
         Route::get('/store', 'store')->name('invoice.store');
         Route::get('/create', 'create')->name('invoice.create');
         Route::get('/invoice-edit', 'invoiceEdit')->name('invoiceEdit');
         Route::get('/invoice-list', 'invoiceList')->name('invoiceList');
+        Route::post('/generate', 'generateInvoice')->name('invoice.generate');
         Route::get('/invoice-preview', 'invoicePreview')->name('invoicePreview');
+        Route::post('/invoice/q-1', 'quarter1')->name('invoice.quarter1');
 
     });
 });
@@ -406,5 +411,7 @@ Route::prefix('cryptocurrency')->group(function () {
         Route::get('/marketplacedetails', 'marketplaceDetails')->name('marketplaceDetails');
         Route::get('/portfolio', 'portfolio')->name('portfolio');
         Route::get('/wallet', 'wallet')->name('wallet');
+
+
     });
 });

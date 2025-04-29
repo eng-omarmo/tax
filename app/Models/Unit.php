@@ -14,8 +14,10 @@ class Unit extends Model
         'unit_number',
         'unit_type',
         'unit_price',
-        'unit_area',
         'is_available',
+        'is_owner'
+
+
     ];
 
     public function property()
@@ -25,5 +27,9 @@ class Unit extends Model
     public  function transactions()
     {
         return $this->hasMany(Transaction::class);
+    }
+    public  function rents()
+    {
+        return $this->hasMany(Payment::class);
     }
 }

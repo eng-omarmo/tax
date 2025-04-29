@@ -123,51 +123,6 @@
                                                 name="property_phone" placeholder="Enter property phone"
                                                 value="{{ old('property_phone') }}">
                                         </div>
-                                        <div class="col-md-6 mb-20">
-                                            <label for="nbr"
-                                                class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                                NBR
-                                            </label>
-                                            <input type="text" class="form-control radius-8" id="nbr"
-                                                name="nbr" placeholder="Enter NBR" value="{{ old('nbr') }}">
-                                        </div>
-                                    
-
-                                        <div class="col-md-6 mb-20">
-                                            <label for="status"
-                                                class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                                Status <span class="text-danger-600">*</span>
-                                            </label>
-                                            <select class="form-control radius-8 form-select" id="status" name="status">
-                                                <option value="Active">Active</option>
-                                                <option value="Inactive">Inactive</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-6 mb-20">
-                                            <label for="monitoring_status"
-                                                class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                                Monetering Status <span class="text-danger-600">*</span>
-                                            </label>
-                                            <select class="form-control radius-8 form-select" id="monitoring_status"
-                                                name="monitoring_status">
-                                                <option value="Pending">Pending</option>
-                                                <option value="Approved">Approved</option>
-                                            </select>
-                                        </div>
-
-
-
-                                        <div class="col-md-6 mb-20">
-                                            <label for="designation"
-                                                class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                                Designation <span class="text-danger-600">*</span>
-                                            </label>
-                                            <select class="form-control radius-8 form-select" id="designation"
-                                                name="designation">
-                                                <option value="">Choose Designation</option>
-                                                <option value="Deegaan">Deegaan</option>
-                                            </select>
-                                        </div>
 
                                         <div class="col-md-6 mb-20">
                                             <label for="house_type"
@@ -178,23 +133,9 @@
                                                 name="house_type">
                                                 <option value="Villa">Villa</option>
                                                 <option value="Apartment">Apartment</option>
+                                                <option value="other">Other</option>
                                             </select>
                                         </div>
-
-                                        <div class="col-md-6 mb-20">
-                                            <label for="house_rent"
-                                                class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                                House Rent
-                                            </label>
-                                            <input type="number" class="form-control radius-8" id="house_rent"
-                                                name="house_rent" placeholder="Enter house rent"
-                                                value="{{ old('house_rent') }}">
-
-                                        </div>
-
-
-
-
 
                                         <div class="col-md-6 mb-20">
                                             <label for="district"

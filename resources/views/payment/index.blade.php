@@ -72,8 +72,8 @@
                             </div>
                         </th>
                         <th scope="col">SNO</th>
-                        <th scope="col">Tenant Name</th>
-                        <th scope="col">Property</th>
+                        <th scope="col">Invoice</th>
+
                         <th scope="col">Account Name</th>
                         <th scope="col">Account Number</th>
                         <th scope="col">Amount Paid</th>
