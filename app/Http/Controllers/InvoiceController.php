@@ -12,6 +12,8 @@ use App\Services\TimeService;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+use function PHPUnit\Framework\isNull;
+
 class InvoiceController extends Controller
 {
     public function invoiceAdd()
@@ -28,17 +30,26 @@ class InvoiceController extends Controller
     {
         $timeService = new TimeService();
         $quarter = $timeService->currentQuarter();
-        $taxRate = TaxRate::where('tax_type', $quarter)->value('rate');
 
-        $baseQuery = Unit::where(['is_available'=>1, 'is_owner' => 'no']);
+        $taxRate = TaxRate::where(['tax_type'=>$quarter, 'status'=>"active"])->value('rate') / 100;
+
+        if (empty($taxRate)) {
+            return redirect()->route('index')->with('error', 'No tax Rate is for this ' . $quarter);
+        }
+
+
+        $baseQuery = Unit::where(['is_available' => 0, 'is_owner' => 'no']);
 
         $data['potentialIncome'] = $baseQuery->sum('unit_price') * $taxRate;
+
+
 
         $data['flatIncome'] = (clone $baseQuery)->where('unit_type', 'Flat')->sum('unit_price') * $taxRate;
         $data['sectionIncome'] = (clone $baseQuery)->where('unit_type', 'Section')->sum('unit_price') * $taxRate;
         $data['officeIncome'] = (clone $baseQuery)->where('unit_type', 'Office')->sum('unit_price') * $taxRate;
         $data['shopIncome'] = (clone $baseQuery)->where('unit_type', 'Shop')->sum('unit_price') * $taxRate;
         $data['otherIncome'] = (clone $baseQuery)->where('unit_type', 'Other')->sum('unit_price') * $taxRate;
+
 
         $data['invoices'] = Invoice::latest()->paginate(10);
 

@@ -81,7 +81,9 @@
                         <th scope="col">Unit Name</th>
                         <th scope="col">Unit Number</th>
                         <th scope="col">Unit Type</th>
+
                         <th scope="col">Availability</th>
+                        <th scope="col">Owner</th>
                         <th scope="col" class="text-center">Action</th>
                     </tr>
                 </thead>
@@ -119,7 +121,12 @@
                                     {{ $unit->is_available == 0 ? 'Available' : 'Occupied' }}
                                 </span>
                             </td>
-
+                            <td class="text-center">
+                                <span
+                                    class="{{ $unit->is_owner == 'yes' ? 'bg-danger-focus text-danger-600 border border-danger-main' : 'bg-success-focus text-success-600 border border-success-main' }} px-24 py-4 radius-4 fw-medium text-sm">
+                                    {{ $unit->is_owner == 'No' ? 'Yes' : 'No' }}
+                                </span>
+                            </td>
                             <td class="text-center">
                                 <div class="d-flex align-items-center gap-10 justify-content-center">
                                     <a href="{{ route('unit.edit', $unit->id) }}"
