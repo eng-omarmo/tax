@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Unit;
 use App\Models\Property;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class unitController extends Controller
 {
@@ -19,15 +20,15 @@ class unitController extends Controller
 
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('unit_name', 'like', $searchTerm)
-                  ->orWhere('unit_number', 'like', $searchTerm)
-                  ->orWhere('unit_price', 'like', $searchTerm);
+                    ->orWhere('unit_number', 'like', $searchTerm)
+                    ->orWhere('unit_price', 'like', $searchTerm);
             })
-            ->orWhereHas('property', function ($q) use ($searchTerm) {
-                $q->where(function ($q) use ($searchTerm) {
-                    $q->where('property_name', 'like', $searchTerm)
-                      ->orWhere('property_phone', 'like', $searchTerm);
+                ->orWhereHas('property', function ($q) use ($searchTerm) {
+                    $q->where(function ($q) use ($searchTerm) {
+                        $q->where('property_name', 'like', $searchTerm)
+                            ->orWhere('property_phone', 'like', $searchTerm);
+                    });
                 });
-            });
         }
 
         if (request()->has('status') && request()->status) {
@@ -46,25 +47,27 @@ class unitController extends Controller
 
     public function store(Request $request)
     {
+dd($request->all());
         try {
             $request->validate([
                 'property_id' => 'required|exists:properties,id',
                 'unit_name' => 'required',
-
                 'unit_price' => 'required',
             ]);
             $unitNumber = 'U' . rand(1000, 9999) . rand(1000, 9999);
-
             unit::create([
                 'property_id' => $request->property_id,
                 'unit_number' => $unitNumber,
                 'unit_name' => $request->unit_name,
                 'unit_type' => $request->unit_type,
                 'unit_price' => $request->unit_price,
-                'is_available' => 0
+                'is_owner' => $request->is_owner = 0 ? yes : no,
+                'is_available' => $request->is_available == 0 ? true : false
+
             ]);
             return redirect()->route('unit.index')->with('success', 'Unit created successfully.');
         } catch (\Throwable $th) {
+            Log::error($th);
             return back()->with('error', 'Failed to create unit.' . $th->getMessage());
         }
     }
@@ -77,7 +80,7 @@ class unitController extends Controller
 
         $search = trim($request->input('search_property'));
 
-        $property = Property::where('property_phone', 'like', '%' . $search . '%')->first();
+        $property = Property::where('house_code', 'like', '%' . $search . '%')->first();
         if (!$property) {
             return back()->with('error', 'Property not found.');
         }
@@ -94,7 +97,7 @@ class unitController extends Controller
 
     public function update(Request $request, $id)
     {
- 
+
 
         try {
             $request->validate([

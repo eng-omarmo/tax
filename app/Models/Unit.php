@@ -15,6 +15,9 @@ class Unit extends Model
         'unit_type',
         'unit_price',
         'is_available',
+        'is_owner'
+
+
     ];
 
     public function property()

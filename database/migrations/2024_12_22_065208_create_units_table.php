@@ -20,7 +20,7 @@ class CreateUnitsTable extends Migration
             $table->string('unit_number')->nullable();
             $table->string('unit_price')->nullable();
             $table->enum('unit_type', ['Flat', 'Section', 'Office', 'Shop', 'Other']);
-
+            $table->enum('is_owner', ['yes', 'no']);
             $table->boolean('is_available')->default(true);
             $table->timestamps();
         });
