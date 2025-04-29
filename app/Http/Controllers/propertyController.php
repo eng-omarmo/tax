@@ -144,19 +144,20 @@ class propertyController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
+
+
         try {
             DB::beginTransaction();
             $request->validate([
                 'property_name' => 'required',
                 'property_phone' => 'required',
                 'house_type' => 'required',
-                'house_rent' => 'required',
-                'branch' => 'required',
+                'branch_id' => 'required',
                 'district_id' => 'required',
                 'zone' => 'required',
                 'latitude' => 'required',
                 'longitude' => 'required',
+                'lanlord_id' => 'required',
             ]);
 
             $properties = Property::where('property_name', $request->property_name)
@@ -166,12 +167,16 @@ class propertyController extends Controller
             if ($properties) {
                 return back()->with('error', 'Property name and phone already exists.');
             }
+            $code = 'HOUSE-' . strtoupper(Str::random(3)) . '-' . rand(100, 999);
+
+            $request->merge(['house_code' => $code]);
+
 
             Property::create([
                 'property_name' => $request->property_name,
                 'property_phone' => $request->property_phone,
                 'house_code' => $request->house_code,
-                'branch' => $request->branch,
+                'branch_id' => $request->branch_id,
                 'zone' => $request->zone,
                 'house_type' => $request->house_type,
                 'house_rent' => $request->house_rent,
@@ -180,7 +185,7 @@ class propertyController extends Controller
                 'monitoring_status' => $request->monitoring_status,
                 'status' => $request->status,
                 'district_id' => $request->district_id,
-                'landlord_id' => $lanlord->id,
+                'landlord_id' => $request->lanlord_id,
                 'monitoring_status' => 'Pending',
                 'status' => 'InActive',
             ]);

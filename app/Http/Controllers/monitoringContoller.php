@@ -38,21 +38,17 @@ class monitoringContoller extends Controller
 
     public function approve(Request $request)
     {
-     
+
         try {
             $status = 'Active';
-            $monitoring_status= 'Approved';
+            $monitoring_status = 'Approved';
             $property = Property::where('id', $request->property_id)->first();
             if (!$property) {
                 return response()->json(['success' => false, 'message' => 'Property not found'], 404);
             }
-            $data = $property->calculateTax($property->house_type, $property->house_rent);
-            $property->update([
-                'monitoring_status' => $monitoring_status,
-                'status' => $status,
-                'quarterly_tax_fee' => $data['quarterly_tax'],
-                'yearly_tax_fee' => $data['yearly_tax'],
-            ]);
+            $property->monitoring_status = $monitoring_status;
+            $property->status = $status;
+            $property->save();
             return response()->json(['success' => true, 'message' => 'Property approved successfully'], 200);
         } catch (\Throwable $th) {
             return response()->json(['success' => false, 'message' => $th->getMessage()], 500);

@@ -134,14 +134,6 @@
                                             name="property_phone" placeholder="Enter property phone"
                                             value="{{ old('property_phone', $property->property_phone) }}">
                                     </div>
-                                    <div class="col-md-6 mb-20">
-                                        <label for="nbr"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            NBR
-                                        </label>
-                                        <input type="text" class="form-control radius-8" id="nbr" name="nbr"
-                                            placeholder="Enter NBR" value="{{ old('nbr', $property->nbr) }}">
-                                    </div>
 
 
                                     <div class="col-md-6 mb-20">
@@ -191,19 +183,7 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-md-6 mb-20">
-                                        <label for="designation"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Designation <span class="text-danger-600">*</span>
-                                        </label>
-                                        <select class="form-control radius-8 form-select" id="designation"
-                                            name="designation">
-                                            <option value="">Choose Designation</option>
-                                            <option value="Deegaan"
-                                                {{ old('designation', $property->designation) == 'Deegaan' ? 'selected' : '' }}>
-                                                Deegaan</option>
-                                        </select>
-                                    </div>
+
 
                                     <div class="col-md-6 mb-20">
                                         <label for="house_type"
@@ -220,41 +200,6 @@
                                                 Apartment</option>
                                         </select>
                                     </div>
-
-                                    <div class="col-md-6 mb-20">
-                                        <label for="house_rent"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            House Rent
-                                        </label>
-                                        <input type="text" class="form-control radius-8" id="house_rent"
-                                            name="house_rent" placeholder="Enter house rent"
-                                            value="{{ old('house_rent', $property->house_rent) }}">
-
-                                    </div>
-
-                                    <div class="col-md-6 mb-20">
-                                        <label for="quarterly_tax_fee"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Quarterly Tax Fee
-                                        </label>
-                                        <input type="text" class="form-control radius-8" id="quarterly_tax_fee"
-                                            name="quarterly_tax_fee" placeholder="Enter quarterly tax fee" readonly
-                                            value="{{ old('quarterly_tax_fee', $property->quarterly_tax_fee) }}">
-
-                                    </div>
-
-                                    <div class="col-md-6 mb-20">
-                                        <label for="yearly_tax_fee"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Yearly Tax Fee
-                                        </label>
-                                        <input type="text" class="form-control radius-8" id="yearly_tax_fee"
-                                            name="yearly_tax_fee" placeholder="Enter yearly tax fee"
-                                            value="{{ old('yearly_tax_fee', $property->yearly_tax_fee)  }}" readonly>
-
-                                    </div>
-
-
 
                                     <div class="col-md-6 mb-20">
                                         <label for="branch"
@@ -304,10 +249,10 @@
 
                                 </div>
                                 <div class="d-flex align-items-center justify-content-center gap-3">
-                                    <button type="button"
+                                    <a href="{{route('property.index')}}"
                                         class="border border-danger-600 bg-hover-danger-200 text-danger-600 text-md px-56 py-11 radius-8">
                                         Cancel
-                                    </button>
+                                </a>
                                     <button type="submit"
                                         class="btn btn-primary border border-primary-600 text-md px-56 py-12 radius-8">
                                         Update
