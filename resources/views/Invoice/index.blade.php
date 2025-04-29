@@ -34,12 +34,11 @@
                             <option>Inactive</option>
                         </select>
                     </div>
-                    <button type="button"
-                        class="btn btn-primary text-sm btn-sm px-12 py-12 radius-8 d-flex align-items-center gap-2"
-                        data-bs-toggle="modal" data-bs-target="#exampleModalEdit">
-                        <iconify-icon icon="ic:baseline-print" class="icon text-xl line-height-1"></iconify-icon>
-                   Print
-                    </button>
+                    <a href="" class="d-flex align-items-center gap-8 text-decoration-none">
+                        <iconify-icon icon="ic:baseline-money" class="icon text-xl text-primary"></iconify-icon>
+                        <span class="fw-semibold text-sm text-primary">Invoice</span>
+                    </a>
+
                 </div>
                 <div class="card-body p-24">
                     <div class="table-responsive scroll-sm">
@@ -151,37 +150,7 @@
                     <div class="px-24 py-20">
                         <span class="mb-8"> Active Property Units Potential Income</span>
                         <h5 class="text-2xl">${{ $data['potentialIncome'] }}</h5>
-                        <div
-                            class="mt-24 pb-24 mb-24 border-bottom d-flex align-items-center gap-16 justify-content-between flex-wrap">
-                            <div class="text-center d-flex align-items-center  flex-column">
-                                <button form="q1Form"
-                                    class="w-60-px h-60-px bg-primary-50 text-primary-600 text-2xl d-inline-flex justify-content-center align-items-center rounded-circle ">
-                                    <i class="ri-add-line"></i>
-                                </button>
-                                <span class="text-primary-light fw-medium mt-6">Quater 1 invoice</span>
-                            </div>
-                            <div class="text-center d-flex align-items-center  flex-column">
-                                <span
-                                    class="w-60-px h-60-px bg-primary-50 text-primary-600 text-2xl d-inline-flex justify-content-center align-items-center rounded-circle ">
-                                    <i class="ri-add-line"></i>
-                                </span>
-                                <span class="text-primary-light fw-medium mt-6">Quater 2 invoice</span>
-                            </div>
-                            <div class="text-center d-flex align-items-center  flex-column">
-                                <span
-                                    class="w-60-px h-60-px bg-primary-50 text-primary-600 text-2xl d-inline-flex justify-content-center align-items-center rounded-circle ">
-                                    <i class="ri-add-line"></i>
-                                </span>
-                                <span class="text-primary-light fw-medium mt-6">Quater 3 invoice</span>
-                            </div>
-                            <div class="text-center d-flex align-items-center  flex-column">
-                                <span
-                                    class="w-60-px h-60-px bg-primary-50 text-primary-600 text-2xl d-inline-flex justify-content-center align-items-center rounded-circle ">
-                                    <i class="ri-add-line"></i>
-                                </span>
-                                <span class="text-primary-light fw-medium mt-6">Quater 4 invoice</span>
-                            </div>
-                        </div>
+
 
                         <div class="d-flex align-items-center justify-content-between gap-8 pb-24 border-bottom">
                             <h6 class="text-lg mb-0">Active Properties Watchlist</h6>

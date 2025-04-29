@@ -19,7 +19,7 @@
             </div>
         @endif
 
-    
+
 
 
 
@@ -76,8 +76,9 @@
                             </div>
                         </th>
                         <th scope="col">Property</th>
-                        <th scope="col">Property Phone</th>
+                        <th scope="col">Property Code</th>
                         <th scope="col">Price</th>
+                        <th scope="col">Unit Name</th>
                         <th scope="col">Unit Number</th>
                         <th scope="col">Unit Type</th>
                         <th scope="col">Availability</th>
@@ -97,17 +98,18 @@
                                 </div>
                             </td>
 
-                            <td>   <a href="{{route('property.edit', $unit->property->id)}}">
-                                {{ $unit->property->property_name }}
-                            </a></td>
+                            <td> <a href="{{ route('property.edit', $unit->property->id) }}">
+                                    {{ $unit->property->property_name }}
+                                </a></td>
                             <td>
-                                <a href="{{route('property.edit', $unit->property->id)}}">
-                                    {{ $unit->property->property_phone }}
+                                <a href="{{ route('property.edit', $unit->property->id) }}">
+                                    {{ $unit->property->house_code }}
                                 </a>
                             </td>
 
 
                             <td>{{ '$' . $unit->unit_price }}</td>
+                            <td>{{ $unit->unit_name }}</td>
                             <td>{{ $unit->unit_number }}</td>
                             <td>{{ $unit->unit_type }}</td>
                             {{-- <td>{{ $unit->unit_type }}</td> --}}
@@ -209,7 +211,5 @@
             });
             document.getElementById('filterForm').submit();
         });
-
-
     </script>
 @endsection

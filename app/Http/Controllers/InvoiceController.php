@@ -8,6 +8,7 @@ use App\Models\Unit;
 use App\Models\Invoice;
 use App\Models\TaxRate;
 use App\Models\Transaction;
+use App\Services\TimeService;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -25,24 +26,25 @@ class InvoiceController extends Controller
 
     public function invoiceList()
     {
+        $timeService = new TimeService();
+        $quarter = $timeService->currentQuarter();
+        $taxRate = TaxRate::where('tax_type', $quarter)->value('rate');
 
-        $data['potentialIncome'] = Unit::where('is_available', 1)->sum('unit_price');
+        $baseQuery = Unit::where(['is_available'=>1, 'is_owner' => 'no']);
 
-        $data['flatIncome'] = Unit::where('is_available', 1)->where('unit_type', 'Flat')->sum('unit_price');
-        $data['sectionIncome'] = Unit::where('is_available', 1)->where('unit_type', 'Section')->sum('unit_price');
-        $data['officeIncome'] = Unit::where('is_available', 1)->where('unit_type', 'Office')->sum('unit_price');
-        $data['shopIncome'] = Unit::where('is_available', 1)->where('unit_type', 'Shop')->sum('unit_price');
-        $data['otherIncome'] = Unit::where('is_available', 1)->where('unit_type', 'Other')->sum('unit_price');
+        $data['potentialIncome'] = $baseQuery->sum('unit_price') * $taxRate;
+
+        $data['flatIncome'] = (clone $baseQuery)->where('unit_type', 'Flat')->sum('unit_price') * $taxRate;
+        $data['sectionIncome'] = (clone $baseQuery)->where('unit_type', 'Section')->sum('unit_price') * $taxRate;
+        $data['officeIncome'] = (clone $baseQuery)->where('unit_type', 'Office')->sum('unit_price') * $taxRate;
+        $data['shopIncome'] = (clone $baseQuery)->where('unit_type', 'Shop')->sum('unit_price') * $taxRate;
+        $data['otherIncome'] = (clone $baseQuery)->where('unit_type', 'Other')->sum('unit_price') * $taxRate;
+
         $data['invoices'] = Invoice::latest()->paginate(10);
 
-
-        return view(
-            'Invoice.index',
-            [
-                'data' => $data
-            ]
-        );
+        return view('Invoice.index', ['data' => $data]);
     }
+
     public function quarter1(Request $request)
     {
         try {
@@ -157,5 +159,22 @@ class InvoiceController extends Controller
         } catch (\Throwable $th) {
             Log::info($th->getMessage());
         }
+    }
+
+
+    function getQuarter($month = null, $format = 'Q')
+    {
+        $month = $month ?: date('n');
+        $quarter = ceil($month / 3);
+
+        return match ($format) {
+            'Q' => "Q$quarter",
+            'int' => $quarter,
+            'range' => [
+                'start' => ($quarter * 3 - 2),
+                'end' => ($quarter * 3)
+            ],
+            default => $quarter
+        };
     }
 }

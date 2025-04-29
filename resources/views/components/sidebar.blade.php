@@ -290,7 +290,7 @@
                     </ul>
 
                 </li>
-
+{{-- 
                 <li class="dropdown">
                     <a href="javascript:void(0)">
                         <i class="ri-wallet-fill text-info-main text-xl"></i>
@@ -312,7 +312,7 @@
                         </li>
 
                     </ul>
-                </li>
+                </li> --}}
             @endif
             {{-- <li class="dropdown">
                 <a href="javascript:void(0)">
