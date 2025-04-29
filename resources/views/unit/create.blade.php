@@ -57,16 +57,25 @@
                                     <iconify-icon icon="ic:twotone-business" class="text-primary me-8"></iconify-icon>
                                     <span class="fw-semibold">{{ $property->property_name }}</span>
                                 </div>
+                                  <div class="d-flex align-items-center mb-12">
+                                    <iconify-icon icon="ic:baseline-code" class="text-primary me-8"></iconify-icon>
+                                    <span class="text-sm">{{ $property->house_code }}</span>
+                                </div>
 
                             </div>
                             <div class="col-md-6">
-                                <div class="text-sm text-primary-light mb-8">Contact Information</div>
+                                <div class="text-sm text-primary-light mb-8">Property Details</div>
+                                <div class="d-flex align-items-center mb-12">
+                                    <iconify-icon icon="ic:baseline-house" class="text-primary me-8"></iconify-icon>
+                                    <span class="text-sm">{{ $property->house_type }}</span>
+                                </div>
                                 <div class="d-flex align-items-center mb-12">
                                     <iconify-icon icon="ic:baseline-phone" class="text-primary me-8"></iconify-icon>
                                     <span class="text-sm">{{ $property->property_phone }}</span>
                                 </div>
 
                             </div>
+
                         </div>
                     </div>
                 </div>
