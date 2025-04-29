@@ -7,7 +7,10 @@
 
 @section('content')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    @if ($property->monetering_status != 'Approved')
+
+   
+
+    @if ($property->monitoring_status != 'Approved')
         <div
             class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center justify-content-between flex-wrap gap-3">
             <div class="ms-auto d-flex align-items-center gap-3 flex-wrap">
@@ -20,6 +23,7 @@
             </div>
         </div>
     @endif
+
 
 
     <div class="card h-100 p-0 radius-12">
@@ -145,7 +149,7 @@
                                             <option value="Active"
                                                 {{ old('status', $property->status) == 'Active' ? 'selected' : '' }}>{{$property->status}}
                                             </option>
-                 
+
                                             <option value="Active"
                                                 {{ old('status', $property->status) == 'Active' ? 'selected' : '' }}>Active
                                             </option>
