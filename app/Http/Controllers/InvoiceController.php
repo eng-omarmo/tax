@@ -65,7 +65,7 @@ class InvoiceController extends Controller
 
             $existingInvoice = Invoice::where('frequency', $quarter)
                 ->whereYear('invoice_date', now()->year)
-                ->exists();
+                ->get();
 
             if ($existingInvoice) {
                 return redirect()->back()->with('error', 'Invoices for this quarter have already been generated today.');
