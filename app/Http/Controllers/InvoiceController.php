@@ -63,13 +63,13 @@ class InvoiceController extends Controller
                 return redirect()->route('index')->with('error', 'No tax Rate is for this ' . $quarter);
             }
 
-            $existingInvoice = Invoice::where('frequency', $quarter)
-                ->whereYear('invoice_date', now()->year)
-                ->get();
+            // $existingInvoice = Invoice::where('frequency', $quarter)
+            //     ->whereYear('invoice_date', now()->year)
+            //     ->get();
 
-            if ($existingInvoice) {
-                return redirect()->back()->with('error', 'Invoices for this quarter have already been generated today.');
-            }
+            // if ($existingInvoice) {
+            //     return redirect()->back()->with('error', 'Invoices for this quarter have already been generated today.');
+            // }
             $query = Unit::where(['is_available' => 1, 'is_owner' => 'no'])->get();
 
             if (!$query) {
