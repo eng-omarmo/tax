@@ -28,18 +28,18 @@ class InvoiceController extends Controller
 
     public function invoiceList()
     {
-        $timeService = new TimeService();
-        $quarter = $timeService->currentQuarter();
+        $quarter = $this->currentQuater();
 
-        $taxRate = TaxRate::where(['tax_type'=>$quarter, 'status'=>"active"])->value('rate') / 100;
+        $taxRate = TaxRate::where(['tax_type' => $quarter, 'status' => "active"])->value('rate') / 100;
 
         if (empty($taxRate)) {
             return redirect()->route('index')->with('error', 'No tax Rate is for this ' . $quarter);
         }
 
 
-        $baseQuery = Unit::where(['is_available' => 0, 'is_owner' => 'no']);
-
+        $baseQuery = Unit::where(['is_available' => 1, 'is_owner' => 'no']);
+        $data['potentialIncome'] = $baseQuery->sum('unit_price') * $taxRate;
+        $baseQuery = Unit::where(['is_available' => 1, 'is_owner' => 'no']);
         $data['potentialIncome'] = $baseQuery->sum('unit_price') * $taxRate;
 
 
@@ -49,45 +49,52 @@ class InvoiceController extends Controller
         $data['officeIncome'] = (clone $baseQuery)->where('unit_type', 'Office')->sum('unit_price') * $taxRate;
         $data['shopIncome'] = (clone $baseQuery)->where('unit_type', 'Shop')->sum('unit_price') * $taxRate;
         $data['otherIncome'] = (clone $baseQuery)->where('unit_type', 'Other')->sum('unit_price') * $taxRate;
-
-
         $data['invoices'] = Invoice::latest()->paginate(10);
 
         return view('Invoice.index', ['data' => $data]);
     }
 
-    public function quarter1(Request $request)
+    public function generateInvoice()
     {
         try {
-            $request->validate([
-                'q1' => 'required',
-            ]);
-            $activeUnits = Unit::where('is_available', 1)->get();
-
-            $taxRate = TaxRate::first();
-            if (!$taxRate) {
-                return redirect()->back()->with('error', 'Tax rate not set');
+            $quarter = $this->currentQuater();
+            $taxRate = TaxRate::where(['tax_type' => $quarter, 'status' => "active"])->value('rate') / 100;
+            if (empty($taxRate)) {
+                return redirect()->route('index')->with('error', 'No tax Rate is for this ' . $quarter);
             }
-            $rate = $taxRate->rate / 100;
-            foreach ($activeUnits as $unit) {
-                $calculatedInvoice = $unit->unit_price * $rate;
-                $invoice =  Invoice::create([
+
+            $existingInvoice = Invoice::where('frequency', $quarter)
+                ->whereYear('invoice_date', now()->year)
+                ->exists();
+
+            if ($existingInvoice) {
+                return redirect()->back()->with('error', 'Invoices for this quarter have already been generated today.');
+            }
+            $query = Unit::where(['is_available' => 1, 'is_owner' => 'no'])->get();
+
+            if (!$query) {
+                return redirect()->back()->with('error', 'there no occupied units to credit invoice in the system');
+            }
+            foreach ($query as $unit) {
+                $calculatedInvoice = $unit->unit_price * $taxRate;
+                Invoice::create([
                     'unit_id' => $unit->id,
                     'invoice_number' => 'INV' . strtoupper(uniqid()),
                     'amount' => $calculatedInvoice,
                     'invoice_date' => now(),
                     'due_date' => now()->addDays(30),
-                    'frequency' => 'quarter1',
+                    'frequency' => $quarter,
                     'payment_status' => 'Pending',
+
                 ]);
-                $this->createTransaction($invoice);
             }
-            return redirect()->back()->with('success', 'invoiced is generated successfully for quater 1');
+            return redirect()->back()->with('success', 'invoiced is generated successfully for ' . $quarter);
         } catch (\Throwable $th) {
             return redirect()->back()->with('error', $th->getMessage());
             Log::info($th->getMessage());
         }
     }
+
 
 
     public function invoicePreview()
@@ -97,6 +104,7 @@ class InvoiceController extends Controller
 
     public function create()
     {
+
         return view('Invoice.create');
     }
 
@@ -146,46 +154,12 @@ class InvoiceController extends Controller
         }
     }
 
-    public function generateTaxInvoice(Request $request)
+
+
+    private function currentQuater()
     {
-        $data = session()->get('data');
-        return view('Invoice.preview', compact('data'));
-    }
-
-
-    private function createTransaction($invoice)
-    {
-        try {
-            return Transaction::create([
-                'transaction_id' => 'Tran' . rand(1000, 9999) . rand(1000, 9999),
-                'property_id' => $invoice->unit->property_id,
-                'unit_id' => $invoice->unit_id,
-                'transaction_type' => 'Tax',
-                'amount' => $invoice->amount,
-                'description' => 'Tax Invoice for ' . $invoice->frequency,
-                'credit' => 0,
-                'debit' => $invoice->amount,
-                'status' => 'Completed',
-            ]);
-        } catch (\Throwable $th) {
-            Log::info($th->getMessage());
-        }
-    }
-
-
-    function getQuarter($month = null, $format = 'Q')
-    {
-        $month = $month ?: date('n');
-        $quarter = ceil($month / 3);
-
-        return match ($format) {
-            'Q' => "Q$quarter",
-            'int' => $quarter,
-            'range' => [
-                'start' => ($quarter * 3 - 2),
-                'end' => ($quarter * 3)
-            ],
-            default => $quarter
-        };
+        $timeService = new TimeService();
+        $quarter = $timeService->currentQuarter();
+        return $quarter;
     }
 }
