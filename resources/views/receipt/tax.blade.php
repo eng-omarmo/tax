@@ -33,7 +33,7 @@
                     <div class="shadow-4 border radius-8">
                         <div class="p-20 d-flex flex-wrap justify-content-between gap-3 border-bottom">
                             <div>
-                                <h3 class="text-xl">Receipt #{{ $data['reference'] }}</h3>
+                                <h3 class="text-xl">Receipt #{{ $data['invoice_number'] }}</h3>
                                 <p class="mb-1 text-sm">Date Issued: {{ $data['payment_date'] }}</p>
                             </div>
                             <div>

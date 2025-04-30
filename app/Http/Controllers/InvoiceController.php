@@ -2,17 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Log;
 use App\Models\Tax;
 use App\Models\Unit;
 use App\Models\Invoice;
+use App\Models\Payment;
 use App\Models\TaxRate;
 use App\Models\Transaction;
-use App\Services\TimeService;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-
+use App\Models\PaymentMethod;
+use App\Services\TimeService;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use function PHPUnit\Framework\isNull;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class InvoiceController extends Controller
 {
@@ -111,7 +114,7 @@ class InvoiceController extends Controller
     public function pay($id)
     {
         try {
-
+            $paymentMethods = PaymentMethod::all();
             $invoice = Invoice::with('unit')->where('invoice_number', $id)->first();
 
             //put data in an array
@@ -133,6 +136,7 @@ class InvoiceController extends Controller
             return view('Invoice.create', [
                 'invoice' => $invoice,
                 'balance' => 00,
+                'paymentMethods' => $paymentMethods,
             ]);
         } catch (ModelNotFoundException $e) {
             return back()->with('error', 'Tax not found');
@@ -148,5 +152,79 @@ class InvoiceController extends Controller
         $timeService = new TimeService();
         $quarter = $timeService->currentQuarter();
         return $quarter;
+    }
+
+
+
+    public function transaction(Request $request)
+    {
+
+        try {
+            $request->validate([
+                'invoice_number' => 'required|exists:invoices,invoice_number',
+                'reference_number' => 'nullable|string|max:255',
+                'payment_method_id' => 'required|string|max:255',
+                'sender_account' => 'nullable|string|max:255',
+            ]);
+
+            DB::beginTransaction();
+            $invoice = Invoice::where('invoice_number', $request->invoice_number)->first();
+
+            if ($invoice->payment_status == 'Paid') {
+                return back()->with('error', 'Invoice already paid.');
+            }
+            $payment = Payment::create([
+                'invoice_id' => $invoice->id,
+                'amount' => $invoice->amount,
+                'payment_date' => Carbon::now()->format('Y-m-d H:i:s'),
+                'reference' => $request->reference_number,
+                'status' => 'completed',
+            ]);
+
+            $this->createpaymentDetail($payment, $request);
+            $this->createTransactionFee($invoice);
+            $invoice->payment_status = 'Paid';
+            $invoice->save();
+            DB::commit();
+
+            return redirect()->route('receipt.tax', ['id' => $payment->id]);
+        } catch (\Throwable $th) {
+            Log::info($th->getMessage());
+            DB::rollBack();
+            return back()->with('error', $th->getMessage());
+        }
+    }
+    private function getPaymentMethod($paymentMethodId)
+    {
+        return PaymentMethod::findOrFail($paymentMethodId)->name;
+    }
+
+
+
+    private function createpaymentDetail($payment, $request)
+    {
+        return Payment::createPaymentDetail([
+            'payment_id' => $payment->id,
+            'bank_name' =>   $this->getPaymentMethod($request->payment_method_id),
+            'account_number' => $request->sender_account,
+            'additional_info' => $request->additional_info ?? 'no additional provided'
+        ]);
+    }
+    private function createTransactionFee($invoice)
+    {
+        try {
+            return Transaction::create([
+                'property_id' => $invoice->unit->property->id,
+                'unit_id' => $invoice->unit->id,
+                'transaction_type' => 'Depsoit',
+                'amount' => $invoice->amount,
+                'description' => 'Paid Tax Fee',
+                'credit' => $invoice->amount,
+                'debit' => 0,
+                'status' => 'completed',
+            ]);
+        } catch (\Throwable $th) {
+            Log::info($th->getMessage());
+        }
     }
 }

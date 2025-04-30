@@ -12,7 +12,6 @@ class CreatePaymentDetailsTable extends Migration
             $table->unsignedBigInteger('payment_id');
             $table->string('bank_name')->nullable();
             $table->string('account_number')->nullable();
-            $table->string('mobile_number')->nullable();
             $table->text('additional_info')->nullable();
             $table->timestamps();
 

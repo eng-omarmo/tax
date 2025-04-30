@@ -344,7 +344,9 @@ Route::prefix('invoice')->middleware(['auth.admin'])->group(function () {
         Route::get('/invoice-list', 'invoiceList')->name('invoiceList');
         Route::post('/generate', 'generateInvoice')->name('invoice.generate');
         Route::get('/invoice-preview', 'invoicePreview')->name('invoicePreview');
-        Route::post('/invoice/q-1', 'quarter1')->name('invoice.quarter1');
+        Route::post('/q-1', 'quarter1')->name('invoice.quarter1');
+        Route::post('/transaction', 'transaction')->name('invoice.transaction');
+
     });
 });
 

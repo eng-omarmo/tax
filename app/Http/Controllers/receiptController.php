@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class receiptController extends Controller
@@ -11,7 +12,7 @@ class receiptController extends Controller
 
     public function taxReceipt(Request $request, $id)
     {
-        $payment = Payment::with('tax.property.landlord.user', 'paymentDetail')->find($id);
+        $payment = Payment::with('invoice.unit.property.landlord.user', 'paymentDetail')->find($id);
 
         if (!$payment) {
             return redirect()->back()->with('error', 'Payment not found');
@@ -19,18 +20,18 @@ class receiptController extends Controller
 
         $data = [
             'amount' => $payment->amount,
-            'tax_code' => $payment->tax->tax_code,
-            'owner' => $payment->tax->property->landlord->user->name,
-            'property' => $payment->tax->property->house_code,
-            'bank' => $payment->paymentDetail->bank_name  ,
-            'account_number' => $payment->paymentDetail->account_number ,
-            'mobile_number' => $payment->paymentDetail->mobile_number ,
+            'invoice_number' => $payment->invoice->invoice_number,
+            'tax_code' =>'Tax-' . strtoupper(Str::random(3)) . '-' . rand(100, 999),
+            'owner' => $payment->invoice->unit->property->landlord->user->name,
+            'property' => $payment->invoice->unit->property->house_code,
+            'bank' => $payment->paymentDetail->bank_name,
+            'account_number' => $payment->paymentDetail->account_number,
             'payment_date' => $payment->payment_date,
             'reference' => $payment->reference,
-            'phone' => $payment->tax->property->landlord->user->phone,
-            'email' => $payment->tax->property->landlord->user->email,
-            'address' => $payment->tax->property->landlord->user->address,
-            'payment_method' => $payment->payment_method,
+            'phone' => $payment->invoice->unit->property->property_phone,
+            'email' => $payment->invoice->unit->property->landlord->user->email,
+            'address' => $payment->invoice->unit->property->landlord->user->address,
+            'payment_method' => $payment->paymentDetail->bank_name,
         ];
 
         return view('receipt.tax', compact('data'));

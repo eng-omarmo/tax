@@ -304,7 +304,7 @@
                         </li>
 
                         <li>
-                            <a href="{{ route('payment.method.create') }}"><i
+                            <a href="{{ route('account.index') }}"><i
                                     class="ri-circle-fill circle-icon text-info-main w-auto"></i> Accounts
                                   </a>
                         </li>

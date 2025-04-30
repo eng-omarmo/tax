@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('invoice_id')->nullable();
             $table->decimal('amount', 10, 2);
             $table->date('payment_date');
-            $table->enum('payment_method', ['Cash', 'Bank Transfer', 'Mobile Money'])->default('Cash');
             $table->string('reference')->nullable();
             $table->enum('status', ['Completed', 'Pending', 'Failed'])->default('Completed');
             $table->timestamps();

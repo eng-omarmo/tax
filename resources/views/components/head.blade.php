@@ -1,7 +1,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finance App</title>
+    <title>Tax App Demo</title>
     <link rel="icon" type="image/png"  href="{{ asset('assets/images/logo.png') }}" sizes="16x16">
     <!-- remix icon font css  -->
     <link rel="stylesheet"  href="{{ asset('assets/css/remixicon.css') }}">
