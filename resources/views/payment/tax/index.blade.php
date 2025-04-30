@@ -52,12 +52,12 @@
                         Reset
                     </a>
 
-                    <!-- Add New Payment Button -->
+                    {{-- <!-- Add New Payment Button -->
                     <a href="{{ route('payment.create.tax') }}"
                         class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
                         <iconify-icon icon="ic:baseline-plus" class="icon text-xl line-height-1"></iconify-icon>
                         Add New Payment
-                    </a>
+                    </a> --}}
                 </div>
             </div>
         </form>
@@ -78,16 +78,15 @@
                             </div>
                         </th>
                         <th scope="col">SNO</th>
-
                         <th scope="col">Property</th>
-                        <th scope="col">Tenant</th>
-                        <th scope="col">Account Name</th>
-                        <th scope="col">Invoice</th>
-                        <th scope="col">Account No</th>
-                        <th scope="col">Amount Paid</th>
+                        <th scope="col">Unit</th>
+                        <th scope="col">Sender Account </th>
+                        <th scope="col">Invoice No</th>
+                        <th scope="col">Payment Method</th>
+                        <th scope="col">Amount</th>
                         <th scope="col">Payment Date</th>
                         <th scope="col" class="text-center">Status</th>
-                        <th scope="col" class="text-center">Action</th>
+                        {{-- <th scope="col" class="text-center">Action</th> --}}
                     </tr>
                 </thead>
                 <tbody>
@@ -105,52 +104,33 @@
                             <td>{{ $payment->id }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <span
-                                        class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->invoice->invoice_number ?? 'N/A' }}</span>
+                                    <span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->invoice->unit->property->house_code ?? 'N/A' }}</span>
                                 </div>
                             </td>
-
-
-
-                            <td><a href="{{ route('property.edit', $payment->invoice->unit->property->id) }}"
-                                    class="text-md mb-0 fw-normal text-secondary-light">
-                                    {{  $payment->invoice->unit->property->property_name ?? 'N/A' }}</a></td>
-
-                            <td><span
-                                    class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->paymentDetails['bank'] }}</span>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->invoice->unit->unit_number ?? 'N/A' }}</span>
+                                </div>
                             </td>
-                            <td><span
-                                class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->amount }}</span>
-                        </td>
-                            <td><span
-                                    class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->paymentDetails['mobile'] ?? $payment->paymentDetails['account'] }}</span>
+                            <td>
+                                <span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->paymentDetail->account_number ?? 'N/A' }}</span>
                             </td>
-
-
-
-
-                            <td><span
-                                    class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->payment_date }}</span>
+                            <td>
+                                <span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->invoice->invoice_number ?? 'N/A' }}</span>
                             </td>
-
+                            <td>
+                                <span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->paymentDetail->bank_name ?? 'N/A' }}</span>
+                            </td>
+                            <td>
+                                <span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->amount }}</span>
+                            </td>
+                            <td>
+                                <span class="text-md mb-0 fw-normal text-secondary-light">{{ $payment->payment_date }}</span>
+                            </td>
                             <td class="text-center">
-                                <span
-                                    class="bg-success-focus text-success-600 border border-success-main px-24 py-4 radius-4 fw-medium text-sm">
+                                <span class="bg-success-focus text-success-600 border border-success-main px-24 py-4 radius-4 fw-medium text-sm">
                                     {{ ucfirst($payment->status) ?? $payment->status }}
                                 </span>
-                            </td>
-                            <td class="text-center">
-                                <div class="d-flex align-items-center gap-10 justify-content-center">
-                                    <a href="{{ route('payment.edit', $payment->id) }}"
-                                        class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
-                                        <iconify-icon icon="lucide:edit" class="menu-icon"></iconify-icon>
-                                    </a>
-
-                                    <a href="{{ route('payment.delete', $payment->id) }}"
-                                        class="remove-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
-                                        <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
-                                    </a>
-                                </div>
                             </td>
                         </tr>
                     @endforeach

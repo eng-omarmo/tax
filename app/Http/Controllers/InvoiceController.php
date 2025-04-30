@@ -219,7 +219,6 @@ class InvoiceController extends Controller
     }
     private function createTransactionFee($invoice)
     {
-
         try {
             return Transaction::create([
                 'transaction_id' => $invoice->invoice_number . '' . uniqid(),

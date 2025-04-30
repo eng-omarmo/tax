@@ -18,14 +18,10 @@ class paymentController extends Controller
     public function index(Request $request)
     {
         $query = Payment::with('invoice', 'paymentDetail');
-
-
         $payments = $query->paginate(5);
 
         foreach ($payments as $payment) {
-
             $paymentDetail = $payment->paymentDetail->first();
-
             $payment->paymentDetails = [
                 'account' => $paymentDetail ? $paymentDetail->account_number : 'N/A',
                 'mobile'  => $paymentDetail ? $paymentDetail->mobile_number : 'N/A',
@@ -39,23 +35,9 @@ class paymentController extends Controller
     }
     public function taxIndex(Request $request)
     {
-        // Build the query with eager loading and tax filtering (if needed).
         $query = Payment::with('invoice', 'paymentDetail');
 
-        $payments = $query->paginate(5);
-
-
-        foreach ($payments as $payment) {
-
-            $paymentDetail = $payment->paymentDetail->first();
-
-            $payment->paymentDetails = [
-                'account' => $paymentDetail ? $paymentDetail->account_number : 'N/A',
-                'mobile'  => $paymentDetail ? $paymentDetail->mobile_number : 'N/A',
-                'bank'    => $paymentDetail ? $paymentDetail->bank_name : 'N/A',
-            ];
-        }
-
+        $payments = $query->paginate(10);
 
         return view('payment.tax.index', [
             'payments' => $payments,
