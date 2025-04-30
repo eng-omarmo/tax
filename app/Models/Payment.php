@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\PaymentDetail;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Invoice;
 
 class Payment extends Model
 {
