@@ -1,8 +1,8 @@
 @extends('layout.layout')
 
 @php
-    $title = 'Payment Method Grid';
-    $subTitle = 'Payment Method ';
+    $title = 'Account Managment';
+    $subTitle = 'Account Grid';
     $script = '<script>
         $(".remove-item-btn").on("click", function() {
             $(this).closest("tr").addClass("d-none");
@@ -17,7 +17,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-        <form method="GET" action="{{ route('payment.method.index') }}" id="filterForm">
+        <form method="GET" action="{{ route('account.index') }}" id="filterForm">
             <div
                 class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center justify-content-between flex-wrap gap-3">
                 <!-- Filter Section (Search, Pagination, Status) -->
@@ -55,10 +55,10 @@
                     </a>
 
                     <!-- Add New User Button -->
-                    <a href="{{ route('payment.method.create') }}"
+                    <a href="{{ route('account.create') }}"
                         class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
                         <iconify-icon icon="ic:baseline-plus" class="icon text-xl line-height-1"></iconify-icon>
-                        Add New Method
+                        Add New Account
                     </a>
                 </div>
             </div>
@@ -82,13 +82,15 @@
                             </div>
                         </th>
                         <th scope="col">SNO</th>
-                        <th scope="col">Name</th>
+                        <th scope="col">Account Name</th>
+                        <th scope="col">Payment Method </th>
+                        <th scope="col">Balance </th>
                         <th scope="col" class="text-center">Status</th>
                         <th scope="col" class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($paymentMethods as $paymentMethod)
+                    @foreach ($accounts as $account)
                         <tr>
                             <td>
                                 <div class="d-flex align-items-center gap-10">
@@ -99,33 +101,36 @@
                                     {{ $loop->iteration }}
                                 </div>
                             </td>
-                            <td>{{ $paymentMethod->id }}</td>
+                            <td>{{ $account->id }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
-
+                                    <img src="{{ asset('assets/images/user-list/user-list' . $loop->iteration . '.png') }}"
+                                        alt=""
+                                        class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
                                     <div class="flex-grow-1">
                                         <span
-                                            class="text-md mb-0 fw-normal text-secondary-light">{{ $paymentMethod->name }}</span>
+                                            class="text-md mb-0 fw-normal text-secondary-light">{{ $account->account_number }}</span>
                                     </div>
                                 </div>
-
+                            </td>
+                            <td><span
+                                    class="text-md mb-0 fw-normal text-secondary-light">{{ $account->paymentMethod->name }}</span>
+                            </td>
 
                             <td class="text-center">
                                 <span
                                     class="bg-success-focus text-success-600 border border-success-main px-24 py-4 radius-4 fw-medium text-sm">
-                                    {{ $paymentMethod->is_active ? 'Active' : 'Not Active' }}
-
+                                    {{ ucfirst($account->status) ?? $account->status }}
                                 </span>
                             </td>
                             <td class="text-center">
                                 <div class="d-flex align-items-center gap-10 justify-content-center">
-                                    <a href="{{ route('payment.method.edit', $paymentMethod->id) }}"
+                                    <a href="{{ route('accountedit', $account->id) }}"
                                         class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
                                         <iconify-icon icon="lucide:edit" class="menu-icon"></iconify-icon>
                                     </a>
 
-
-                                    <a href="{{ route('payment.method.destroy', $paymentMethod->id) }}"
+                                    <a href="{{ route('accountdelete', $acount->id) }}"
                                         class="remove-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
                                         <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
                                     </a>
@@ -140,45 +145,55 @@
 
 
         <div class="d-flex align-items-center  bg-base px-24 py-12 justify-content-between flex-wrap gap-2 mt-24">
-            <span>Showing {{ $paymentMethods->firstItem() }} to {{ $paymentMethods->lastItem() }} of {{ $paymentMethods->total() }} entries</span>
+            <span>Showing {{ $accounts->firstItem() }} to {{ $accounts->lastItem() }} of {{ $accounts->total() }}
+                entries</span>
             <div class="pagination-container">
                 <div class="card-body p-24">
                     <ul class="pagination d-flex flex-wrap bg-base align-items-center gap-2 justify-content-center">
-                        @if ($paymentMethods->onFirstPage())
+                        @if ($accounts->onFirstPage())
                             <li class="page-item disabled">
-                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="javascript:void(0)">First</a>
+                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px"
+                                    href="javascript:void(0)">First</a>
                             </li>
                             <li class="page-item disabled">
-                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="javascript:void(0)">Previous</a>
+                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px"
+                                    href="javascript:void(0)">Previous</a>
                             </li>
                         @else
                             <li class="page-item">
-                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $paymentMethods->url(1) }}">First</a>
+                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px"
+                                    href="{{ $accounts->url(1) }}">First</a>
                             </li>
                             <li class="page-item">
-                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $paymentMethods->previousPageUrl() }}">Previous</a>
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px"
+                                    href="{{ $accounts->previousPageUrl() }}">Previous</a>
                             </li>
                         @endif
 
-                        @foreach ($paymentMethods->getUrlRange(1, $paymentMethods->lastPage()) as $page => $url)
-                            <li class="page-item {{ $paymentMethods->currentPage() == $page ? 'active' : '' }}">
-                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px w-48-px {{ $paymentMethods->currentPage() == $page ? 'bg-primary-600 text-white' : '' }}" href="{{ $url }}">{{ $page }}</a>
+                        @foreach ($accounts->getUrlRange(1, $accounts->lastPage()) as $page => $url)
+                            <li class="page-item {{ $accounts->currentPage() == $page ? 'active' : '' }}">
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px w-48-px {{ $accounts->currentPage() == $page ? 'bg-primary-600 text-white' : '' }}"
+                                    href="{{ $url }}">{{ $page }}</a>
                             </li>
                         @endforeach
 
-                        @if ($paymentMethods->hasMorePages())
+                        @if ($accounts->hasMorePages())
                             <li class="page-item">
-                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $paymentMethods->nextPageUrl() }}">Next</a>
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px"
+                                    href="{{ $accounts->nextPageUrl() }}">Next</a>
                             </li>
                             <li class="page-item">
-                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $paymentMethods->url($paymentMethods->lastPage()) }}">Last</a>
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px"
+                                    href="{{ $accounts->url($accounts->lastPage()) }}">Last</a>
                             </li>
                         @else
                             <li class="page-item disabled">
-                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px " href="javascript:void(0)">Next</a>
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px "
+                                    href="javascript:void(0)">Next</a>
                             </li>
                             <li class="page-item disabled">
-                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="javascript:void(0)">Last</a>
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px"
+                                    href="javascript:void(0)">Last</a>
                             </li>
                         @endif
                     </ul>

@@ -9,6 +9,7 @@ class Accounts extends Model
     protected $fillable = [
         'payment_method_id',
         'account_number',
+        'balance',
         'status'
     ];
 

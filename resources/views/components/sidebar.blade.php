@@ -290,7 +290,30 @@
                     </ul>
 
                 </li>
-{{-- 
+
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <i class="ri-user-fill text-info-main text-xl"></i>
+                        <span>Account Management</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="{{ route('payment.method.index') }}"><i
+                                    class="ri-circle-fill circle-icon text-primary-600 w-auto"></i>
+                             Payment Method</a>
+                        </li>
+
+                        <li>
+                            <a href="{{ route('payment.method.create') }}"><i
+                                    class="ri-circle-fill circle-icon text-info-main w-auto"></i> Accounts
+                                  </a>
+                        </li>
+
+                    </ul>
+
+                </li>
+{{--
+{{--
                 <li class="dropdown">
                     <a href="javascript:void(0)">
                         <i class="ri-wallet-fill text-info-main text-xl"></i>

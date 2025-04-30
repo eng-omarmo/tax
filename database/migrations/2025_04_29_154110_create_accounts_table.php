@@ -11,6 +11,7 @@ class CreateAccountsTable extends Migration
             $table->id();
             $table->foreignId('payment_method_id')->constrained()->onDelete('cascade');
             $table->string('account_number');
+            $table->float('balance', 10, 2);
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });

@@ -13,6 +13,7 @@ use App\Http\Controllers\TableController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\tenantController;
+use App\Http\Controllers\accountController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\paymentController;
 use App\Http\Controllers\receiptController;
@@ -227,6 +228,16 @@ Route::prefix('payment-method')->middleware(['auth.admin'])->group(function () {
     });
 });
 
+Route::prefix('account')->middleware(['auth.admin'])->group(function () {
+    Route::controller(accountController::class)->group(function () {
+        Route::get('/index', 'index')->name('account.index');
+        Route::get('/create', 'create')->name('account.create');
+        Route::post('/store', 'store')->name('account.store');
+        Route::get('/edit/{id}', 'edit')->name('account.edit');
+        Route::put('/update/{id}', 'update')->name('account.update');
+        Route::get('/destroy/{id}', 'destroy')->name('account.destroy');
+    });
+});
 
 
 Route::prefix('tax')->middleware(['auth.admin'])->group(function () {
