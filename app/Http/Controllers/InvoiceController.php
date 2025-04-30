@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Accounts;
 use App\Models\Tax;
 use App\Models\Unit;
 use App\Models\Invoice;
@@ -180,13 +181,16 @@ class InvoiceController extends Controller
                 'reference' => $request->reference_number,
                 'status' => 'completed',
             ]);
+            $account = Accounts::where('payment_method_id', $request->payment_method_id)->first();
+
+            $account->balance += $invoice->amount;
+            $account->save();
 
             $this->createpaymentDetail($payment, $request);
             $this->createTransactionFee($invoice);
             $invoice->payment_status = 'Paid';
             $invoice->save();
             DB::commit();
-
             return redirect()->route('receipt.tax', ['id' => $payment->id]);
         } catch (\Throwable $th) {
             Log::info($th->getMessage());

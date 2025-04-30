@@ -398,11 +398,11 @@
                                 Payment List</a>
                         </li>
 
-                        <li>
+                        {{-- <li>
                             <a href="{{ route('payment.create.tax') }}"><i
                                     class="ri-circle-fill circle-icon text-info-main w-auto"></i> Add
                                 Payment</a>
-                        </li>
+                        </li> --}}
 
                     </ul>
 
