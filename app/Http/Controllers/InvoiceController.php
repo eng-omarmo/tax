@@ -81,7 +81,7 @@ class InvoiceController extends Controller
             }
             foreach ($query as $unit) {
                 $calculatedInvoice = $unit->unit_price * $taxRate;
-                Invoice::create([
+                $invoice =    Invoice::create([
                     'unit_id' => $unit->id,
                     'invoice_number' => 'INV' . strtoupper(uniqid()),
                     'amount' => $calculatedInvoice,
@@ -91,6 +91,7 @@ class InvoiceController extends Controller
                     'payment_status' => 'Pending',
 
                 ]);
+                $this->createTransactiondebit($invoice);
             }
             return redirect()->back()->with('success', 'invoiced is generated successfully for ' . $quarter);
         } catch (\Throwable $th) {
@@ -169,11 +170,13 @@ class InvoiceController extends Controller
             ]);
 
             DB::beginTransaction();
-            $invoice = Invoice::where('invoice_number', $request->invoice_number)->first();
+            $invoice = Invoice::with('unit.property')->where('invoice_number', $request->invoice_number)->first();
+
 
             if ($invoice->payment_status == 'Paid') {
                 return back()->with('error', 'Invoice already paid.');
             }
+
             $payment = Payment::create([
                 'invoice_id' => $invoice->id,
                 'amount' => $invoice->amount,
@@ -181,8 +184,8 @@ class InvoiceController extends Controller
                 'reference' => $request->reference_number,
                 'status' => 'completed',
             ]);
-            $account = Accounts::where('payment_method_id', $request->payment_method_id)->first();
 
+            $account = Accounts::where('payment_method_id', $request->payment_method_id)->first();
             $account->balance += $invoice->amount;
             $account->save();
 
@@ -216,15 +219,36 @@ class InvoiceController extends Controller
     }
     private function createTransactionFee($invoice)
     {
+
         try {
             return Transaction::create([
+                'transaction_id' => $invoice->invoice_number . '' . uniqid(),
                 'property_id' => $invoice->unit->property->id,
                 'unit_id' => $invoice->unit->id,
-                'transaction_type' => 'Depsoit',
+                'transaction_type' => 'credit',
                 'amount' => $invoice->amount,
                 'description' => 'Paid Tax Fee',
                 'credit' => $invoice->amount,
                 'debit' => 0,
+                'status' => 'completed',
+            ]);
+        } catch (\Throwable $th) {
+            Log::info($th->getMessage());
+        }
+    }
+
+    private function createTransactiondebit($invoice)
+    {
+        try {
+            return Transaction::create([
+                'transaction_id' => $invoice->invoice_number . '' . uniqid(),
+                'property_id' => $invoice->unit->property->id,
+                'unit_id' => $invoice->unit->id,
+                'transaction_type' => 'debit',
+                'amount' => $invoice->amount,
+                'description' => 'Paid Tax Fee',
+                'credit' => 0,
+                'debit' => $invoice->amount,
                 'status' => 'completed',
             ]);
         } catch (\Throwable $th) {

@@ -59,18 +59,23 @@ class accountController extends Controller
     }
     public function update(Request $request, $id)
     {
+
         $request->validate([
             'payment_method' => 'required|exists:payment_methods,id',
             'account_number' => 'nullable|string|max:255',
             'status' => 'required|in:active,Inactive',
-
+            'opening_balance' => 'nullable|numeric',
         ]);
+
         $account = Accounts::findOrFail($id);
+
         $account->update([
             'payment_method_id' => $request->payment_method,
             'account_number' => $request->account_number,
+            'balance' => $request->opening_balance ?? $account->balance,
             'status' => $request->status,
         ]);
+
         return redirect()->route('account.index')->with('success', 'Account updated successfully.');
     }
     public function destroy($id)
