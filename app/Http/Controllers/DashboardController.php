@@ -56,7 +56,7 @@ class DashboardController extends Controller
 
 
         //tenant calculation
-        $totalTenants = Unit::where('is_available' ,1)->count();
+        $totalTenants = Unit::where('is_available' ,0)->count();
         $totalTenantsIncreaseByThisWeek = Tenant::where('created_at', '>=', now()->startOfWeek())->count();
 
         $noIncome =  $totalPaidTax;
