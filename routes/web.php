@@ -26,6 +26,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\monitoringContoller;
 use App\Http\Controllers\AiapplicationController;
 use App\Http\Controllers\ComponentpageController;
+use App\Http\Controllers\paymentMethodController;
 use App\Http\Controllers\RoleandaccessController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\changePasswordController;
@@ -212,16 +213,19 @@ Route::prefix('unit')->middleware(['auth.admin'])->group(function () {
         Route::put('/update/{unit}', 'update')->name('unit.update');
         Route::get('/delete/{unit}', 'destroy')->name('unit.delete');
         Route::get('/search', 'search')->name('unit.property.search');
-
     });
 });
-// Route::prefix('invoice')->middleware(['auth.admin'])->group(function () {
-//     Route::controller(invoiceController::class)->group(function () {
-//         Route::get('/index', 'index')->name('invoice.index');
-//         Route::get('/index', 'index')->name('invoice.index');
 
-//     });
-// });
+Route::prefix('payment-method')->middleware(['auth.admin'])->group(function () {
+    Route::controller(paymentMethodController::class)->group(function () {
+        Route::get('/index', 'index')->name('payment.method.index');
+        Route::get('/create', 'create')->name('payment.method.create');
+        Route::post('/store', 'store')->name('payment.method.store');
+        Route::get('/edit/{id}', 'edit')->name('payment.method.edit');
+        Route::put('/update/{id}', 'update')->name('payment.method.update');
+        Route::get('/destroy/{id}', 'destroy')->name('payment.method.destroy');
+    });
+});
 
 
 
@@ -330,18 +334,20 @@ Route::prefix('invoice')->middleware(['auth.admin'])->group(function () {
         Route::post('/generate', 'generateInvoice')->name('invoice.generate');
         Route::get('/invoice-preview', 'invoicePreview')->name('invoicePreview');
         Route::post('/invoice/q-1', 'quarter1')->name('invoice.quarter1');
-
     });
 });
+
+
 // receipt
 Route::prefix('receipt')->group(function () {
     Route::controller(receiptController::class)->group(function () {
         Route::get('tax/receipt/{id}', 'taxReceipt')->name('receipt.tax');
         Route::get('tax/rent/{id}', 'rentReceipt')->name('receipt.rent');
-
-
     });
 });
+
+
+
 // Settings
 Route::prefix('settings')->group(function () {
     Route::controller(SettingsController::class)->group(function () {
@@ -411,7 +417,5 @@ Route::prefix('cryptocurrency')->group(function () {
         Route::get('/marketplacedetails', 'marketplaceDetails')->name('marketplaceDetails');
         Route::get('/portfolio', 'portfolio')->name('portfolio');
         Route::get('/wallet', 'wallet')->name('wallet');
-
-
     });
 });
