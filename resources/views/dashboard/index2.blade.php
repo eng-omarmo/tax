@@ -87,7 +87,7 @@
                                         <iconify-icon icon="mdi:message-text" class="icon"></iconify-icon>
                                     </span>
                                     <div>
-                                        <span class="mb-2 fw-medium text-secondary-light text-sm">All Tenants</span>
+                                        <span class="mb-2 fw-medium text-secondary-light text-sm">All Occupied Units</span>
                                         <h6 class="fw-semibold">{{$totalTenants}}</h6>
                                     </div>
                                 </div>
@@ -99,7 +99,7 @@
                     </div>
                 </div>
 
-                <div class="col-xxl-4 col-sm-6">
+                {{-- <div class="col-xxl-4 col-sm-6">
                     <div class="card p-3 shadow-2 radius-8 border input-form-light h-100 bg-gradient-end-5">
                         <div class="card-body p-0">
                             <div class="d-flex flex-wrap align-items-center justify-content-between gap-1 mb-8">
@@ -119,9 +119,9 @@
                             <p class="text-sm mb-0">Increase by <span class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">{{$totalPaidRentIncreaseByThisWeek}}</span> this week</p>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
-                <div class="col-xxl-4 col-sm-6">
+                {{-- <div class="col-xxl-4 col-sm-6">
                     <div class="card p-3 shadow-2 radius-8 border input-form-light h-100 bg-gradient-end-6">
                         <div class="card-body p-0">
                             <div class="d-flex flex-wrap align-items-center justify-content-between gap-1 mb-8">
@@ -141,7 +141,7 @@
                             <p class="text-sm mb-0">Increase by <span class="bg-success-focus px-1 rounded-2 fw-medium text-success-main text-sm">{{$totalPaidRentIncreaseByThisWeek}}</span> this week</p>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
             </div>
         </div>

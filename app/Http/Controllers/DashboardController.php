@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\Unit;
 use App\Models\Tenant;
 use App\Models\Property;
 use App\Models\Transaction;
@@ -42,8 +43,8 @@ class DashboardController extends Controller
         $IncreaseByThisWeek = $query->where('created_at', '>=', Carbon::now()->startOfWeek())->count();
 
         //total unpaid Tax
-        $totalUnpaidTax = $transactionQuery->where('transaction_type', 'Tax')->where('status', 'Completed')->sum('debit');
-        $unpaidTaxIncreaseByThisWeek = $transactionQuery->where('transaction_type', 'Tax')->where('status', 'Increase')->sum('debit');
+        $totalUnpaidTax = $transactionQuery->where('transaction_type', 'debit')->where('status', 'Completed')->sum('debit');
+        $unpaidTaxIncreaseByThisWeek = $transactionQuery->where('transaction_type', 'debit')->where('status', 'Increase')->sum('debit');
         $totalPaidTax = $transactionQuery->where('transaction_type', 'Tax')->where('status', 'Completed')->sum('credit');
         $totalUnPaidTaxIncreaseByThisWeek = $transactionQuery->where('transaction_type', 'Tax')->where('status', 'Completed')->sum('credit');
 
@@ -55,7 +56,7 @@ class DashboardController extends Controller
 
 
         //tenant calculation
-        $totalTenants = Tenant::count();
+        $totalTenants = Unit::where('is_available' ,1)->count();
         $totalTenantsIncreaseByThisWeek = Tenant::where('created_at', '>=', now()->startOfWeek())->count();
 
         $noIncome =  $totalPaidTax;
