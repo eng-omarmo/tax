@@ -76,7 +76,7 @@
                                     <th scope="col">Type</th>
                                     <th scope="col">Quater</th>
                                     <th scope="col">Amount</th>
-                                    <th scope="col"> Status</th>
+                                    <th scope="col">Status</th>
                                     <th scope="col">Pay</th>
 
                                 </tr>
@@ -94,19 +94,28 @@
 
                                         <td class="text-center">
                                             <span
-                                                class="{{ $invoice->status == 'Paid' ? 'bg-danger-focus text-danger-600 border border-danger-main' : 'bg-success-focus text-success-600 border border-success-main' }} px-24 py-4 radius-4 fw-medium text-sm">
-                                                {{ $invoice->status == 'Pending' ? 'Paid' : 'Pending' }}
+                                                class="{{ $invoice->payment_status == 'Paid' ? 'bg-success-focus text-success-600 border border-success-main' : 'bg-danger-focus text-danger-600 border border-danger-main' }} px-24 py-4 radius-4 fw-medium text-sm">
+                                                {{ $invoice->payment_status == 'Paid' ? 'Paid' : 'Pending' }}
                                             </span>
                                         </td>
 
-                                        <td>
-                                            <a type="submit" href="{{route('invoice.pay' , $invoice->invoice_number)}}"
-                                                class="d-flex align-items-center gap-2 px-3 py-2 border border-primary rounded text-decoration-none text-info hover:bg-light hover:text-white transition"
-                                                title="Generate invoice for the current quarter">
-                                                <iconify-icon icon="ic:baseline-money" class="icon text-xl"></iconify-icon>
-                                                <span class="fw-semibold text-sm">Pay</span>
-                                        </a>
-                                        </td>
+                                        @if ($invoice->payment_status == 'Pending')
+                                            <td>
+                                                <a type="submit"
+                                                    href="{{ route('invoice.pay', $invoice->invoice_number) }}"
+                                                    class="d-flex align-items-center gap-2 px-3 py-2 border border-primary rounded text-decoration-none text-info hover:bg-light hover:text-white transition"
+                                                    title="Generate invoice for the current quarter">
+                                                    <iconify-icon icon="ic:baseline-money"
+                                                        class="icon text-xl"></iconify-icon>
+                                                    <span class="fw-semibold text-sm">Pay</span>
+                                                </a>
+                                            </td>
+                                        @else
+                                            <td>
+                                          {{   $invoice->payment_status}}
+                                            </td>
+
+                                        @endif
 
 
                                     </tr>
