@@ -65,7 +65,6 @@ class rentController extends Controller
     {
         try {
             $request->validate([
-
                 'property_id' => 'required|exists:properties,id',
                 'unit_id' => 'required|exists:units,id',
                 'rent_amount' => 'required|numeric|min:0',

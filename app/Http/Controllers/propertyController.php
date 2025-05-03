@@ -69,6 +69,7 @@ class propertyController extends Controller
     public function ReportDetails(Request $request)
     {
 
+
         $query = Property::query();
 
         if ($request->has('start_date') && $request->start_date) {
@@ -80,7 +81,7 @@ class propertyController extends Controller
         }
 
         if ($request->has('nbr') && $request->nbr) {
-            $query->where('nbr', $request->nbr);
+            $query->where('nbr', $request->house_code);
         }
 
         if ($request->has('status') && $request->status && $request->status !== 'all') {
@@ -88,7 +89,7 @@ class propertyController extends Controller
         }
 
         if ($request->has('branch') && $request->branch && $request->branch !== 'all') {
-            $query->where('branch', $request->branch);
+            $query->where('branch', $request->branch->id);
         }
 
         if ($request->has('zone') && $request->zone && $request->zone !== 'all') {
@@ -96,10 +97,11 @@ class propertyController extends Controller
         }
         if (request('isPrint') == 1) {
             if ($request->input('isPrint') == 1) {
-                return $this->exportPdf($query->get()); // Pass the filtered data to the PDF export method
+                return $this->exportPdf($query->get());
             }
         }
-        $properties = $query->paginate(5);
+        $properties = $query->paginate(10);
+        dd($properties);
         foreach ($properties as $property) {
             $property->balance = $property->transactions->sum(function ($transaction) {
                 return $transaction->debit - $transaction->credit;
@@ -144,8 +146,6 @@ class propertyController extends Controller
 
     public function store(Request $request)
     {
-
-
         try {
             DB::beginTransaction();
             $request->validate([
@@ -158,8 +158,14 @@ class propertyController extends Controller
                 'latitude' => 'required',
                 'longitude' => 'required',
                 'lanlord_id' => 'required',
+                'image' => 'image|mimes:jpeg,png,jpg,webp|max:2048', // Validate file type & size
             ]);
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
 
+            $path = $image->storeAs('uploads', $imageName, 'public');
+
+            $request->merge(['image' => $imageName]);
             $properties = Property::where('property_name', $request->property_name)
                 ->where('property_phone', $request->property_phone)
                 ->first();
@@ -170,6 +176,7 @@ class propertyController extends Controller
             $code = 'HOUSE-' . strtoupper(Str::random(3)) . '-' . rand(100, 999);
 
             $request->merge(['house_code' => $code]);
+
 
 
             Property::create([
@@ -188,6 +195,7 @@ class propertyController extends Controller
                 'landlord_id' => $request->lanlord_id,
                 'monitoring_status' => 'Pending',
                 'status' => 'InActive',
+                'image' => $path
             ]);
 
             DB::commit();

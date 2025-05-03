@@ -899,7 +899,7 @@
                                                 {{ $transaction->status }}
                                             </span>
                                         </td>
-                                        <td>{{ $transaction->created_at->format('Y-m-d') }}</td>
+                                        <td>{{ $transaction->created_at}}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

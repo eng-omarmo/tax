@@ -35,7 +35,16 @@ class monitoringContoller extends Controller
         }
         return view('property.monitor.index', compact('properties', 'statuses', 'monitoringStatuses'));
     }
+    public function show($id)
+    {
+        $property = Property::with([
+            'units',
+            'landlord.user',
+            'district'
+        ])->findOrFail($id);
 
+        return view('property.monitor.details', compact('property'));
+    }
     public function approve(Request $request)
     {
 

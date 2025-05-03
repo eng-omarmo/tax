@@ -10,6 +10,7 @@ class Rent extends Model
     protected $fillable = [
         'property_id',
         'tenant_name',
+        'tenant_phone',
         'rent_amount',
         'rent_total_amount',
         'rent_start_date',

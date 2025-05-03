@@ -2,29 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use App\Models\Unit;
-use App\Models\Tenant;
 use App\Models\Property;
+use App\Models\Tenant;
 use App\Models\Transaction;
+use App\Models\Unit;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-
         return view('dashboard/index', []);
     }
 
     public function index2()
     {
-
         $query = Property::query();
 
         $transactionQuery = Transaction::query();
         if (auth()->user()->role == 'Landlord') {
-
             $query->whereHas('landlord', function ($q) {
                 $q->where('user_id', auth()->id());
             });
@@ -36,47 +33,48 @@ class DashboardController extends Controller
             });
         }
 
-
-
-
-        $noProperties =  $query->count();
+        $noProperties = $query->count();
         $IncreaseByThisWeek = $query->where('created_at', '>=', Carbon::now()->startOfWeek())->count();
 
-        //total unpaid Tax
-        $totalUnpaidTax = $transactionQuery->where('transaction_type', 'debit')->where('status', 'Completed')->sum('debit') - $transactionQuery->where('transaction_type', 'credit')->where('status', 'Completed')->sum('credit');
-        $unpaidTaxIncreaseByThisWeek = $transactionQuery->where('transaction_type', 'debit')->where('status', 'Increase')->sum('debit');
-        $totalPaidTax = $transactionQuery->where('transaction_type', 'credit')->where('status', 'Completed')->sum('credit');
+        // total unpaid Tax
+        $totalUnpaidTax = $transactionQuery
+            ->where('transaction_type', 'debit')
+            ->where('status', 'Completed')
+            ->sum('debit');
+        $unpaidTaxIncreaseByThisWeek = $transactionQuery->where('transaction_type', 'debit')->sum('debit');
+        $totalPaidTax = $transactionQuery
+            ->where('transaction_type', 'credit')
+            ->where('status', 'Completed')
+            ->sum('credit');
+
         $totalUnPaidTaxIncreaseByThisWeek = $transactionQuery->where('transaction_type', 'Tax')->where('status', 'Completed')->sum('credit');
 
-        //rent calculation
+        // rent calculation
         $totalUnpaidRent = $transactionQuery->where('transaction_type', 'Rent')->where('status', 'Completed')->sum('debit');
         $unpaidRentIncreaseByThisWeek = $transactionQuery->where('transaction_type', 'Rent')->where('status', 'Increase')->sum('debit');
         $totalPaidRent = $transactionQuery->where('transaction_type', 'Rent')->where('status', 'Completed')->sum('credit');
         $totalPaidRentIncreaseByThisWeek = $transactionQuery->where('transaction_type', 'Rent')->where('status', 'Completed')->sum('credit');
 
-
-        //tenant calculation
-        $totalTenants = Unit::where('is_available' ,1)->count();
+        // tenant calculation
+        $totalTenants = Unit::where('is_available', 1)->count();
         $totalTenantsIncreaseByThisWeek = Tenant::where('created_at', '>=', now()->startOfWeek())->count();
 
-        $noIncome =  $totalPaidTax;
+        $noIncome = $totalPaidTax;
         $profit = $totalUnpaidTax - $noIncome;
 
-        //last 7 days transaction
+        // last 7 days transaction
         $transactions = $transactionQuery->where('created_at', '>=', now()->subDays(7))->get();
 
-        //property calculation
+        // property calculation
         $noNewProperties = Property::where('created_at', '>=', now()->subDays(7))->count();
         $noActiveProperties = Property::where('status', 'Active')->count();
 
-
-        //transaction calculation
+        // transaction calculation
         $noTransaction = $transactionQuery->count();
 
         return view('dashboard/index2', [
             'noProperties' => $noProperties,
             'IncreaseByThisWeek' => $IncreaseByThisWeek,
-
             'totalUnpaidTax' => $totalUnpaidTax,
             'totalPaidTax' => $totalPaidTax,
             'unpaidTaxIncreaseByThisWeek' => $unpaidTaxIncreaseByThisWeek,

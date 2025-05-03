@@ -24,7 +24,8 @@ class Property extends Model
         'monitoring_status',
         'status',
         'district_id',
-        'landlord_id'
+        'landlord_id',
+        'image'
     ];
     public function district()
     {

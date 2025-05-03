@@ -200,7 +200,9 @@ Route::prefix('lanlord')->middleware(['auth.admin'])->group(function () {
 Route::prefix('monitor')->middleware(['auth.admin'])->group(function () {
     Route::controller(monitoringContoller::class)->group(function () {
         Route::get('/index', 'index')->name('monitor.index');
+        Route::get('/show/{id}', 'show')->name('monitor.show');
         Route::post('/approve', 'approve')->name('monitor.approve');
+
     });
 });
 
