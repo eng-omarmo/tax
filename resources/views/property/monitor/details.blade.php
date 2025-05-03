@@ -280,7 +280,7 @@
                         <div class="card border-0 bg-light-primary">
                             <div class="card-body">
                                 <h6 class="mb-2">Quarterly</h6>
-                                <h5 class="mb-0">${{ number_format($totalValue/3 * $taxRates['quaterly'], 2) }}</h5>
+                                <h5 class="mb-0">${{ number_format($totalValue * $taxRates['quaterly'] * 4, 2) }}</h5>
                             </div>
                         </div>
                     </div>
@@ -289,7 +289,7 @@
                         <div class="card border-0 bg-light-success">
                             <div class="card-body">
                                 <h6 class="mb-2">Yearly</h6>
-                                <h5 class="mb-0">${{ number_format($totalValue * $taxRates['quaterly'], 2) }}</h5>
+                                <h5 class="mb-0">${{ number_format($totalValue * $taxRates['quaterly'] * 12, 2) }}</h5>
                             </div>
                         </div>
                     </div>
