@@ -201,8 +201,9 @@ Route::prefix('monitor')->middleware(['auth.admin'])->group(function () {
     Route::controller(monitoringContoller::class)->group(function () {
         Route::get('/index', 'index')->name('monitor.index');
         Route::get('/show/{id}', 'show')->name('monitor.show');
+        Route::get('/unit-rent/{id}', 'rentIndex')->name('monitor.rent.index');
+        // Route::get('/unit-rent/{id}', 'rent')->name('monitor.unit-rent');
         Route::post('/approve', 'approve')->name('monitor.approve');
-
     });
 });
 
@@ -348,7 +349,6 @@ Route::prefix('invoice')->middleware(['auth.admin'])->group(function () {
         Route::get('/invoice-preview', 'invoicePreview')->name('invoicePreview');
         Route::post('/q-1', 'quarter1')->name('invoice.quarter1');
         Route::post('/transaction', 'transaction')->name('invoice.transaction');
-
     });
 });
 

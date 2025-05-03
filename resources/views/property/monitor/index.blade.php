@@ -71,12 +71,10 @@
                             </td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center align-items-center gap-10">
-                                    <a href="{{ route('property.edit', $property->id) }}" class="bg-success-focus text-success-600 w-40-px h-40-px rounded-circle d-flex justify-content-center align-items-center">
-                                        <iconify-icon icon="lucide:edit" class="menu-icon"></iconify-icon>
+                                    <a href="{{ route('monitor.show', $property->id) }}" class="bg-success-focus text-success-600 w-40-px h-40-px rounded-circle d-flex justify-content-center align-items-center">
+                                        <iconify-icon icon="lucide:view" class="menu-icon"></iconify-icon>
                                     </a>
-                                    <a href="{{ route('property.delete', $property->id) }}" class="remove-item-btn bg-danger-focus text-danger-600 w-40-px h-40-px rounded-circle d-flex justify-content-center align-items-center">
-                                        <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
-                                    </a>
+
                                 </div>
                             </td>
                         </tr>
