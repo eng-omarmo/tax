@@ -14,7 +14,7 @@ class monitoringContoller extends Controller
     {
         $statuses = Property::pluck('status')->unique();
         $monitoringStatuses = Property::pluck('monitoring_status')->unique();
-        $query  = Property::with('transactions', 'landlord')->where(['status' => 'inActive', 'monitoring_status' => 'Pending']);
+        $query  = Property::with('transactions', 'landlord')->orderBy('id', 'desc');
         if ($request->filled('search')) {
             // has landlord
             $query->whereHas('landlord', function ($q) use ($request) {
@@ -28,7 +28,7 @@ class monitoringContoller extends Controller
                 ->orWhere('nbr', 'like', '%' . $request->search . '%')
                 ->orWhere('branch', 'like', '%' . $request->search . '%');
         }
-        $properties = $query->paginate(5);
+        $properties = $query->paginate(10);
         foreach ($properties as $property) {
             $property->balance = $property->transactions->sum(function ($transaction) {
                 return $transaction->debit - $transaction->credit;
