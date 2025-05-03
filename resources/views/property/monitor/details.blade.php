@@ -105,7 +105,7 @@
         </div>
 
         <!-- Units Section -->
-        <div class="card shadow-sm border-0 mt-4">
+        <div class="card shadow-sm border-0 mt-12">
             <div class="card-header bg-transparent border-bottom p-4">
                 <div class="d-flex flex-wrap justify-content-between align-items-center">
                     <h5 class="mb-0">Unit Details</h5>
@@ -116,14 +116,14 @@
                 </div>
             </div>
 
-            <div class="card-body p-24">
+            <div class="card-body  p-24">
                 <div class="table-responsive scroll-sm overflow-x-auto">
                     <table class="table bordered-table sm-table mb-0">
                         <thead>
                             <tr>
                                 <th>Unit Code</th>
                                 <th>Type</th>
-                                <th>Monthly Rate</th>
+                                <th>Monthly Rent</th>
                                 <th>Status</th>
                                 <th class="text-end">Actions</th>
                             </tr>

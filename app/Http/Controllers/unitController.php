@@ -35,7 +35,7 @@ class unitController extends Controller
             $query->where('is_available', request()->status);
         }
 
-        $units = $query->paginate(5);
+        $units = $query->paginate(10);
 
         return view('unit.index', compact('units'));
     }
