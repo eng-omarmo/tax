@@ -121,4 +121,21 @@ class unitController extends Controller
             return back()->with('error', 'Failed to update unit.' . $th->getMessage());
         }
     }
+
+    public function viewRent($id)
+    {
+        $unit = Unit::with([
+            'property',
+            'currentRent'
+        ])->findOrFail($id);
+
+        $isAvailableBadge = function ($isAvailable) {
+            if ($isAvailable) {
+                return ['success', 'Available', 'checkbox'];
+            }
+            return ['danger', 'Occupied', 'close'];
+        };
+
+        return view('property.monitor.unit.details', compact('unit', 'isAvailableBadge'));
+    }
 }

@@ -142,13 +142,7 @@
                                     </td>
                                     <td class="text-end">
                                         <div class="d-flex gap-2 justify-content-end">
-                                            <a href="{{ route('unit.edit', $unit->id) }}"
-                                               class="btn btn-icon btn-sm btn-outline-secondary"
-                                               data-bs-toggle="tooltip"
-                                               title="Edit Unit">
-                                                <i class="ri-edit-line"></i>
-                                            </a>
-                                            <a href="{{ route('monitor.rent.index', $unit->id) }}"
+                                                     <a href="{{ route('monitor.rent.view', $unit->id) }}"
                                                class="btn btn-icon btn-sm btn-outline-info"
                                                data-bs-toggle="tooltip"
                                                title="Rent Management">
@@ -254,42 +248,82 @@
         <!-- Tax Overview -->
         <div class="card shadow-sm border-0 mt-4">
             <div class="card-header bg-transparent border-bottom p-4">
-                <h5 class="mb-0">Tax Projections</h5>
+                <div class="d-flex align-items-center">
+                    <i class="ri-money-dollar-circle-line text-danger me-2"></i>
+                    <h5 class="mb-0">Tax Projections</h5>
+                </div>
             </div>
             <div class="card-body p-4">
                 @php
                     $totalValue = $property->units->sum('unit_price');
-                    $taxRates = [
-                        'quaterly' => 0.05,
-
-                    ];
+                    $taxRate = 0.05; // 5% tax rate
+                    $monthlyTax = $totalValue * $taxRate;
+                    $quarterlyTax = $monthlyTax * 3;
+                    $yearlyTax = $monthlyTax * 12;
                 @endphp
 
+                <!-- Quarterly Tax Cards -->
                 <div class="row g-3">
+                    <!-- Q1 -->
+                    <div class="col-6">
+                        <div class="card border-0 bg-light-primary h-100">
+                            <div class="card-body">
+                                <div class="d-flex flex-column">
+                                    <small class="text-primary mb-1">Q1 (Jan-Mar)</small>
+                                    <h4 class="mb-0 text-primary">${{ number_format($quarterlyTax, 2) }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Q2 -->
+                    <div class="col-6">
+                        <div class="card border-0 bg-light-success h-100">
+                            <div class="card-body">
+                                <div class="d-flex flex-column">
+                                    <small class="text-success mb-1">Q2 (Apr-Jun)</small>
+                                    <h4 class="mb-0 text-success">${{ number_format($quarterlyTax, 2) }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="col-6">
+                        <div class="card border-0 bg-light-warning h-100">
+                            <div class="card-body">
+                                <div class="d-flex flex-column">
+                                    <small class="text-warning mb-1">Q3 (Jul-Sep)</small>
+                                    <h4 class="mb-0 text-warning">${{ number_format($quarterlyTax, 2) }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Q4 -->
+                    <div class="col-6">
+                        <div class="card border-0 bg-light-danger h-100">
+                            <div class="card-body">
+                                <div class="d-flex flex-column">
+                                    <small class="text-danger mb-1">Q4 (Oct-Dec)</small>
+                                    <h4 class="mb-0 text-danger">${{ number_format($quarterlyTax, 2) }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Yearly Total -->
                     <div class="col-12">
-                        <div class="card border-0 bg-light-danger">
+                        <div class="card border-0 bg-light-primary text-primary-light ">
                             <div class="card-body">
-                                <h6 class="mb-3">Property Total Income</h6>
-                                <h2 class="text-danger">${{ number_format($property->units->sum('unit_price'), 2) }}</h2>
-                                <small class="text-muted text-primary-light">Based on 5% monthly tax rate</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-6">
-                        <div class="card border-0 bg-light-primary">
-                            <div class="card-body">
-                                <h6 class="mb-2">Quarterly</h6>
-                                <h5 class="mb-0">${{ number_format($totalValue * $taxRates['quaterly'] * 4, 2) }}</h5>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-6">
-                        <div class="card border-0 bg-light-success">
-                            <div class="card-body">
-                                <h6 class="mb-2">Yearly</h6>
-                                <h5 class="mb-0">${{ number_format($totalValue * $taxRates['quaterly'] * 12, 2) }}</h5>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">Total Annual Tax</h6>
+                                        <h3 class="mb-0">${{ number_format($yearlyTax, 2) }}</h3>
+                                    </div>
+                                    <i class="ri-calendar-line fs-2"></i>
+                                </div>
+                                <small class="text-white-50">Based on 5% monthly tax rate</small>
                             </div>
                         </div>
                     </div>

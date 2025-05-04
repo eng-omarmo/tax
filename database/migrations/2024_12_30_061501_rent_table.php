@@ -10,6 +10,7 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('property_id');
             $table->string('tenant_name');
+            $table->string('tenant_phone');
             $table->unsignedBigInteger('unit_id');
             $table->string('rent_code');
             $table->decimal('rent_amount', 10, 2);

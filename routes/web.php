@@ -202,8 +202,9 @@ Route::prefix('monitor')->middleware(['auth.admin'])->group(function () {
         Route::get('/index', 'index')->name('monitor.index');
         Route::get('/show/{id}', 'show')->name('monitor.show');
         Route::get('/unit-rent/{id}', 'rentIndex')->name('monitor.rent.index');
-        // Route::get('/unit-rent/{id}', 'rent')->name('monitor.unit-rent');
+        Route::post('/unit-rent', 'rentStore')->name('monitor.rent.store');
         Route::post('/approve', 'approve')->name('monitor.approve');
+
     });
 });
 
@@ -217,6 +218,7 @@ Route::prefix('unit')->middleware(['auth.admin'])->group(function () {
         Route::put('/update/{unit}', 'update')->name('unit.update');
         Route::get('/delete/{unit}', 'destroy')->name('unit.delete');
         Route::get('/search', 'search')->name('unit.property.search');
+        Route::get('/unit-rent/details/{id}', 'viewRent')->name('monitor.rent.view');
     });
 });
 

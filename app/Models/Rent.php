@@ -22,13 +22,18 @@ class Rent extends Model
     ];
 
 
-    public function property()
+    public function transactions()
     {
-        return $this->belongsTo(Property::class);
+        return $this->hasMany(Transaction::class);
     }
 
     public function unit()
     {
         return $this->belongsTo(Unit::class);
+    }
+
+    public function property()
+    {
+        return $this->belongsTo(Property::class);
     }
 }
