@@ -46,8 +46,8 @@ class GenerateQuarterlyInvoices extends Command
                     $skippedCount++;
                     continue;
                 }
-                $propertyCode = $unit->property ? $unit->property->property_code : '';
-                $invoiceNumber = 'INV-' . $propertyCode . '-' . strtoupper(Str::random(8));
+                $propertyCode = $unit->property ? $unit->property->house_code : '';
+                $invoiceNumber = 'INV-' . $propertyCode . '-' . strtoupper(uniqid());
 
                 $dueDate = $now->copy()->startOfMonth()->addDays(14);
 
