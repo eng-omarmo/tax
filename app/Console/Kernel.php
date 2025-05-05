@@ -9,7 +9,7 @@ class Kernel extends ConsoleKernel
 {
     protected function schedule(Schedule $schedule)
     {
-        // You can put scheduled commands here
+
         $schedule->command('invoices:generate-quarterly')
             ->monthlyOn(1, '00:00')
             ->when(fn() => in_array(now()->month, [1, 4, 7, 10]));
