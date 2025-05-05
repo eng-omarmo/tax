@@ -18,6 +18,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
+        @if (session()->has('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ session()->get('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
         <form method="GET" action="{{ route('lanlord.index') }}" id="filterForm">
             <div
                 class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center justify-content-between flex-wrap gap-3">
@@ -71,6 +77,8 @@
                             </div>
                         </th>
                         <th scope="col">SNO</th>
+                        <th scope="col">Image</th>
+
                         <th scope="col">Name</th>
                         <th scope="col">Email</th>
                         <th scope="col">Phone Number</th>
@@ -93,11 +101,24 @@
                             <td>
                                 <div class="d-flex align-items-center">
                                     <div class="flex-grow-1">
+                                        <span class="text-md mb-0 fw-normal text-secondary-light"><img
+                                                src="{{ asset('storage/' . $landlord->user->profile_image) }}" alt="Property Image"
+                                                class="img-fluid rounded-circle"
+                                                style="width: 40px; height: 40px; object-fit: cover;"
+                                           </span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-grow-1">
                                         <span
                                             class="text-md mb-0 fw-normal text-secondary-light">{{ $landlord->name }}</span>
                                     </div>
                                 </div>
                             </td>
+
+
                             <td>{{ $landlord->email }}</td>
                             <td>{{ $landlord->phone_number }}</td>
                             <td class="text-center">
@@ -121,45 +142,55 @@
 
 
         <div class="d-flex align-items-center  bg-base px-24 py-12 justify-content-between flex-wrap gap-2 mt-24">
-            <span>Showing {{ $landlords->firstItem() }} to {{ $landlords->lastItem() }} of {{ $landlords->total() }} entries</span>
+            <span>Showing {{ $landlords->firstItem() }} to {{ $landlords->lastItem() }} of {{ $landlords->total() }}
+                entries</span>
             <div class="pagination-container">
                 <div class="card-body p-24">
                     <ul class="pagination d-flex flex-wrap bg-base align-items-center gap-2 justify-content-center">
                         @if ($landlords->onFirstPage())
                             <li class="page-item disabled">
-                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="javascript:void(0)">First</a>
+                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px"
+                                    href="javascript:void(0)">First</a>
                             </li>
                             <li class="page-item disabled">
-                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="javascript:void(0)">Previous</a>
+                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px"
+                                    href="javascript:void(0)">Previous</a>
                             </li>
                         @else
                             <li class="page-item">
-                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $landlords->url(1) }}">First</a>
+                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px"
+                                    href="{{ $landlords->url(1) }}">First</a>
                             </li>
                             <li class="page-item">
-                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $landlords->previousPageUrl() }}">Previous</a>
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px"
+                                    href="{{ $landlords->previousPageUrl() }}">Previous</a>
                             </li>
                         @endif
 
                         @foreach ($landlords->getUrlRange(1, $landlords->lastPage()) as $page => $url)
                             <li class="page-item {{ $landlords->currentPage() == $page ? 'active' : '' }}">
-                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px w-48-px {{ $landlords->currentPage() == $page ? 'bg-primary-600 text-white' : '' }}" href="{{ $url }}">{{ $page }}</a>
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px w-48-px {{ $landlords->currentPage() == $page ? 'bg-primary-600 text-white' : '' }}"
+                                    href="{{ $url }}">{{ $page }}</a>
                             </li>
                         @endforeach
 
                         @if ($landlords->hasMorePages())
                             <li class="page-item">
-                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $landlords->nextPageUrl() }}">Next</a>
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px"
+                                    href="{{ $landlords->nextPageUrl() }}">Next</a>
                             </li>
                             <li class="page-item">
-                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $landlords->url($landlords->lastPage()) }}">Last</a>
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px"
+                                    href="{{ $landlords->url($landlords->lastPage()) }}">Last</a>
                             </li>
                         @else
                             <li class="page-item disabled">
-                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px " href="javascript:void(0)">Next</a>
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px "
+                                    href="javascript:void(0)">Next</a>
                             </li>
                             <li class="page-item disabled">
-                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="javascript:void(0)">Last</a>
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px"
+                                    href="javascript:void(0)">Last</a>
                             </li>
                         @endif
                     </ul>
@@ -183,5 +214,7 @@
             });
             document.getElementById('filterForm').submit();
         });
+
+
     </script>
 @endsection

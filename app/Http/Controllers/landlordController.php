@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Landlord;
+use App\Models\Property;
 use Illuminate\Http\Request;
 
 class landlordController extends Controller
@@ -33,8 +34,12 @@ class landlordController extends Controller
             'address' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
             'email' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
+        $image = $request->file('image');
+        $imageName = time() . '.' . $image->getClientOriginalExtension();
 
+        $path = $image->storeAs('uploads', $imageName, 'public');
         $landlord =  Landlord::create([
             'name' => $request->name,
             'address' => $request->address,
@@ -48,7 +53,7 @@ class landlordController extends Controller
             'password' => bcrypt('password'),
             'role' => 'Landlord',
             'status' => 'Active',
-            'profile_image' => null
+            'profile_image' => $path
         ]);
         $landlord->update([
             'user_id' => $user->id
@@ -58,9 +63,17 @@ class landlordController extends Controller
 
     public function edit($landlord)
     {
-        $landlord = Landlord::find($landlord);
+        $landlord = Landlord::with(['user', 'properties.units'])->findOrFail($landlord);
+
+        $totalProperties = $landlord->properties->count();
+        $totalUnits = $landlord->properties->sum(function($property) {
+            return $property->units->count();
+        });
+
         return view('landlord.edit', [
-            'lanlord' => $landlord
+            'lanlord' => $landlord,
+            'totalProperties' => $totalProperties,
+            'totalUnits' => $totalUnits
         ]);
     }
 
@@ -75,6 +88,7 @@ class landlordController extends Controller
 
     public function update(Request $request, $landlordId)
     {
+
         $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
@@ -88,19 +102,25 @@ class landlordController extends Controller
             return redirect()->route('landlord.index')->with('error', 'Landlord not found.');
         }
 
+        $image = $request->file('image');
+        $imageName = time() . '.' . $image->getClientOriginalExtension();
+
+        $path = $image->storeAs('uploads', $imageName, 'public');
+
         $landlord->update([
             'name' => $request->name,
             'address' => $request->address,
             'phone_number' => $request->phone,
             'email' => $request->email
-        ]);
 
+        ]);
 
         if ($landlord->user) {
             $landlord->user->update([
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
+                'profile_image' => $path
             ]);
         }
 
@@ -109,6 +129,10 @@ class landlordController extends Controller
 
     public function destroy($landlord)
     {
+        $lanlord_has_property = Property::where('landlord_id', $landlord)->first();
+        if ($lanlord_has_property) {
+            return redirect()->route('lanlord.index')->with('error', 'Landlord has property cannot be deleted');
+        }
         Landlord::find($landlord)->delete();
         return redirect()->route('lanlord.index')->with('success', 'Landlord deleted successfully');
     }

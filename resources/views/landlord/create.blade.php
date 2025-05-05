@@ -1,7 +1,7 @@
 @extends('layout.layout')
 @php
-    $title = 'Edit Landlord';
-    $subTitle = 'Edit Landlord';
+    $title = ' Landlord Manangment';
+    $subTitle = 'Add Landlord';
     $script = '<script>
         // ================== Image Upload Js Start ===========================
         function readURL(input) {
@@ -40,7 +40,7 @@
                                 </div>
                             @endif
 
-                            <form action="{{ route('lanlord.store') }}" method="POST">
+                            <form action="{{ route('lanlord.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
 
                                 <div class="mb-20">
@@ -60,7 +60,8 @@
                                 </div>
                                 <div class="mb-20">
                                     <label for="email"
-                                        class="form-label fw-semibold text-primary-light text-sm mb-8">Landlord Email <span class="text-danger-600">*</span></label>
+                                        class="form-label fw-semibold text-primary-light text-sm mb-8">Landlord Email <span
+                                            class="text-danger-600">*</span></label>
                                     <input type="text" class="form-control radius-8" id="email" name="email"
                                         placeholder="Enter Landlord Email">
                                 </div>
@@ -68,13 +69,22 @@
 
                                 <div class="mb-20">
                                     <label for="address"
-                                        class="form-label fw-semibold text-primary-light text-sm mb-8">Landlord Address <span class="text-danger-600">*</span></label>
+                                        class="form-label fw-semibold text-primary-light text-sm mb-8">Landlord Address
+                                        <span class="text-danger-600">*</span></label>
                                     <input type="text" class="form-control radius-8" id="address" name="address"
                                         placeholder="Enter Landlord Address">
                                 </div>
 
+                                <div class="mb-20">
+                                    <label for="image"
+                                        class="form-label fw-semibold text-primary-light text-sm mb-8">Landlord Image <span
+                                            class="text-danger-600">*</span></label>
+                                    <input type="file" class="form-control radius-8" id="image" name="image">
+                                </div>
+
                                 <div class="d-flex align-items-center justify-content-center gap-3">
-                                    <a href="{{ route('lanlord.index') }}" class="border border-danger-600 bg-hover-danger-200 text-danger-600 text-md px-56 py-11 radius-8">Cancel</a>
+                                    <a href="{{ route('lanlord.index') }}"
+                                        class="border border-danger-600 bg-hover-danger-200 text-danger-600 text-md px-56 py-11 radius-8">Cancel</a>
                                     <button type="submit"
                                         class="btn btn-primary border border-primary-600 text-md px-56 py-12 radius-8">Save</button>
                                 </div>
