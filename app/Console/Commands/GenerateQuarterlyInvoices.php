@@ -8,6 +8,7 @@ use App\Models\Invoice;
 use Illuminate\Support\Str;
 use App\Services\TimeService;
 use Illuminate\Console\Command;
+use App\Services\TransactionService;
 
 class GenerateQuarterlyInvoices extends Command
 {
@@ -23,7 +24,7 @@ class GenerateQuarterlyInvoices extends Command
         $this->info("Generating invoices for Q{$quarter} {$year}...");
 
         // Loop through all occupied (not owner) units
-        $units = Unit::where('is_owner', 1)
+        $units = Unit::where('is_owner', 'no')
             ->where('is_available', 0)
             ->with('property')
             ->get();
@@ -48,9 +49,7 @@ class GenerateQuarterlyInvoices extends Command
                 }
                 $propertyCode = $unit->property ? $unit->property->house_code : '';
                 $invoiceNumber = 'INV-' . $propertyCode . '-' . strtoupper(uniqid());
-
                 $dueDate = $now->copy()->startOfMonth()->addDays(14);
-
                 Invoice::create([
                     'unit_id' => $unit->id,
                     'invoice_number' => $invoiceNumber,
@@ -62,6 +61,8 @@ class GenerateQuarterlyInvoices extends Command
                     'quarter' => $quarter,
                     'year' => $year
                 ]);
+                $transaction = new TransactionService();
+                $transaction->recordInvoice($unit, $quarter);
                 $generatedCount++;
                 $this->info("Invoice generated for unit ID {$unit->id} with number {$invoiceNumber}");
             } catch (\Exception $e) {
