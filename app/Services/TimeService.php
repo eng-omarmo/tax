@@ -9,6 +9,11 @@ class TimeService
         return 'Q' . Carbon::now()->quarter;
     }
 
+    public function currentYear(): int
+    {
+        return Carbon::now()->year;
+    }
+
     public function currentTimeInfo(): array
     {
         return [

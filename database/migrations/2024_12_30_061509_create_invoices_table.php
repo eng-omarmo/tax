@@ -22,6 +22,7 @@ class CreateInvoicesTable extends Migration
             $table->date('due_date');
             $table->enum('frequency', ['Q1', 'Q2', 'Q3', 'Q4'])->default('Q1');
             $table->enum('payment_status', ['Pending', 'Paid', 'Overdue'])->default('Pending');
+            $table->dateTime('paid_at')->nullable();
             $table->timestamps();
         });
     }

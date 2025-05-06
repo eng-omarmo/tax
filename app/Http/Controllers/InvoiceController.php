@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Accounts;
 use App\Models\Tax;
 use App\Models\Unit;
 use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\TaxRate;
+use App\Models\Accounts;
+use App\Models\Property;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\PaymentMethod;
@@ -33,27 +34,30 @@ class InvoiceController extends Controller
     public function invoiceList()
     {
         $quarter = $this->currentQuater();
-
-        $taxRate = TaxRate::where(['tax_type' => $quarter, 'status' => "active"])->value('rate') / 100;
-
-        if (empty($taxRate)) {
-            return redirect()->route('index')->with('error', 'No tax Rate is for this ' . $quarter);
-        }
-
+        $taxRate = 0.05;
 
         $baseQuery = Unit::where(['is_available' => 1, 'is_owner' => 'no']);
         $data['potentialIncome'] = $baseQuery->sum('unit_price') * $taxRate;
-        $baseQuery = Unit::where(['is_available' => 1, 'is_owner' => 'no']);
-        $data['potentialIncome'] = $baseQuery->sum('unit_price') * $taxRate;
-
-
 
         $data['flatIncome'] = (clone $baseQuery)->where('unit_type', 'Flat')->sum('unit_price') * $taxRate;
         $data['sectionIncome'] = (clone $baseQuery)->where('unit_type', 'Section')->sum('unit_price') * $taxRate;
         $data['officeIncome'] = (clone $baseQuery)->where('unit_type', 'Office')->sum('unit_price') * $taxRate;
         $data['shopIncome'] = (clone $baseQuery)->where('unit_type', 'Shop')->sum('unit_price') * $taxRate;
         $data['otherIncome'] = (clone $baseQuery)->where('unit_type', 'Other')->sum('unit_price') * $taxRate;
-        $data['invoices'] = Invoice::latest()->paginate(10);
+
+        // Get both properties and invoices
+        $data['properties'] = Unit::where(['is_available' => 1, 'is_owner' => 'no'])
+            ->with(['property.landlord.user', 'property.district', 'invoices'])
+            ->get()
+            ->pluck('property')
+            ->unique();
+
+        $data['invoices'] = Invoice::with(['unit.property'])
+            ->where('frequency', $quarter)
+            ->latest()
+            ->paginate(10);
+
+        $data['quarter'] = $quarter;
 
         return view('Invoice.index', ['data' => $data]);
     }
@@ -252,6 +256,32 @@ class InvoiceController extends Controller
             ]);
         } catch (\Throwable $th) {
             Log::info($th->getMessage());
+        }
+    }
+    //details
+    public function propertyDetails($id)
+    {
+        try {
+            $property = Property::with(['landlord.user', 'district', 'units.invoices'])
+                ->findOrFail($id);
+
+            $totalBilled = $property->units->flatMap->invoices->sum('amount');
+            $totalPaid = $property->units->flatMap->invoices
+                ->where('payment_status', 'Paid')
+                ->sum('amount');
+
+            $currentQuarter = $this->currentQuater();
+
+            return view('Invoice.property.details', compact(
+                'property',
+                'totalBilled',
+                'totalPaid',
+                'currentQuarter'
+            ));
+        } catch (ModelNotFoundException $e) {
+            return back()->with('error', 'Property not found.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'An error occurred while fetching property details.');
         }
     }
 }

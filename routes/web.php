@@ -309,7 +309,7 @@ Route::prefix('componentspage')->group(function () {
 Route::prefix('dashboard')->middleware(['auth.admin'])->group(function () {
     Route::controller(DashboardController::class)->group(function () {
         Route::get('/index', 'index')->name('index');
-        Route::get('/index2', 'index2')->name('index2');
+        // Route::get('/index2', 'index2')->name('index2');
         Route::get('/index3', 'index3')->name('index3');
         Route::get('/index4', 'index4')->name('index4');
         Route::get('/index5', 'index5')->name('index5');
@@ -351,6 +351,8 @@ Route::prefix('invoice')->middleware(['auth.admin'])->group(function () {
         Route::get('/invoice-preview', 'invoicePreview')->name('invoicePreview');
         Route::post('/q-1', 'quarter1')->name('invoice.quarter1');
         Route::post('/transaction', 'transaction')->name('invoice.transaction');
+        Route::get('/property/{id}', 'propertyDetails')->name('invoice.property.details');
+
     });
 });
 

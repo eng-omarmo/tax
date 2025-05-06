@@ -17,6 +17,12 @@ class Invoice extends Model
         'due_date',
         'frequency',
         'payment_status',
+        'paid_at'
+    ];
+    protected $casts = [
+        'invoice_date' => 'datetime',
+        'due_date' => 'datetime',
+        'paid_at' => 'datetime' 
     ];
     public function unit()
     {

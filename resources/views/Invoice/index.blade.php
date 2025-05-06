@@ -70,59 +70,49 @@
                                             S.L
                                         </div>
                                     </th>
-                                    <th scope="col">Invoice No</th>
-                                    <th scope="col">Property</th>
-                                    <th scope="col">Unit</th>
-                                    <th scope="col">Type</th>
-                                    <th scope="col">Quater</th>
-                                    <th scope="col">Amount</th>
+                                    <th scope="col">Property Code</th>
+                                    <th scope="col">Property Name</th>
+                                    <th scope="col">Owner</th>
+                                    <th scope="col">Location</th>
+                                    <th scope="col">Total Units</th>
+                                    <th scope="col">Quarter</th>
                                     <th scope="col">Status</th>
-                                    <th scope="col">Pay</th>
-
+                                    <th scope="col">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($data['invoices'] as $invoice)
+                                @foreach ($data['properties'] as $property)
                                     <tr>
                                         <td scope="row">{{ $loop->iteration }}</td>
-                                        <td>{{ $invoice->invoice_number }}</td>
-                                        <td>{{ $invoice->unit->property->property_name }}</td>
-                                        <td>{{ $invoice->unit->unit_number }}</td>
-                                        <td>{{ $invoice->unit->unit_type }}</td>
-                                        <td>{{ $invoice->frequency }}</td>
-                                        <td>{{ $invoice->amount }}</td>
-
+                                        <td>{{ $property->house_code }}</td>
+                                        <td>{{ $property->property_name }}</td>
+                                        <td>{{ $property->landlord->user->name }}</td>
+                                        <td>{{ $property->district->name }}</td>
+                                        <td>{{ $property->units->count() }}</td>
+                                        <td>{{ $data['quarter'] }}</td>  <!-- Changed from $quarter to $data['quarter'] -->
                                         <td class="text-center">
-                                            <span
-                                                class="{{ $invoice->payment_status == 'Paid' ? 'bg-success-focus text-success-600 border border-success-main' : 'bg-danger-focus text-danger-600 border border-danger-main' }} px-24 py-4 radius-4 fw-medium text-sm">
-                                                {{ $invoice->payment_status == 'Paid' ? 'Paid' : 'Pending' }}
+                                            @php
+                                                $paidUnits = $property->units->filter(function($unit) {
+                                                    return $unit->invoices->where('payment_status', 'Paid')->count() > 0;
+                                                })->count();
+                                                $totalUnits = $property->units->count();
+                                                $status = $paidUnits === $totalUnits ? 'Paid' : ($paidUnits > 0 ? 'Partial' : 'Pending');
+                                                $statusClass = $status === 'Paid' ? 'success' : ($status === 'Partial' ? 'warning' : 'danger');
+                                            @endphp
+                                            <span class="bg-{{ $statusClass }}-focus text-{{ $statusClass }}-600 border border-{{ $statusClass }}-main px-24 py-4 radius-4 fw-medium text-sm">
+                                                {{ $status }}
                                             </span>
                                         </td>
-
-                                        @if ($invoice->payment_status == 'Pending')
-                                            <td>
-                                                <a type="submit"
-                                                    href="{{ route('invoice.pay', $invoice->invoice_number) }}"
-                                                    class="d-flex align-items-center gap-2 px-3 py-2 border border-primary rounded text-decoration-none text-info hover:bg-light hover:text-white transition"
-                                                    title="Generate invoice for the current quarter">
-                                                    <iconify-icon icon="ic:baseline-money"
-                                                        class="icon text-xl"></iconify-icon>
-                                                    <span class="fw-semibold text-sm">Pay</span>
-                                                </a>
-                                            </td>
-                                        @else
-                                            <td>
-                                          {{   $invoice->payment_status}}
-                                            </td>
-
-                                        @endif
-
-
+                                        <td>
+                                            <a href="{{ route('invoice.property.details', $property->id) }}"
+                                                class="d-flex align-items-center gap-2 px-3 py-2 border border-info rounded text-decoration-none text-info hover:bg-light hover:text-white transition"
+                                                title="View property invoice details">
+                                                <iconify-icon icon="ri:eye-line" class="icon text-xl"></iconify-icon>
+                                                <span class="fw-semibold text-sm">Details</span>
+                                            </a>
+                                        </td>
                                     </tr>
                                 @endforeach
-
-
-
                             </tbody>
                         </table>
                     </div>

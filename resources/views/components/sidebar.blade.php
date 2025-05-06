@@ -12,7 +12,14 @@
     </div>
     <div class="sidebar-menu-area">
         <ul class="sidebar-menu" id="sidebar-menu">
-            <li class="dropdown">
+            <li>
+                <a href="{{ route('index') }}">
+                    <iconify-icon icon="solar:home-smile-angle-outline" class="menu-icon"></iconify-icon>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            {{-- <li class="sidebar-menu-group-title">Pages</li> --}}
+            {{-- <li class="dropdown">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="solar:home-smile-angle-outline" class="menu-icon"></iconify-icon>
                     <span>Dashboard</span>
@@ -21,11 +28,11 @@
                     {{-- <li>
                         <a href="{{ route('index') }}"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> AI</a>
                     </li> --}}
-                    <li>
-                        <a href="{{ route('index2') }}"><i
+                    {{-- <li>
+                        <a href="{{ route('index') }}"><i
                                 class="ri-circle-fill circle-icon text-warning-main w-auto"></i> CRM</a>
                     </li>
-                    <li>
+                    <li> --}}
                         {{-- <a href="{{ route('index3') }}"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> eCommerce</a>
                     </li>
                     <li>
@@ -49,8 +56,8 @@
                     <li>
                     <a href="{{ route('index10') }}"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> POS & Inventory </a>
                     </li> --}}
-                </ul>
-            </li>
+                {{-- </ul>
+            </li> --}}
             <li class="sidebar-menu-group-title">Pages</li>
             {{-- <li>
                   <a href="{{ route('email') }}">

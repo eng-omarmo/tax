@@ -29,10 +29,7 @@ class Unit extends Model
     /**
      * Get the property this unit belongs to
      */
-    public function property()
-    {
-        return $this->belongsTo(Property::class);
-    }
+
 
     /**
      * Get all transactions associated with this unit
@@ -48,5 +45,15 @@ class Unit extends Model
     public function rents()
     {
         return $this->hasMany(Payment::class);
+    }
+  
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    public function property()
+    {
+        return $this->belongsTo(Property::class);
     }
 }

@@ -50,7 +50,7 @@ class GenerateQuarterlyInvoices extends Command
                 $propertyCode = $unit->property ? $unit->property->house_code : '';
                 $invoiceNumber = 'INV-' . $propertyCode . '-' . strtoupper(uniqid());
                 $dueDate = $now->copy()->startOfMonth()->addDays(14);
-                Invoice::create([
+            $invoice =    Invoice::create([
                     'unit_id' => $unit->id,
                     'invoice_number' => $invoiceNumber,
                     'amount' => $unit->unit_price,
@@ -65,6 +65,7 @@ class GenerateQuarterlyInvoices extends Command
                 $transaction->recordInvoice($unit, $quarter);
                 $generatedCount++;
                 $this->info("Invoice generated for unit ID {$unit->id} with number {$invoiceNumber}");
+                $this->info("Invoice due date is {$invoice}");
             } catch (\Exception $e) {
                 $this->error("Failed to generate invoice for unit ID {$unit->id}: " . $e->getMessage());
             }
