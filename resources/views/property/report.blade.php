@@ -86,7 +86,7 @@
                                             </div>
                                         </th>
                                         <th scope="col">Property Name</th>
-                                        <th scope="col">House Nbr</th>
+                                        <th scope="col">House Code</th>
 
                                         <th scope="col">Propery phone </th>
                                         <th scope="col">Branch</th>
@@ -110,7 +110,7 @@
                                                 </div>
                                             </td>
                                             <td>{{ $property->property_name }}</td>
-                                            <td>{{ $property->nbr }}</td>
+                                            <td>{{ $property->house_code }}</td>
                                             <td>{{ $property->property_phone }}</td>
 
                                             <td>{{ $property->branch->name }}</td>

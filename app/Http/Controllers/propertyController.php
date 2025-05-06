@@ -68,9 +68,7 @@ class propertyController extends Controller
 
     public function ReportDetails(Request $request)
     {
-
-
-        $query = Property::query();
+        $query = Property::with(['landlord.user', 'district', 'branch', 'transactions']);
 
         if ($request->has('start_date') && $request->start_date) {
             $query->whereDate('created_at', '>=', Carbon::parse($request->start_date)->format('Y-m-d'));
@@ -81,27 +79,33 @@ class propertyController extends Controller
         }
 
         if ($request->has('nbr') && $request->nbr) {
-            $query->where('nbr', $request->house_code);
+            $query->where('nbr', $request->nbr);
         }
 
         if ($request->has('status') && $request->status && $request->status !== 'all') {
-            $query->where('district', $request->status);
+            $query->where('status', $request->status);
+        }
+
+        if ($request->has('district') && $request->district && $request->district !== 'all') {
+            $query->where('district_id', $request->district);
         }
 
         if ($request->has('branch') && $request->branch && $request->branch !== 'all') {
-            $query->where('branch', $request->branch->id);
+            $query->where('branch_id', $request->branch);
         }
 
         if ($request->has('zone') && $request->zone && $request->zone !== 'all') {
             $query->where('zone', $request->zone);
         }
-        if (request('isPrint') == 1) {
-            if ($request->input('isPrint') == 1) {
-                return $this->exportPdf($query->get());
-            }
+
+        // Export PDF if requested
+        if ($request->input('isPrint') == 1) {
+            return $this->exportPdf($query->get());
         }
+
         $properties = $query->paginate(10);
-        dd($properties);
+
+        // Calculate balance for each property
         foreach ($properties as $property) {
             $property->balance = $property->transactions->sum(function ($transaction) {
                 return $transaction->debit - $transaction->credit;

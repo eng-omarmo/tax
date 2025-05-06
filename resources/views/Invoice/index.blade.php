@@ -41,13 +41,13 @@
                         </select>
                     </div>
 
-                    <!-- Button to submit the form -->
+                    {{-- <!-- Button to submit the form -->
                     <button form="generateInvoice" type="submit"
                         class="d-flex align-items-center gap-2 px-3 py-2 border border-primary rounded text-decoration-none text-primary hover:bg-primary hover:text-white transition"
                         title="Generate invoice for the current quarter">
                         <iconify-icon icon="ic:baseline-money" class="icon text-xl"></iconify-icon>
                         <span class="fw-semibold text-sm">Generate Invoice for Current Quarter</span>
-                    </button>
+                    </button> --}}
 
                     <!-- Hidden form -->
                     <form id="generateInvoice" action="{{ route('invoice.generate') }}" method="POST" class="d-none">

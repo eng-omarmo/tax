@@ -111,14 +111,7 @@
                                             name="property_phone" placeholder="Enter property phone"
                                             value="{{ old('property_phone', $property->property_phone) }}">
                                     </div>
-                                    <div class="col-md-6 mb-20">
-                                        <label for="nbr"
-                                            class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            NBR
-                                        </label>
-                                        <input type="text" class="form-control radius-8" id="nbr" name="nbr"
-                                            placeholder="Enter NBR" value="{{ old('nbr', $property->nbr) }}">
-                                    </div>
+
                                     <div class="col-md-6 mb-20">
                                         <label for="house_code"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
