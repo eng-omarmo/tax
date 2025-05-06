@@ -6,6 +6,7 @@ use App\Models\Branch;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Svg\Document;
 
 class Property extends Model
 {
@@ -25,6 +26,7 @@ class Property extends Model
         'status',
         'district_id',
         'landlord_id',
+        'document',
         'image'
     ];
     public function district()

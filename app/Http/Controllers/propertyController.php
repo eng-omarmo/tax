@@ -162,8 +162,11 @@ class propertyController extends Controller
             ]);
             $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $document = $request->file('document');
+            $documentName = time() . '.' . $document->getClientOriginalExtension();
 
             $path = $image->storeAs('uploads', $imageName, 'public');
+            $documentPath = $document->storeAs('uploads', $documentName, 'public');
 
             $request->merge(['image' => $imageName]);
             $properties = Property::where('property_name', $request->property_name)
@@ -195,6 +198,7 @@ class propertyController extends Controller
                 'landlord_id' => $request->lanlord_id,
                 'monitoring_status' => 'Pending',
                 'status' => 'InActive',
+                'document'  => $documentPath,
                 'image' => $path
             ]);
 

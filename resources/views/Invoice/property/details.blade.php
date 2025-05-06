@@ -47,11 +47,15 @@
                         </tr>
                         <tr>
                             <th>Property Status:</th>
-                            <td><span class="badge bg-success">{{strtoupper($property->status)}}</span></td>
+                            <td>
+                                <span class="badge bg-{{ $property->status === 'active' ? 'success' : 'danger' }}">
+                                    {{ strtoupper($property->status) }}
+                                </span>
+                            </td>
                         </tr>
                         <tr>
                             <th>Last Updated:</th>
-                            <td>{{ $property->updated_at}}</td>
+                            <td>{{ \Carbon\Carbon::parse($property->updated_at)->format('M d, Y h:i A') }}</td>
                         </tr>
                     </table>
                 </div>
@@ -64,38 +68,39 @@
         <div class="card-header">
             <h5 class="mb-0">Unit Details</h5>
         </div>
-        <div class="card-body p-24">
-            <div class="table-responsive scroll-sm">
-                <table class="table bordered-table sm-table mb-0">
-                    <thead>
-                        <tr>
-                            <th>Unit Number</th>
-                            <th>Type</th>
+        <div class="card-body p-24">  <!-- Add this to match Unit Details card -->
 
-                            <th>Tax Rate</th>
+            <div class="row">
 
-                            <th>Status</th>
+                <div class="table-responsive scroll-sm">
+                    <table class="table bordered-table sm-table mb-0" aria-describedby="unitDetailsTable">
+                        <thead>
+                            <tr>
+                                <th scope="col">Unit Number</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Tax Rate</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($property->units as $unit)
+                            <tr>
+                                <td>{{ $unit->unit_number }}</td>
+                                <td>{{ $unit->unit_type }}</td>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($property->units as $unit)
-                        <tr>
-                            <td>{{ $unit->unit_number }}</td>
-                            <td>{{ $unit->unit_type }}</td>
+                                <td>{{ 5 }}%</td>
 
-                            <td>{{ 5 }}%</td>
+                                <td>
 
-                            <td>
+                                    <span class="badge bg-success">{{ $unit->is_available == 1 ? 'Available' : 'Occupied' }}</span>
 
-                                <span class="badge bg-success">{{ $unit->is_available == 1 ? 'Available' : 'Occupied' }}</span>
+                                </td>
 
-                            </td>
-
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -161,7 +166,7 @@
                                 <td>{{ $invoice->invoice_number }}</td>
                                 <td>{{ $invoice->frequency }}</td>
                                 <td>{{ $invoice->invoice_date }}</td>
-                                <td>{{ $invoice->due_date}}</td>
+                                <td>{{ \Carbon\Carbon::parse($invoice->due_date)->format('M d, Y') }}</td>
                                 <td>${{ $invoice->amount}}</td>
                                 <td>
                                     @php

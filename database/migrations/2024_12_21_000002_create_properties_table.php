@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('property_name');
             $table->string('property_phone', 25)->nullable();
             $table->string('image')->nullable();
+            $table->string('document')->nullable();
             $table->unsignedBigInteger('district_id');
             $table->unsignedBigInteger('landlord_id');
             $table->unsignedBigInteger('branch_id')->nullable();

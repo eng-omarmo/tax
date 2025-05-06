@@ -197,12 +197,22 @@
                                         <div class="col-md-6 mb-20">
                                             <label for="image"
                                                 class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                                Image
+                                              Property  Image
                                             </label>
                                             <input type="file" class="form-control radius-8" id="image"
                                                 name="image">
                                         </div>
+                                        <div class="col-md-6 mb-20">
+                                            <label for="document"
+                                                class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                            Property document
+                                            </label>
+                                            <input type="file" class="form-control radius-8" id="document"
+                                                name="document">
+                                        </div>
                                     </div>
+
+                         
                                     <div class="d-flex align-items-center justify-content-center gap-3">
                                         <button type="button"
                                             class="border border-danger-600 bg-hover-danger-200 text-danger-600 text-md px-56 py-11 radius-8">

@@ -44,7 +44,7 @@ class OtpController extends Controller
                 return redirect()->route('signin')->with('error', 'User not found.');
             }
             Auth::login($user);
-            return redirect()->route('index2');
+            return redirect()->route('index')->with('success', 'OTP verified successfully.');
         } catch (\Throwable $th) {
             return redirect()->route('signin')->with('error', $th->getMessage());
         }
