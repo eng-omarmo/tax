@@ -241,7 +241,6 @@ class propertyController extends Controller
     }
     public function update(Request $request, $property)
     {
-
         try {
             $request->validate([
                 'property_name' => 'required|string|max:255',
@@ -256,7 +255,6 @@ class propertyController extends Controller
                 'house_rent' => 'nullable|numeric',
                 'latitude' => 'required|numeric',
                 'longitude' => 'required|numeric',
-                'dalal_company_name' => 'nullable|string|max:255',
                 'designation' => 'nullable|string|max:255',
                 'monitoring_status' => 'required|in:Pending,Approved',
                 'status' => 'required|in:Active,Inactive',
@@ -264,40 +262,47 @@ class propertyController extends Controller
             ]);
 
             $property = Property::find($property);
-
             if (!$property) {
                 return back()->with('error', 'Property not found.');
             }
 
-
-
-            $property->update([
-                'property_name' => $request->property_name,
-                'property_phone' => $request->property_phone,
-                'nbr' => $request->nbr,
-
-                'branch_id' => $request->branch,
-                'zone' => $request->zone,
-                'house_type' => $request->house_type,
-                'house_rent' => $request->house_rent,
-                'quarterly_tax_fee' => $request->quarterly_tax_fee,
-                'yearly_tax_fee' => $request->yearly_tax_fee,
-                'latitude' => $request->latitude,
-                'longitude' => $request->longitude,
-                'designation' => $request->designation,
-
-                'district_id' => $request->district_id,
-                'monitoring_status' => $request->monitoring_status,
-                'status' => $request->status,
+            $updateData = $request->only([
+                'property_name',
+                'property_phone',
+                'nbr',
+                'branch',
+                'zone',
+                'house_type',
+                'house_rent',
+                'quarterly_tax_fee',
+                'yearly_tax_fee',
+                'latitude',
+                'longitude',
+                'designation',
+                'district_id',
+                'monitoring_status',
+                'status'
             ]);
 
-            if (auth()->user()->role == 'Admin') {
-                return redirect()->route('property.index')->with('success', 'Property updated successfully.');
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $updateData['image'] = $image->storeAs('uploads', $imageName, 'public');
             }
-            return redirect()->route('monitor.index')->with('success', 'Property updated successfully.');
+
+            if ($request->hasFile('document')) {
+                $document = $request->file('document');
+                $documentName = time() . '.' . $document->getClientOriginalExtension();
+                $updateData['document'] = $document->storeAs('uploads', $documentName, 'public');
+            }
+
+            $property->update($updateData);
+
+            $redirectRoute = auth()->user()->role == 'Admin' ? 'property.index' : 'monitor.index';
+            return redirect()->route($redirectRoute)->with('success', 'Property updated successfully.');
         } catch (Exception $th) {
+            Log::error('Error updating property: ' . $th->getMessage());
             return back()->with('error', $th->getMessage());
-            Log::info($th->getMessage());
         }
     }
 
@@ -331,39 +336,5 @@ class propertyController extends Controller
         }
         return view('property.create', compact('lanlord', 'districts'));
     }
-    private function createTransaction($property)
-    {
-        try {
-            return Transaction::create([
-                'tenant_id' => null,
-                'transaction_id' => 'Tran' . rand(1000, 9999) . rand(1000, 9999),
-                'property_id' => $property->id,
-                'transaction_type' => 'Tax',
-                'amount' => $property->yearly_tax_fee,
-                'description' => 'Tenant Rent',
-                'credit' => 0,
-                'debit' => $property->yearly_tax_fee,
-                'status' => 'Pending',
-            ]);
-        } catch (\Throwable $th) {
-            Log::info($th->getMessage());
-        }
-    }
 
-
-    private function recordTaxFee($property)
-    {
-
-        try {
-            return Tax::create([
-                'property_id' => $property->id,
-                'tax_amount' => $property->yearly_tax_fee,
-                'due_date' => now()->addMonths(1),
-                'status' => 'Completed',
-                'tax_code' => 'T' . rand(1000, 9999) . rand(1000, 9999),
-            ]);
-        } catch (\Throwable $th) {
-            Log::info($th->getMessage());
-        }
-    }
 }

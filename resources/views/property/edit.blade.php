@@ -8,7 +8,7 @@
 @section('content')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-   
+
 
     @if ($property->monitoring_status != 'Approved')
         <div
@@ -95,8 +95,7 @@
                                     {{ session('error') }}
                                 </div>
                             @endif
-                            <form action="{{ route('property.update', $property->id) }}" method="POST"
-                                enctype="multipart/form-data">
+                            <form action="{{ route('property.update', $property->id) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 <div class="row">
@@ -196,8 +195,6 @@
                                         </select>
                                     </div>
 
-
-
                                     <div class="col-md-6 mb-20">
                                         <label for="house_type"
                                             class="form-label fw-semibold text-primary-light text-sm mb-8">
@@ -240,6 +237,22 @@
                                         <input type="text" class="form-control radius-8" id="zone"
                                             name="zone" placeholder="Enter zone name"
                                             value="{{ old('zone', $property->zone) }}">
+                                    </div>
+
+                                    <div class="col-md-6 mb-20">
+                                        <label for="image" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                            Property Image
+                                        </label>
+                                        <input type="file" class="form-control radius-8" id="image" name="image">
+                                    </div>
+                                    <div class="col-md-6 mb-20">
+                                        <label for="document" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                            Property Document
+                                        </label>
+                                        <input type="file" class="form-control radius-8" id="document" name="document" onchange="previewDocument()">
+                                        <div id="documentPreview" class="mt-2">
+                                            <!-- Document preview will be displayed here -->
+                                        </div>
                                     </div>
 
                                     <div class="col-md-6 mb-20">
@@ -417,3 +430,20 @@
 
 
 @endsection
+<script>
+    function previewDocument() {
+        const documentInput = document.getElementById('document');
+        const documentPreview = document.getElementById('documentPreview');
+        const file = documentInput.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                documentPreview.innerHTML = `<embed src="${e.target.result}" width="100%" height="200px" type="application/pdf">`;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            documentPreview.innerHTML = '';
+        }
+    }
+</script>

@@ -20,7 +20,7 @@
                      class="img-fluid w-100 property-image"
                      loading="lazy">
 
-                <div class="property-overlay bg-dark bg-opacity-75 p-4">
+                <div class="property-overlay bg-light  p-4">
                     <div class="d-flex flex-wrap justify-content-between align-items-center">
                         <div class="text-white mb-3 mb-md-0">
                             <h2 class="mb-2">{{ $property->house_code }}</h2>
