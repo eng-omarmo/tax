@@ -2,75 +2,38 @@
 
 namespace App\Console\Commands;
 
-use Carbon\Carbon;
+use App\Jobs\GenerateInvoiceJob;
 use App\Models\Unit;
-use App\Models\Invoice;
-use Illuminate\Support\Str;
-use App\Services\TimeService;
 use Illuminate\Console\Command;
-use App\Services\TransactionService;
-
+use Illuminate\Support\Facades\Log;
 class GenerateQuarterlyInvoices extends Command
 {
     protected $signature = 'invoices:generate-quarterly';
-    protected $description = 'Generate quarterly invoices for all rented units';
+    protected $description = 'Dispatch jobs to generate quarterly invoices for rented units';
 
     public function handle()
     {
-        $now = Carbon::now();
-        $quarter = ceil($now->month / 3);
-        $year = $now->year;
+        $this->info("Starting invoice job dispatch...");
 
-        $this->info("Generating invoices for Q{$quarter} {$year}...");
-
-        // Loop through all occupied (not owner) units
-        $units = Unit::where('is_owner', 'no')
-            ->where('is_available', 0)
+        $query = Unit::query()
             ->with('property')
-            ->get();
+            ->where('is_owner', 'no')
+            ->where('is_available', 1)
+            ->whereHas('property', function ($query) {
+                $query->where('status', 'Active')
+                      ->where('monitoring_status', 'Approved');
+            });
+            Log::info('SQL: ' . $query->toSql());
+            Log::info('Bindings: ', $query->getBindings());
+        $total = $query->count();
+        $this->info("Found {$total} eligible units. Dispatching jobs...");
 
-        $generatedCount = 0;
-        $skippedCount = 0;
-        $timeService = new TimeService();
-        $quarter = $timeService->currentQuarter();
-        $this->info("This is the current Quarter: {$quarter}");
-        foreach ($units as $unit) {
-            try {
-                // Check if an invoice for this quarter already exists
-                $invoiceExists = Invoice::where('unit_id', $unit->id)
-                    ->where('frequency', $quarter)
-                    ->whereYear('invoice_date', now()->year)
-                    ->exists();
-
-                if ($invoiceExists) {
-                    $this->info("Invoice already exists for unit ID {$unit->id} for Q{$quarter} {$year}.");
-                    $skippedCount++;
-                    continue;
-                }
-                $propertyCode = $unit->property ? $unit->property->house_code : '';
-                $invoiceNumber = 'INV-' . $propertyCode . '-' . strtoupper(uniqid());
-                $dueDate = $now->copy()->startOfMonth()->addDays(14);
-            $invoice =    Invoice::create([
-                    'unit_id' => $unit->id,
-                    'invoice_number' => $invoiceNumber,
-                    'amount' => $unit->unit_price,
-                    'invoice_date' => $now->startOfMonth(),
-                    'due_date' => $dueDate,
-                    'frequency' => $quarter,
-                    'payment_status' => 'Pending',
-                    'quarter' => $quarter,
-                    'year' => $year
-                ]);
-                $transaction = new TransactionService();
-                $transaction->recordInvoice($unit, $quarter);
-                $generatedCount++;
-                $this->info("Invoice generated for unit ID {$unit->id} with number {$invoiceNumber}");
-                $this->info("Invoice due date is {$invoice}");
-            } catch (\Exception $e) {
-                $this->error("Failed to generate invoice for unit ID {$unit->id}: " . $e->getMessage());
+        $query->chunk(100, function ($units) {
+            foreach ($units as $unit) {
+                GenerateInvoiceJob::dispatch($unit);
             }
-        }
+        });
 
-        $this->info("Generation completed: {$generatedCount} invoices generated, {$skippedCount} skipped.");
+        $this->info("✅ All invoice jobs dispatched successfully.");
     }
 }

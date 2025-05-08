@@ -31,7 +31,7 @@
                             @endif
                             <form action="{{ route('unit.update', $unit->id) }}" method="POST">
                                 @csrf
-                                @method('PUT') <!-- This is used for method spoofing to send a PUT request -->
+                                @method('PUT')
                                 <input type="hidden" name="property_id" value="{{ $unit->property_id }}">
 
                                 <div class="row">
@@ -94,7 +94,22 @@
                                         </label>
                                         <select class="form-control radius-8 form-select" id="is_available" name="is_available" required>
                                             <option value="0" {{ old('is_available', $unit->is_available) == 0 ? 'selected' : '' }}>Available</option>
-                                            <option value="1" {{ old('is_available', $unit->is_available) == 1 ? 'selected' : '' }}>occupied</option>
+                                            <option value="1" {{ old('is_available', $unit->is_available) == 1 ? 'selected' : '' }}>Occupied</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                        
+
+
+                                <div class="row">
+                                    <div class="mb-20">
+                                        <label for="is_owner" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                            Is Owner <span class="text-danger-600">*</span>
+                                        </label>
+                                        <select class="form-control radius-8 form-select" id="is_owner" name="is_owner" required>
+                                            <option value="0" {{ old('is_owner', $unit->is_owner) == 0 ? 'selected' : '' }}>No</option>
+                                            <option value="1" {{ old('is_owner', $unit->is_owner) == 1 ? 'selected' : '' }}>Yes</option>
                                         </select>
                                     </div>
                                 </div>

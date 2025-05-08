@@ -76,7 +76,7 @@
                                     <th scope="col">Location</th>
                                     <th scope="col">Total Units</th>
                                     <th scope="col">Quarter</th>
-                                    <th scope="col">Status</th>
+                                    {{-- <th scope="col">Status</th> --}}
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
@@ -90,7 +90,7 @@
                                         <td>{{ $property->district->name }}</td>
                                         <td>{{ $property->units->count() }}</td>
                                         <td>{{ $data['quarter'] }}</td>  <!-- Changed from $quarter to $data['quarter'] -->
-                                        <td class="text-center">
+                                        {{-- <td class="text-center">
                                             @php
                                                 $paidUnits = $property->units->filter(function($unit) {
                                                     return $unit->invoices->where('payment_status', 'Paid')->count() > 0;
@@ -102,7 +102,7 @@
                                             <span class="bg-{{ $statusClass }}-focus text-{{ $statusClass }}-600 border border-{{ $statusClass }}-main px-24 py-4 radius-4 fw-medium text-sm">
                                                 {{ $status }}
                                             </span>
-                                        </td>
+                                        </td> --}}
                                         <td>
                                             <a href="{{ route('invoice.property.details', $property->id) }}"
                                                 class="d-flex align-items-center gap-2 px-3 py-2 border border-info rounded text-decoration-none text-info hover:bg-light hover:text-white transition"

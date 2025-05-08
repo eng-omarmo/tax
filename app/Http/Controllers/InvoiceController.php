@@ -36,21 +36,35 @@ class InvoiceController extends Controller
         $quarter = $this->currentQuater();
         $taxRate = 0.05;
 
-        $baseQuery = Unit::where(['is_available' => 1, 'is_owner' => 'no']);
+        $baseQuery = Unit::where(['is_available' => 1, 'is_owner' => 'no'])
+            ->whereHas('property', function ($query) {
+                $query->where('status', 'active')
+                    ->where('monitoring_status', 'Approved');
+            });
         $data['potentialIncome'] = $baseQuery->sum('unit_price') * $taxRate;
-
         $data['flatIncome'] = (clone $baseQuery)->where('unit_type', 'Flat')->sum('unit_price') * $taxRate;
         $data['sectionIncome'] = (clone $baseQuery)->where('unit_type', 'Section')->sum('unit_price') * $taxRate;
         $data['officeIncome'] = (clone $baseQuery)->where('unit_type', 'Office')->sum('unit_price') * $taxRate;
         $data['shopIncome'] = (clone $baseQuery)->where('unit_type', 'Shop')->sum('unit_price') * $taxRate;
         $data['otherIncome'] = (clone $baseQuery)->where('unit_type', 'Other')->sum('unit_price') * $taxRate;
 
-        // Get both properties and invoices
-        $data['properties'] = Unit::where(['is_available' => 1, 'is_owner' => 'no'])
-            ->with(['property.landlord.user', 'property.district', 'invoices'])
+        $data['properties'] = Unit::where([
+            'is_available' => 1,
+            'is_owner' => 'no'
+        ])
+            ->whereHas('property', function ($query) {
+                $query->where('status', 'active')
+                    ->where('monitoring_status', 'Approved');
+            })
+            ->with([
+                'property.landlord.user',
+                'property.district',
+                'invoices'
+            ])
             ->get()
             ->pluck('property')
             ->unique();
+
 
         $data['invoices'] = Invoice::with(['unit.property'])
             ->where('frequency', $quarter)

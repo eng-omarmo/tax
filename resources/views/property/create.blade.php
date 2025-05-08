@@ -3,22 +3,6 @@
 @php
     $title = 'Register Property';
     $subTitle = 'Property Registration';
-    $script = '<script>
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    $("#imagePreview").css("background-image", "url(" + e.target.result + ")");
-                    $("#imagePreview").hide();
-                    $("#imagePreview").fadeIn(650);
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-        $("#imageUpload").change(function() {
-            readURL(this);
-        });
-    </script>';
 @endphp
 
 @section('content')
@@ -197,22 +181,29 @@
                                         <div class="col-md-6 mb-20">
                                             <label for="image"
                                                 class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                              Property  Image
+                                                Property Image
                                             </label>
                                             <input type="file" class="form-control radius-8" id="image"
-                                                name="image">
+                                                name="image" onchange="previewImage() ">
+                                                <div id="previewImage" class="mt-2">
+                                                    <!-- Image preview will be displayed here -->
+                                                </div>
                                         </div>
                                         <div class="col-md-6 mb-20">
                                             <label for="document"
                                                 class="form-label fw-semibold text-primary-light text-sm mb-8">
-                                            Property document
+                                                Property document
                                             </label>
                                             <input type="file" class="form-control radius-8" id="document"
-                                                name="document">
+                                                name="document" onchange="previewDocument()">
+                                                <div id="documentPreview" class="mt-2">
+                                                    <!-- Document preview will be displayed here -->
+                                                </div>
                                         </div>
+
                                     </div>
 
-                         
+
                                     <div class="d-flex align-items-center justify-content-center gap-3">
                                         <button type="button"
                                             class="border border-danger-600 bg-hover-danger-200 text-danger-600 text-md px-56 py-11 radius-8">
@@ -253,6 +244,40 @@
                 .catch(error => console.error('Error fetching branches:', error));
         } else {
             document.getElementById('branch_id').innerHTML = '<option value="">Choose Branch</option>';
+        }
+    }
+
+    function previewDocument() {
+        const documentInput = document.getElementById('document');
+        const documentPreview = document.getElementById('documentPreview');
+        const file = documentInput.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                documentPreview.innerHTML =
+                    `<embed src="${e.target.result}" width="100%" height="200px" type="application/pdf">`;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            documentPreview.innerHTML = '';
+        }
+    }
+
+    function previewImage() {
+        const documentInput = document.getElementById('image');
+        const documentPreview = document.getElementById('previewImage');
+        const file = documentInput.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                documentPreview.innerHTML =
+                    `<embed src="${e.target.result}" width="100%" height="200px" type="application/pdf">`;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            documentPreview.innerHTML = '';
         }
     }
 </script>
