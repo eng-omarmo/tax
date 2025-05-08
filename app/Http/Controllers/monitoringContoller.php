@@ -111,8 +111,8 @@ class monitoringContoller extends Controller
     public function viewRent($id)
     {
         $rent = Rent::with([
-            'unit' => function($query) {
-                $query->with(['property' => function($q) {
+            'unit' => function ($query) {
+                $query->with(['property' => function ($q) {
                     $q->with('landlord.user');
                 }]);
             },
@@ -130,7 +130,7 @@ class monitoringContoller extends Controller
             'days' => $interval->d
         ];
 
-$unit = $rent;
+        $unit = $rent;
 
         return view('property.monitor.unit.details', compact('rent'));
     }

@@ -167,7 +167,7 @@
                                     </div>
                                     <div class="form-check radio-card align-items-center p-12 radius-8">
                                         <input class="form-check-input" type="radio" name="is_available" id="available_no"
-                                            value="1" {{ old('is_available') == '1' ? 'checked' : '' }}>
+                                            value="1" {{ old('is_available') == 1 ? 'checked' : '' }}>
                                         <label class="form-check-label text-sm ms-8" for="available_no">
                                             Occupied
                                         </label>

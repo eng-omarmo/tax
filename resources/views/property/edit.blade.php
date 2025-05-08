@@ -243,7 +243,10 @@
                                         <label for="image" class="form-label fw-semibold text-primary-light text-sm mb-8">
                                             Property Image
                                         </label>
-                                        <input type="file" class="form-control radius-8" id="image" name="image">
+                                        <input type="file" class="form-control radius-8" id="image" name="image" onchange="previewImage()">
+                                        <div id="previewImage" class="mt-2">
+                                            <!-- Document preview will be displayed here -->
+                                        </div>
                                     </div>
                                     <div class="col-md-6 mb-20">
                                         <label for="document" class="form-label fw-semibold text-primary-light text-sm mb-8">
@@ -434,6 +437,22 @@
     function previewDocument() {
         const documentInput = document.getElementById('document');
         const documentPreview = document.getElementById('documentPreview');
+        const file = documentInput.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                documentPreview.innerHTML = `<embed src="${e.target.result}" width="100%" height="200px" type="application/pdf">`;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            documentPreview.innerHTML = '';
+        }
+    }
+
+    function previewImage() {
+        const documentInput = document.getElementById('image');
+        const documentPreview = document.getElementById('previewImage');
         const file = documentInput.files[0];
 
         if (file) {
