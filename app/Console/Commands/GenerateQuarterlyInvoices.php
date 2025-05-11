@@ -2,10 +2,12 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\GenerateInvoiceJob;
 use App\Models\Unit;
 use Illuminate\Console\Command;
+use App\Jobs\GenerateInvoiceJob;
 use Illuminate\Support\Facades\Log;
+use App\Jobs\NotifyPropertyOwnerJob;
+
 class GenerateQuarterlyInvoices extends Command
 {
     protected $signature = 'invoices:generate-quarterly';
@@ -21,10 +23,9 @@ class GenerateQuarterlyInvoices extends Command
             ->where('is_available', 1)
             ->whereHas('property', function ($query) {
                 $query->where('status', 'Active')
-                      ->where('monitoring_status', 'Approved');
+                    ->where('monitoring_status', 'Approved');
             });
-            Log::info('SQL: ' . $query->toSql());
-            Log::info('Bindings: ', $query->getBindings());
+
         $total = $query->count();
         $this->info("Found {$total} eligible units. Dispatching jobs...");
 
@@ -33,6 +34,8 @@ class GenerateQuarterlyInvoices extends Command
                 GenerateInvoiceJob::dispatch($unit);
             }
         });
+
+
 
         $this->info("✅ All invoice jobs dispatched successfully.");
     }

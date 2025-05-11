@@ -149,6 +149,9 @@
                                         class="remove-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
                                         <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
                                     </a>
+                                    <a href="{{ route('monitor.show', $property->id) }}" class="bg-success-focus text-success-600 w-40-px h-40-px rounded-circle d-flex justify-content-center align-items-center">
+                                        <iconify-icon icon="lucide:view" class="menu-icon"></iconify-icon>
+                                    </a>
                                 </div>
                             </td>
                             @else
@@ -157,7 +160,9 @@
                                     <a href="{{ route('property.show', $property->id) }}"
                                         class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
                                         <iconify-icon icon="lucide:eye" class="menu-icon"></iconify-icon>
+
                                     </a>
+
                                 </div>
                             </td>
                             @endif

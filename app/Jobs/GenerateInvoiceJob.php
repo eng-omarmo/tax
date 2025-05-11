@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Unit;
 use App\Models\Invoice;
+use App\Services\EmailService;
 use App\Services\TimeService;
 use App\Services\TransactionService;
 use Carbon\Carbon;
@@ -61,6 +62,7 @@ class GenerateInvoiceJob implements ShouldQueue
                 'quarter' => $quarter,
                 'year' => $year,
             ]);
+
 
             Log::info("✅ Invoice created for Unit #{$this->unit->id} | Invoice #: {$invoiceNumber}");
 

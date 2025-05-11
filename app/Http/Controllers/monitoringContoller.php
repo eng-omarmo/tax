@@ -17,9 +17,8 @@ class monitoringContoller extends Controller
     {
         $statuses = Property::pluck('status')->unique();
         $monitoringStatuses = Property::pluck('monitoring_status')->unique();
-        $query  = Property::with('transactions', 'landlord')->orderBy('id', 'desc');
+        $query  = Property::with('transactions', 'landlord')->where('monitoring_status' , 'Pending')->orderBy('id', 'desc');
         if ($request->filled('search')) {
-            // has landlord
             $query->whereHas('landlord', function ($q) use ($request) {
                 $q->whereHas('user', function ($q) use ($request) {
                     $q->where('name', 'like', '%' . $request->search . '%');
