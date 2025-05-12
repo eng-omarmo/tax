@@ -86,10 +86,10 @@
                                         <td scope="row">{{ $loop->iteration }}</td>
                                         <td>{{ $property->house_code }}</td>
                                         <td>{{ $property->property_name }}</td>
-                                        <td>{{ $property->landlord->user->name }}</td>
+                                        <td>{{ $property->landlord->user->name ?? '' }}</td>
                                         <td>{{ $property->district->name }}</td>
                                         <td>{{ $property->units->count() }}</td>
-                                        <td>{{ $data['quarter'] }}</td>  <!-- Changed from $quarter to $data['quarter'] -->
+                                        <td>{{ $data['quarter'] }}</td>
                                         {{-- <td class="text-center">
                                             @php
                                                 $paidUnits = $property->units->filter(function($unit) {

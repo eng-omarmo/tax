@@ -173,12 +173,22 @@
         <div class="header">
             <img src="{{ asset('images/logo.png') }}" alt="Company Logo" class="logo">
             <h1 class="title">Property Invoice Summary</h1>
-            <p class="subtitle">Invoice #{{ $invoice->invoice_number }}</p>
+            <p class="subtitle">
+                @if(isset($invoices) && count($invoices) > 0)
+                    Invoice Summary for {{ $property->property_name }}
+                @else
+                    Invoice #{{ $invoice->invoice_number }}
+                @endif
+            </p>
         </div>
 
         <!-- Access property through invoice->unit->property relationship -->
         @php
-            $property = $invoice->unit->property;
+            if(isset($invoices) && count($invoices) > 0) {
+                $property = $invoices->first()->unit->property;
+            } else {
+                $property = $invoice->unit->property;
+            }
             $totalTax = 0;
         @endphp
 
@@ -293,7 +303,13 @@
             <h3>Payment Information</h3>
             <div class="info-row">
                 <div class="info-label">Due Date:</div>
-                <div class="info-value">{{ date('M d, Y', strtotime($invoice->due_date)) }}</div>
+                <div class="info-value">
+                    @if(isset($invoices) && count($invoices) > 0)
+                        {{ date('M d, Y', strtotime($invoices->first()->due_date)) }}
+                    @else
+                        {{ date('M d, Y', strtotime($invoice->due_date)) }}
+                    @endif
+                </div>
             </div>
             <div class="info-row">
                 <div class="info-label">Payment Methods:</div>
@@ -305,11 +321,17 @@
             </div>
             <div class="info-row">
                 <div class="info-label">Reference:</div>
-                <div class="info-value">{{ $invoice->invoice_number }}</div>
+                <div class="info-value">
+                    @if(isset($invoices) && count($invoices) > 0)
+                        {{ $invoices->first()->invoice_number }}
+                    @else
+                        {{ $invoice->invoice_number }}
+                    @endif
+                </div>
             </div>
 
             <div style="text-align: center; margin-top: 20px;">
-                <a href="{{ route('invoice.pay', $invoice->id) }}" class="button">Pay Now</a>
+                <a href="{{ isset($invoices) && count($invoices) > 0 ? route('invoice.pay', $invoices->first()->id) : route('invoice.pay', $invoice->id) }}" class="button">Pay Now</a>
             </div>
         </div>
 

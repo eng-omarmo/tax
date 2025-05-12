@@ -32,8 +32,8 @@ class landlordController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
-            'phone' => 'required|string|max:255',
-            'email' => 'required|string|max:255',
+            'phone' => 'required|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:15|unique:users,phone|unique:landlords,phone_number',
+            'email' => 'required|email|unique:users,email|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
         $image = $request->file('image');
@@ -88,40 +88,58 @@ class landlordController extends Controller
 
     public function update(Request $request, $landlordId)
     {
-
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:255',
-        ]);
-
         $landlord = Landlord::find($landlordId);
 
         if (!$landlord) {
             return redirect()->route('landlord.index')->with('error', 'Landlord not found.');
         }
 
-        $image = $request->file('image');
-        $imageName = time() . '.' . $image->getClientOriginalExtension();
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'phone_number' => [
+                'required',
+                'string',
+                'regex:/^([0-9\s\-\+\(\)]*)$/',
+                'min:10',
+                'max:15',
+                'unique:users,phone,' . $landlord->user_id,
+                'unique:landlords,phone_number,' . $landlord->id
+            ],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                'unique:users,email,' . $landlord->user_id,
+                'unique:landlords,email,' . $landlord->id
+            ],
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
 
-        $path = $image->storeAs('uploads', $imageName, 'public');
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $path = $image->storeAs('uploads', $imageName, 'public');
+        }
 
         $landlord->update([
             'name' => $request->name,
             'address' => $request->address,
-            'phone_number' => $request->phone,
+            'phone_number' => $request->phone_number,
             'email' => $request->email
-
         ]);
 
         if ($landlord->user) {
-            $landlord->user->update([
+            $updateData = [
                 'name' => $request->name,
                 'email' => $request->email,
-                'phone' => $request->phone,
-                'profile_image' => $path
-            ]);
+                'phone' => $request->phone_number,
+            ];
+ if (isset($path)) {
+                $updateData['profile_image'] = $path;
+            }
+
+            $landlord->user->update($updateData);
         }
 
         return redirect()->route('lanlord.index')->with('success', 'Landlord updated successfully');

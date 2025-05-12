@@ -101,7 +101,7 @@ class unitController extends Controller
     public function update(Request $request, $id)
     {
 
-
+        // $unit = Unit::fin
         try {
             $request->validate([
                 'unit_name' => 'required',
@@ -114,7 +114,8 @@ class unitController extends Controller
                 'unit_name' => $request->unit_name,
                 'unit_type' => $request->unit_type,
                 'unit_price' => $request->unit_price,
-                'is_available' => $request->is_available
+                'is_available' => $request->is_available,
+                'is_owner' => $request->is_owner == 1 ? 'yes' : 'no'
             ]);
             return redirect()->route('unit.index')->with('success', 'Unit updated successfully.');
         } catch (\Throwable $th) {

@@ -6,6 +6,22 @@
 @endphp
 
 @section('content')
+{{-- @if (session('error'))
+<div class="alert alert-danger   alert-dismissible fade show" role="alert">
+    {{ session('error') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif --}}
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
@@ -33,7 +49,7 @@
                                         <div class="text-center">
                                             <div class="image-preview mb-3">
                                                 <img id="profileImagePreview"
-                                                    src="{{ $lanlord->user->profile_image ? asset('storage/' . $lanlord->user->profile_image) : asset('assets/images/default-avatar.png') }}"
+                                                    src="{{ isset($landlord->user) && $landlord->user->profile_image ? asset('storage/' . $landlord->user->profile_image) : asset('assets/images/default-avatar.png') }}"
                                                     alt="Profile Preview" class="img-thumbnail rounded-circle shadow-sm"
                                                     style="width: 180px; height: 180px; object-fit: cover; border: 2px solid var(--bs-primary-subtle);">
                                             </div>
@@ -101,6 +117,19 @@
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
                                             </div>
+
+                                            <div class="col-md-6">
+                                                <label for="address" class="form-label text-secondary-600">Address</label>
+                                                <input type="text"
+                                                    class="form-control radius-8 @error('address') is-invalid @enderror"
+                                                    id="address" name="address"
+                                                    value="{{ old('address', $lanlord->address) }}"
+                                                    placeholder="Enter address">
+                                                @error('address')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>

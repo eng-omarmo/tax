@@ -51,14 +51,14 @@
                             <div class="card-body">
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="avatar avatar-lg bg-primary text-white">
-                                        {{ substr($property->landlord->user->name, 0, 1) }}
+                                        {{ substr($property->landlord->name, 0, 1) ?? '' }}
                                     </div>
                                     <div>
                                         <h6 class="mb-1">Property Owner</h6>
-                                        <p class="mb-0 fw-medium">{{ $property->landlord->user->name }}</p>
+                                        <p class="mb-0 fw-medium">{{ $property->landlord->user->name ?? ''}}</p>
                                         <small class="text-muted text-primary-light">
                                             <i class="ri-phone-line text-primary-light"></i>
-                                            {{ $property->phone_number ?? $property->landlord->phone_number }}
+                                            {{ $property->phone_number ?? $property->landlord->phone_number ?? '' }}
                                         </small>
                                     </div>
                                 </div>
