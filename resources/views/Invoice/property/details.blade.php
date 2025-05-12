@@ -28,7 +28,7 @@
                             <tr>
                                 <th>Owner Info:</th>
                                 <td>
-                                    {{ $property->landlord->user->name }}<br>
+                                    {{ $property->landlord->name }}<br>
                                     {{ $property->landlord->phone_number }}<br>
                                     {{ $property->landlord->email }}
                                 </td>

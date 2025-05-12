@@ -54,7 +54,7 @@ class GenerateInvoiceJob implements ShouldQueue
             $invoice = Invoice::create([
                 'unit_id' => $this->unit->id,
                 'invoice_number' => $invoiceNumber,
-                'amount' => $this->unit->unit_price,
+                'amount' => $this->unit->unit_price * 3 * 0.05,
                 'invoice_date' => $now->startOfMonth(),
                 'due_date' => $dueDate,
                 'frequency' => $quarter,

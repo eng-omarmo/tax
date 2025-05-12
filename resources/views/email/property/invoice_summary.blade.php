@@ -175,9 +175,9 @@
             <h1 class="title">Property Invoice Summary</h1>
             <p class="subtitle">
                 @if(isset($invoices) && count($invoices) > 0)
-                    Invoice Summary for {{ $property->property_name }}
+                    Invoice Summary for {{ $invoice->unit->property->property_name }}
                 @else
-                    Invoice #{{ $invoice->invoice_number }}
+                    Invoice #{{ $invoice->invoice_number}}
                 @endif
             </p>
         </div>

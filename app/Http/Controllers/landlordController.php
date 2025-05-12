@@ -66,7 +66,7 @@ class landlordController extends Controller
         $landlord = Landlord::with(['user', 'properties.units'])->findOrFail($landlord);
 
         $totalProperties = $landlord->properties->count();
-        $totalUnits = $landlord->properties->sum(function($property) {
+        $totalUnits = $landlord->properties->sum(function ($property) {
             return $property->units->count();
         });
 
@@ -135,7 +135,7 @@ class landlordController extends Controller
                 'email' => $request->email,
                 'phone' => $request->phone_number,
             ];
- if (isset($path)) {
+            if (isset($path)) {
                 $updateData['profile_image'] = $path;
             }
 

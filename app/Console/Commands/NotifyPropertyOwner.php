@@ -11,54 +11,70 @@ use App\Services\TimeService;
 
 class NotifyPropertyOwner extends Command
 {
-    protected $signature = 'invoices:notify-property-owner {--chunk=100 : Number of records to process per chunk}';
+    protected $signature = 'invoices:notify-property-owner
+                            {--chunk=100 : Number of records to process per chunk}
+                            {--dry-run : Do not dispatch jobs, just simulate the process}';
+
     protected $description = 'Notify property owners about their invoices';
 
     public function handle()
     {
-        $this->info("Starting property owner notification process...");
+        $this->info("🔔 Starting property owner notification process...");
 
         $timeService = new TimeService();
         $quarter = $timeService->currentQuarter();
         $year = $timeService->currentYear();
         $chunkSize = $this->option('chunk');
+        $dryRun = $this->option('dry-run');
 
-        // Get count of invoices to process
         $count = Invoice::where('frequency', $quarter)
             ->whereYear('invoice_date', $year)
             ->count();
 
-        $this->info("Found {$count} invoices to process in chunks of {$chunkSize}");
-
         if ($count === 0) {
-            $this->info("No invoices to process. Exiting.");
+            $this->info("📭 No invoices to process. Exiting.");
             return;
         }
 
-        // Process in chunks to avoid memory issues
+        $this->info("🔎 Found {$count} invoices to process in chunks of {$chunkSize}");
+
         Invoice::with('unit.property.landlord')
             ->where('frequency', $quarter)
             ->whereYear('invoice_date', $year)
-            ->chunkById($chunkSize, function ($invoices) {
-                // Group by property and dispatch jobs
-                $grouped = $invoices->groupBy(function ($invoice) {
-                    return $invoice->unit->property->id;
+            ->chunkById($chunkSize, function ($invoices) use ($dryRun) {
+                // Filter out invoices with missing relationships
+                $filtered = $invoices->filter(function ($invoice) {
+                    if (!$invoice->unit || !$invoice->unit->property || !$invoice->unit->property->landlord) {
+                        Log::warning("❌ Skipping invoice ID {$invoice->id} due to missing unit/property/landlord.");
+                        return false;
+                    }
+                    return true;
+                });
+
+                // Group by landlord (you can change this to property if needed)
+                $grouped = $filtered->groupBy(function ($invoice) {
+                    return $invoice->unit->property->landlord->id;
                 });
 
                 $jobs = [];
-                foreach ($grouped as $propertyId => $propertyInvoices) {
-                    $jobs[] = new NotifyPropertyOwnerJob($propertyInvoices);
+
+                foreach ($grouped as $landlordId => $landlordInvoices) {
+                    $jobs[] = new NotifyPropertyOwnerJob($landlordInvoices);
                 }
 
-                // Dispatch batch of jobs
+                if ($dryRun) {
+                    $this->info("🧪 Dry run enabled. Simulated dispatch of " . count($jobs) . " jobs.");
+                    return;
+                }
+
                 Bus::batch($jobs)
                     ->allowFailures()
                     ->onQueue('emails')
                     ->dispatch();
 
-                $this->info("Dispatched " . count($jobs) . " notification jobs");
+                $this->info("✅ Dispatched " . count($jobs) . " notification jobs in this chunk.");
             });
 
-        $this->info("✅ All invoice notification jobs dispatched successfully.");
+        $this->info("🎉 All invoice notification jobs dispatched successfully.");
     }
 }
