@@ -49,10 +49,10 @@
                         <span class="fw-semibold text-sm">Generate Invoice for Current Quarter</span>
                     </button> --}}
 
-                    <!-- Hidden form -->
+                    {{-- <!-- Hidden form -->
                     <form id="generateInvoice" action="{{ route('invoice.generate') }}" method="POST" class="d-none">
                         @csrf
-                    </form>
+                    </form> --}}
 
 
                 </div>

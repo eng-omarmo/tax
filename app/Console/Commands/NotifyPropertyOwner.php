@@ -69,7 +69,6 @@ class NotifyPropertyOwner extends Command
 
                 Bus::batch($jobs)
                     ->allowFailures()
-                    ->onQueue('emails')
                     ->dispatch();
 
                 $this->info("✅ Dispatched " . count($jobs) . " notification jobs in this chunk.");
