@@ -66,7 +66,7 @@
                                 </div>
 
                                 <div class="d-flex align-items-center justify-content-center gap-3">
-                                    <a href="{{ route('usersList') }}" class="border border-danger-600 bg-hover-danger-200 text-danger-600 text-md px-56 py-11 radius-8">Cancel</a>
+                                    <a href="{{ route('user.index') }}" class="border border-danger-600 bg-hover-danger-200 text-danger-600 text-md px-56 py-11 radius-8">Cancel</a>
                                     <button type="submit" class="btn btn-primary border border-primary-600 text-md px-56 py-12 radius-8">Update</button>
                                 </div>
                             </form>

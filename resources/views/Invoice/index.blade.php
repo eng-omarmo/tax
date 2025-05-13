@@ -15,64 +15,69 @@
         <div class="col-lg-9">
             <div class="card h-100 p-0 radius-12">
                 <form method="GET" action="{{ route('invoiceList') }}" id="filterForm">
-                <div
-                    class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center flex-wrap gap-3 justify-content-between">
-                    <div class="d-flex align-items-center flex-wrap gap-3">
-                        <div class="d-flex align-items-center gap-3 flex-wrap">
-                            <div class="navbar-search">
-                                <input type="text" class="bg-base h-40-px w-auto" name="search" placeholder="Search"
-                                    value="{{ request()->search }}">
-                                <iconify-icon icon="ion:search-outline" class="icon"></iconify-icon>
+                    <div
+                        class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center flex-wrap gap-3 justify-content-between">
+                        <div class="d-flex align-items-center flex-wrap gap-3">
+                            <div class="d-flex align-items-center gap-3 flex-wrap">
+                                <div class="navbar-search">
+                                    <input type="text" class="bg-base h-40-px w-auto" name="search" placeholder="Search"
+                                        value="{{ request()->search }}">
+                                    <iconify-icon icon="ion:search-outline" class="icon"></iconify-icon>
+                                </div>
+                            </div>
+                            <select class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px"
+                                name="house_number">
+                                <option value="">House Number</option>
+                                @foreach ($data['houseNumbers'] ?? [] as $houseNumber)
+                                    <option value="{{ $houseNumber }}"
+                                        {{ request()->house_number == $houseNumber ? 'selected' : '' }}>{{ $houseNumber }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <select class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px" name="zone">
+                                <option value="">Zone</option>
+                                @foreach ($data['zones'] ?? [] as $zone)
+                                    <option value="{{ $zone }}" {{ request()->zone == $zone ? 'selected' : '' }}>
+                                        {{ $zone }}</option>
+                                @endforeach
+                            </select>
+                            <select class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px" name="district">
+                                <option value="">District</option>
+                                @foreach ($data['districts'] ?? [] as $district)
+                                    <option value="{{ $district->id }}"
+                                        {{ request()->district == $district->id ? 'selected' : '' }}>{{ $district->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            <select class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px"
+                                name="property_type">
+                                <option value="">Property Type</option>
+                                @foreach ($data['propertyTypes'] ?? [] as $propertyType)
+                                    <option value="{{ $propertyType }}"
+                                        {{ request()->property_type == $propertyType ? 'selected' : '' }}>
+                                        {{ $propertyType }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <div class="d-flex align-items-center gap-3 flex-wrap">
+
+                                <a href="javascript:void(0);" id="filterLink"
+                                    class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
+                                    <iconify-icon icon="ic:baseline-filter-alt"
+                                        class="icon text-xl line-height-1"></iconify-icon>
+                                    Filter
+                                </a>
+
+                                <a href="javascript:void(0);" id="resetLink"
+                                    class="btn btn-info text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
+                                    <iconify-icon icon="ic:baseline-filter-alt-off"
+                                        class="icon text-xl line-height-1"></iconify-icon>
+                                    Reset
+                                </a>
                             </div>
                         </div>
-                        <select class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px" name="house_number">
-                            <option value="">House Number</option>
-                            @foreach ($data['houseNumbers'] ?? [] as $houseNumber)
-                                <option value="{{ $houseNumber }}"
-                                    {{ request()->house_number == $houseNumber ? 'selected' : '' }}>{{ $houseNumber }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <select class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px" name="zone">
-                            <option value="">Zone</option>
-                            @foreach ($data['zones'] ?? [] as $zone)
-                                <option value="{{ $zone }}" {{ request()->zone == $zone ? 'selected' : '' }}>
-                                    {{ $zone }}</option>
-                            @endforeach
-                        </select>
-                        <select class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px" name="district">
-                            <option value="">District</option>
-                            @foreach ($data['districts'] ?? [] as $district)
-                                <option value="{{ $district->id }}"
-                                    {{ request()->district == $district->id ? 'selected' : '' }}>{{ $district->name }}
-                                </option>
-                            @endforeach
-                        </select>
-
-                        <select class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px" name="property_type">
-                            <option value="">Property Type</option>
-                            @foreach ($data['propertyTypes'] ?? [] as $propertyType)
-                                <option value="{{ $propertyType }}"
-                                    {{ request()->property_type == $propertyType ? 'selected' : '' }}>{{ $propertyType }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <div class="d-flex align-items-center gap-3 flex-wrap">
-
-                            <a href="javascript:void(0);" id="filterLink"
-                                class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
-                                <iconify-icon icon="ic:baseline-filter-alt" class="icon text-xl line-height-1"></iconify-icon>
-                                Filter
-                            </a>
-
-                            <a href="javascript:void(0);" id="resetLink"
-                                class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
-                                <iconify-icon icon="ic:baseline-filter-alt-off" class="icon text-xl line-height-1"></iconify-icon>
-                                Reset
-                            </a>
-                        </div>
                     </div>
-                </div>
                 </form>
                 <div class="card-body p-24">
                     <div class="table-responsive scroll-sm">

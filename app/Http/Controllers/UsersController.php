@@ -36,13 +36,16 @@ class UsersController extends Controller
         // } else {
         //     $imagePath = null;
         // }
+        //make this upper case
+        $validated['role'] = ucfirst($validated['role']);
+
 
         User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make('password'),
             'phone' => $validated['phone'],
-            'role' => $validated['role'],
+            'role' =>  $validated['role'],
             'status' => $validated['status'],
             'profile_image' => null
         ]);
@@ -102,15 +105,14 @@ class UsersController extends Controller
         return redirect()->route('user.index')->with('success', 'User deleted successfully!');
     }
 
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id){
         try {
             $user = User::findOrFail($id);
             $user->update([
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
-                'role' => $request->role,
+                'role' => ucfirst($request->role),
                 'status' => $request->status
             ]);
             return redirect()->route('user.index')->with('success', 'User Updated successfully!');
