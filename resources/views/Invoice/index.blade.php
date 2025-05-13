@@ -14,95 +14,94 @@
     <div class="row gy-4">
         <div class="col-lg-9">
             <div class="card h-100 p-0 radius-12">
+                <form method="GET" action="{{ route('invoiceList') }}" id="filterForm">
                 <div
                     class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center flex-wrap gap-3 justify-content-between">
                     <div class="d-flex align-items-center flex-wrap gap-3">
-                        <span class="text-md fw-medium text-secondary-light mb-0">Show</span>
-                        <select class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                            <option>6</option>
-                            <option>7</option>
-                            <option>8</option>
-                            <option>9</option>
-                            <option>10</option>
+                        <div class="d-flex align-items-center gap-3 flex-wrap">
+                            <div class="navbar-search">
+                                <input type="text" class="bg-base h-40-px w-auto" name="search" placeholder="Search"
+                                    value="{{ request()->search }}">
+                                <iconify-icon icon="ion:search-outline" class="icon"></iconify-icon>
+                            </div>
+                        </div>
+                        <select class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px" name="house_number">
+                            <option value="">House Number</option>
+                            @foreach ($data['houseNumbers'] ?? [] as $houseNumber)
+                                <option value="{{ $houseNumber }}"
+                                    {{ request()->house_number == $houseNumber ? 'selected' : '' }}>{{ $houseNumber }}
+                                </option>
+                            @endforeach
                         </select>
-                        <form class="navbar-search">
-                            <input type="text" class="bg-base h-40-px w-auto" name="search" placeholder="Search">
-                            <iconify-icon icon="ion:search-outline" class="icon"></iconify-icon>
-                        </form>
-                        <select class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px">
-                            <option>Status</option>
-                            <option>Active</option>
-                            <option>Inactive</option>
+                        <select class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px" name="zone">
+                            <option value="">Zone</option>
+                            @foreach ($data['zones'] ?? [] as $zone)
+                                <option value="{{ $zone }}" {{ request()->zone == $zone ? 'selected' : '' }}>
+                                    {{ $zone }}</option>
+                            @endforeach
                         </select>
+                        <select class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px" name="district">
+                            <option value="">District</option>
+                            @foreach ($data['districts'] ?? [] as $district)
+                                <option value="{{ $district->id }}"
+                                    {{ request()->district == $district->id ? 'selected' : '' }}>{{ $district->name }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                        <select class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px" name="property_type">
+                            <option value="">Property Type</option>
+                            @foreach ($data['propertyTypes'] ?? [] as $propertyType)
+                                <option value="{{ $propertyType }}"
+                                    {{ request()->property_type == $propertyType ? 'selected' : '' }}>{{ $propertyType }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <div class="d-flex align-items-center gap-3 flex-wrap">
+
+                            <a href="javascript:void(0);" id="filterLink"
+                                class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
+                                <iconify-icon icon="ic:baseline-filter-alt" class="icon text-xl line-height-1"></iconify-icon>
+                                Filter
+                            </a>
+
+                            <a href="javascript:void(0);" id="resetLink"
+                                class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
+                                <iconify-icon icon="ic:baseline-filter-alt-off" class="icon text-xl line-height-1"></iconify-icon>
+                                Reset
+                            </a>
+                        </div>
                     </div>
-
-                    {{-- <!-- Button to submit the form -->
-                    <button form="generateInvoice" type="submit"
-                        class="d-flex align-items-center gap-2 px-3 py-2 border border-primary rounded text-decoration-none text-primary hover:bg-primary hover:text-white transition"
-                        title="Generate invoice for the current quarter">
-                        <iconify-icon icon="ic:baseline-money" class="icon text-xl"></iconify-icon>
-                        <span class="fw-semibold text-sm">Generate Invoice for Current Quarter</span>
-                    </button> --}}
-
-                    {{-- <!-- Hidden form -->
-                    <form id="generateInvoice" action="{{ route('invoice.generate') }}" method="POST" class="d-none">
-                        @csrf
-                    </form> --}}
-
-
                 </div>
+                </form>
                 <div class="card-body p-24">
                     <div class="table-responsive scroll-sm">
                         <table class="table bordered-table sm-table mb-0">
                             <thead>
                                 <tr>
-                                    <th scope="col">
-                                        <div class="d-flex align-items-center gap-10">
-                                            <div class="form-check style-check d-flex align-items-center">
-                                                <input class="form-check-input radius-4 border input-form-dark"
-                                                    type="checkbox" name="checkbox" id="selectAll">
-                                            </div>
-                                            S.L
-                                        </div>
-                                    </th>
+
+                                    <th scope="col">SNO</th>
                                     <th scope="col">Property Code</th>
                                     <th scope="col">Property Name</th>
+                                    <th scope="col">Type</th>
                                     <th scope="col">Owner</th>
                                     <th scope="col">Location</th>
                                     <th scope="col">Total Units</th>
                                     <th scope="col">Quarter</th>
-                                    {{-- <th scope="col">Status</th> --}}
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($data['properties'] as $property)
                                     <tr>
-                                        <td scope="row">{{ $loop->iteration }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $property->house_code }}</td>
                                         <td>{{ $property->property_name }}</td>
+                                        <td>{{ $property->house_type }}</td>
                                         <td>{{ $property->landlord->name ?? '' }}</td>
                                         <td>{{ $property->district->name }}</td>
                                         <td>{{ $property->units->count() }}</td>
                                         <td>{{ $data['quarter'] }}</td>
-                                        {{-- <td class="text-center">
-                                            @php
-                                                $paidUnits = $property->units->filter(function($unit) {
-                                                    return $unit->invoices->where('payment_status', 'Paid')->count() > 0;
-                                                })->count();
-                                                $totalUnits = $property->units->count();
-                                                $status = $paidUnits === $totalUnits ? 'Paid' : ($paidUnits > 0 ? 'Partial' : 'Pending');
-                                                $statusClass = $status === 'Paid' ? 'success' : ($status === 'Partial' ? 'warning' : 'danger');
-                                            @endphp
-                                            <span class="bg-{{ $statusClass }}-focus text-{{ $statusClass }}-600 border border-{{ $statusClass }}-main px-24 py-4 radius-4 fw-medium text-sm">
-                                                {{ $status }}
-                                            </span>
-                                        </td> --}}
                                         <td>
                                             <a href="{{ route('invoice.property.details', $property->id) }}"
                                                 class="d-flex align-items-center gap-2 px-3 py-2 border border-info rounded text-decoration-none text-info hover:bg-light hover:text-white transition"
@@ -271,10 +270,18 @@
             </div>
         </div>
     </div>
-
-    <form id="q1Form" action="{{ route('invoice.quarter1') }}" method="post">
-        @csrf
-        @method('POST')
-        <input type="hidden" name="q1" value="q1">
-    </form>
+    <script>
+        document.getElementById('filterLink').addEventListener('click', function() {
+            document.getElementById('filterForm').submit();
+        });
+        document.getElementById('resetLink').addEventListener('click', function() {
+            const formElements = document.getElementById('filterForm').elements;
+            Array.from(formElements).forEach(element => {
+                if (element.type === 'select-one' || element.type === 'text') {
+                    element.value = '';
+                }
+            });
+            document.getElementById('filterForm').submit();
+        });
+    </script>
 @endsection
