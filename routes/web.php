@@ -233,38 +233,26 @@ Route::prefix('payment-method')->middleware(['auth.admin'])->group(function () {
     });
 });
 
-Route::prefix('account')->middleware(['auth.admin'])->group(function () {
-    Route::controller(accountController::class)->group(function () {
-        Route::get('/index', 'index')->name('account.index');
-        Route::get('/create', 'create')->name('account.create');
-        Route::post('/store', 'store')->name('account.store');
-        Route::get('/edit/{id}', 'edit')->name('account.edit');
-        Route::put('/update/{id}', 'update')->name('account.update');
-        Route::get('/destroy/{id}', 'destroy')->name('account.destroy');
-    });
-});
+// Route::prefix('account')->middleware(['auth.admin'])->group(function () {
+//     Route::controller(accountController::class)->group(function () {
+//         Route::get('/index', 'index')->name('account.index');
+//         Route::get('/create', 'create')->name('account.create');
+//         Route::post('/store', 'store')->name('account.store');
+//         Route::get('/edit/{id}', 'edit')->name('account.edit');
+//         Route::put('/update/{id}', 'update')->name('account.update');
+//         Route::get('/destroy/{id}', 'destroy')->name('account.destroy');
+//     });
+// });
 
 
 Route::prefix('tax')->middleware(['auth.admin'])->group(function () {
-    Route::prefix('rate')->group(function () {
-        Route::controller(taxRateController::class)->group(function () {
-            Route::get('/index', 'index')->name('tax.rate.index');
-            Route::get('/create', 'create')->name('tax.rate.create');
-            Route::post('/store', 'store')->name('tax.rate.store');
-            Route::get('/edit/{taxRate}', 'edit')->name('tax.rate.edit');
-            Route::put('/update/{taxRate}', 'update')->name('tax.rate.update');
-            Route::get('/delete/{taxRate}', 'destroy')->name('tax.rate.delete');
-        });
-    });
+
     Route::controller(taxController::class)->group(function () {
         Route::get('/index', 'index')->name('tax.index');
         Route::get('/create', 'create')->name('tax.create');
         Route::post('/store', 'store')->name('tax.store');
         Route::get('/edit/{tax}', 'edit')->name('tax.edit');
         Route::put('/update/{tax}', 'update')->name('tax.update');
-        //show
-
-
         Route::get('/delete/{tax}', 'destroy')->name('tax.delete');
         Route::get('/property/search', 'search')->name('property.tax.search');
     });
