@@ -130,16 +130,19 @@
                         </thead>
                         <tbody>
                             @foreach($property->units as $unit)
-                                @php [$color, $label, $icon] = $isAvailableBadge($unit->is_available); @endphp
+
                                 <tr>
                                     <td class="fw-medium">{{ $unit->unit_number }}</td>
                                     <td>{{ $unit->unit_type }}</td>
                                     <td>${{ number_format($unit->unit_price, 2) }}</td>
                                     <td>
-                                        <span class="badge bg-{{ $color }}-subtle text-{{ $color }} d-inline-flex align-items-center">
-                                            <i class="ri-{{ $icon }}-circle-fill me-2 fs-xs"></i>{{ $label }}
+                                        <span class="badge d-inline-flex align-items-center
+                                            {{ $unit->is_available == 0 ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger' }}">
+                                            <i class="ri-circle-fill me-2 fs-xs"></i>
+                                            {{ $unit->is_available == 0 ? 'Available' : 'Occupied' }}
                                         </span>
                                     </td>
+
                                     <td class="text-end">
                                         <div class="d-flex gap-2 justify-content-end">
                                                      <a href="{{ route('monitor.rent.view', $unit->id) }}"
@@ -174,7 +177,7 @@
                             <div class="card-body">
                                 @php
                                     $totalUnits = $property->units->count();
-                                    $occupied = $property->units->where('is_available', false)->count();
+                                    $occupied = $property->units->where('is_available', 1)->count();
                                     $rate = $totalUnits > 0 ? ($occupied/$totalUnits)*100 : 0;
                                 @endphp
                                 <h6 class="mb-3">Occupancy Rate</h6>
@@ -202,7 +205,7 @@
                                     <i class="ri-checkbox-circle-line fs-3 text-success"></i>
                                     <div>
                                         <h6 class="mb-0">Available</h6>
-                                        <h3 class="mb-0">{{ $property->units->where('is_available', true)->count() }}</h3>
+                                        <h3 class="mb-0">{{ $property->units->where('is_available', 0)->count() }}</h3>
                                     </div>
                                 </div>
                             </div>
@@ -216,7 +219,7 @@
                                     <i class="ri-user-line fs-3 text-warning"></i>
                                     <div>
                                         <h6 class="mb-0">Occupied</h6>
-                                        <h3 class="mb-0">{{ $property->units->where('is_available', false)->count() }}</h3>
+                                        <h3 class="mb-0">{{ $property->units->where('is_available', 1)->count() }}</h3>
                                     </div>
                                 </div>
                             </div>

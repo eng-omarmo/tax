@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use function PHPUnit\Framework\isNull;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-
+use Illuminate\Support\Collection;
 class InvoiceController extends Controller
 {
     public function invoiceAdd()
@@ -73,7 +73,15 @@ class InvoiceController extends Controller
         $invoiceQuery = Invoice::with(['unit.property'])
             ->where('frequency', $quarter);
 
-            $data['potenialIncomeAfterFilter'] =  $baseQuery->sum('unit_price') * $taxRate * 3;
+            $data['potentialIncomeAfterFilter'] = collect($data['properties']->items())
+            ->flatMap(function ($property) {
+                return collect($property->units);
+            })
+            ->flatMap(function ($unit) {
+                return collect($unit->invoices);
+            })
+            ->sum('amount');
+
 
         if (!empty($filters['unit_type'])) {
             $invoiceQuery->whereHas('unit', function ($q) use ($filters) {

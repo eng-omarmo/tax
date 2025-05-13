@@ -40,6 +40,7 @@ class monitoringContoller extends Controller
     }
     public function show($id)
     {
+
         $property = Property::with([
             'units',
             'landlord.user',
@@ -163,7 +164,7 @@ class monitoringContoller extends Controller
             }
             $property->update([
                 'monitoring_status' => 'Rejected',
-                'status' => 'inActive',
+                'status' => 'InActive',
             ]);
             return response()->json(['message' => 'Property rejected successfully'], 200);
         } catch (\Throwable $th) {

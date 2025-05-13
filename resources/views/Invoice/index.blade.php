@@ -161,7 +161,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
                                             <h6 class="text-muted mb-0">Potential Income</h6>
-                                            <h3 class="text-dark mb-0">${{$data['potenialIncomeAfterFilter']}} </h3>
+                                            <h3 class="text-dark mb-0">${{$data['potentialIncomeAfterFilter']}} </h3>
                                         </div>
                                         <div class="bg-light p-2 rounded-circle">
                                             <iconify-icon icon="mdi:cash-multiple" width="32" height="32" class="text-secondary"></iconify-icon>
@@ -172,7 +172,6 @@
                         </div>
                     </div>
                     <!-- End Summary Cards -->
-
                     <div class="table-responsive">
                         <table class="table bordered-table sm-table mb-0 table-fixed">
                             <thead>
