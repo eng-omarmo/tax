@@ -3,6 +3,34 @@
     $title = 'Property Invoice Management';
     $subTitle = 'Invoice';
 @endphp
+<style>
+    /* Custom Select2 styling */
+    .table-responsive {
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    .table-responsive th,
+    .table-responsive td {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .text-wrap {
+        white-space: normal;
+        word-break: break-word;
+    }
+
+    .text-nowrap {
+        white-space: nowrap;
+    }
+
+    /* Compact the action button */
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+</style>
 
 @section('content')
     @if (session('error'))
@@ -80,39 +108,103 @@
                     </div>
                 </form>
                 <div class="card-body p-24">
-                    <div class="table-responsive scroll-sm">
-                        <table class="table bordered-table sm-table mb-0">
+                    <!-- Summary Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="card bg-light h-100 radius-12 border-start border-primary border-3">
+                                <div class="card-body p-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="text-muted mb-0">Total Properties</h6>
+                                            <h3 class="text-primary mb-0">{{ $data['properties']->count() }}</h3>
+                                        </div>
+                                        <div class="text-primary">
+                                            <iconify-icon icon="mdi:home-city" width="36" height="36"></iconify-icon>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="card bg-light h-100 radius-12 border-start border-success border-3">
+                                <div class="card-body p-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="text-muted mb-0">Total Units</h6>
+                                            <h3 class="text-success mb-0">{{ $data['totalUnits'] ?? $data['properties']->sum(function($property) { return $property->units->count(); }) }}</h3>
+                                        </div>
+                                        <div class="text-success">
+                                            <iconify-icon icon="mdi:office-building" width="36" height="36"></iconify-icon>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="card bg-light h-100 radius-12 border-start border-info border-3">
+                                <div class="card-body p-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="text-muted mb-0">Current Quarter</h6>
+                                            <h3 class="text-info mb-0">{{ $data['quarter'] }}</h3>
+                                        </div>
+                                        <div class="text-info">
+                                            <iconify-icon icon="mdi:calendar-clock" width="36" height="36"></iconify-icon>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="card bg-light h-100 radius-12 border-start border-warning border-3">
+                                <div class="card-body p-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="text-muted mb-0">Potential Income</h6>
+                                            <h3 class="text-warning mb-0">${{ number_format($data['potentialIncome'], 2) }}</h3>
+                                        </div>
+                                        <div class="text-warning">
+                                            <iconify-icon icon="mdi:cash-multiple" width="36" height="36"></iconify-icon>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Summary Cards -->
+
+                    <div class="table-responsive">
+                        <table class="table bordered-table sm-table mb-0 table-fixed">
                             <thead>
                                 <tr>
-
-                                    <th scope="col">SNO</th>
-                                    <th scope="col">Property Code</th>
-                                    <th scope="col">Property Name</th>
-                                    <th scope="col">Type</th>
-                                    <th scope="col">Owner</th>
-                                    <th scope="col">Location</th>
-                                    <th scope="col">Total Units</th>
-                                    <th scope="col">Quarter</th>
-                                    <th scope="col">Actions</th>
+                                    <th scope="col" style="width: 5%;">SNO</th>
+                                    <th scope="col" style="width: 10%;">Property Code</th>
+                                    <th scope="col" style="width: 15%;">Property Name</th>
+                                    <th scope="col" style="width: 10%;">Type</th>
+                                    <th scope="col" style="width: 15%;">Owner</th>
+                                    <th scope="col" style="width: 15%;">Location</th>
+                                    <th scope="col" style="width: 8%;">Units</th>
+                                    <th scope="col" style="width: 8%;">Quarter</th>
+                                    <th scope="col" style="width: 14%;">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($data['properties'] as $property)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $property->house_code }}</td>
-                                        <td>{{ $property->property_name }}</td>
+                                        <td class="text-nowrap">{{ $property->house_code }}</td>
+                                        <td class="text-wrap">{{ $property->property_name }}</td>
                                         <td>{{ $property->house_type }}</td>
-                                        <td>{{ $property->landlord->name ?? '' }}</td>
-                                        <td>{{ $property->district->name }}</td>
-                                        <td>{{ $property->units->count() }}</td>
+                                        <td class="text-wrap">{{ $property->landlord->name ?? '' }}</td>
+                                        <td class="text-wrap">{{ $property->district->name }}</td>
+                                        <td class="text-center">{{ $property->units->count() }}</td>
                                         <td>{{ $data['quarter'] }}</td>
                                         <td>
                                             <a href="{{ route('invoice.property.details', $property->id) }}"
-                                                class="d-flex align-items-center gap-2 px-3 py-2 border border-info rounded text-decoration-none text-info hover:bg-light hover:text-white transition"
+                                                class="btn btn-sm btn-info d-flex align-items-center justify-content-center gap-1"
                                                 title="View property invoice details">
-                                                <iconify-icon icon="ri:eye-line" class="icon text-xl"></iconify-icon>
-                                                <span class="fw-semibold text-sm">Details</span>
+                                                <iconify-icon icon="ri:eye-line" class="icon"></iconify-icon>
+                                                Details
                                             </a>
                                         </td>
                                     </tr>
@@ -196,7 +288,7 @@
 
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-8 py-16 border-bottom">
                             <div class="d-flex align-items-center">
-                                <img src="{{ asset('assets/images/crypto/crypto-img1.png') }}" alt=""
+                                <img src="https://img.icons8.com/color/48/000000/office-building.png" alt="Office"
                                     class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
                                 <div class="flex-grow-1 d-flex flex-column">
                                     <span class="text-md mb-0 fw-medium text-primary-light d-block">Offices</span>
@@ -211,7 +303,7 @@
                         </div>
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-8 py-16 border-bottom">
                             <div class="d-flex align-items-center">
-                                <img src="{{ asset('assets/images/crypto/crypto-img2.png') }}" alt=""
+                                <img src="https://img.icons8.com/color/48/000000/apartment.png" alt="Flat"
                                     class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
                                 <div class="flex-grow-1 d-flex flex-column">
                                     <span class="text-md mb-0 fw-medium text-primary-light d-block">Flats</span>
@@ -226,7 +318,7 @@
                         </div>
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-8 py-16 border-bottom">
                             <div class="d-flex align-items-center">
-                                <img src="{{ asset('assets/images/crypto/crypto-img5.png') }}" alt=""
+                                <img src="https://img.icons8.com/color/48/000000/shop.png" alt="Shop"
                                     class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
                                 <div class="flex-grow-1 d-flex flex-column">
                                     <span class="text-md mb-0 fw-medium text-primary-light d-block">shops</span>
@@ -241,7 +333,7 @@
                         </div>
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-8 py-16">
                             <div class="d-flex align-items-center">
-                                <img src="{{ asset('assets/images/crypto/crypto-img6.png') }}" alt=""
+                                <img src="https://img.icons8.com/color/48/000000/department.png" alt="Section"
                                     class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
                                 <div class="flex-grow-1 d-flex flex-column">
                                     <span class="text-md mb-0 fw-medium text-primary-light d-block">Section</span>
@@ -256,7 +348,7 @@
                         </div>
                         <div class="d-flex align-items-center justify-content-between flex-wrap gap-8 py-16">
                             <div class="d-flex align-items-center">
-                                <img src="{{ asset('assets/images/crypto/crypto-img6.png') }}" alt=""
+                                <img src="https://img.icons8.com/color/48/000000/real-estate.png" alt="Others"
                                     class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
                                 <div class="flex-grow-1 d-flex flex-column">
                                     <span class="text-md mb-0 fw-medium text-primary-light d-block">Others</span>
