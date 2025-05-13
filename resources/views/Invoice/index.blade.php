@@ -111,60 +111,60 @@
                     <!-- Summary Cards -->
                     <div class="row mb-4">
                         <div class="col-md-3 col-sm-6 mb-3">
-                            <div class="card bg-light h-100 radius-12 border-start border-primary border-3">
+                            <div class="card h-100 radius-12 border shadow-sm">
                                 <div class="card-body p-3">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
                                             <h6 class="text-muted mb-0">Total Properties</h6>
-                                            <h3 class="text-primary mb-0">{{ $data['properties']->count() }}</h3>
+                                            <h3 class="text-dark mb-0">{{ $data['properties']->count() }}</h3>
                                         </div>
-                                        <div class="text-primary">
-                                            <iconify-icon icon="mdi:home-city" width="36" height="36"></iconify-icon>
+                                        <div class="bg-light p-2 rounded-circle">
+                                            <iconify-icon icon="mdi:home-city" width="32" height="32" class="text-secondary"></iconify-icon>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-6 mb-3">
-                            <div class="card bg-light h-100 radius-12 border-start border-success border-3">
+                            <div class="card h-100 radius-12 border shadow-sm">
                                 <div class="card-body p-3">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
                                             <h6 class="text-muted mb-0">Total Units</h6>
-                                            <h3 class="text-success mb-0">{{ $data['totalUnits'] ?? $data['properties']->sum(function($property) { return $property->units->count(); }) }}</h3>
+                                            <h3 class="text-dark mb-0">{{$data['properties']->sum(function($property) { return $property->units->count(); }) }}</h3>
                                         </div>
-                                        <div class="text-success">
-                                            <iconify-icon icon="mdi:office-building" width="36" height="36"></iconify-icon>
+                                        <div class="bg-light p-2 rounded-circle">
+                                            <iconify-icon icon="mdi:office-building" width="32" height="32" class="text-secondary"></iconify-icon>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-6 mb-3">
-                            <div class="card bg-light h-100 radius-12 border-start border-info border-3">
+                            <div class="card h-100 radius-12 border shadow-sm">
                                 <div class="card-body p-3">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
                                             <h6 class="text-muted mb-0">Current Quarter</h6>
-                                            <h3 class="text-info mb-0">{{ $data['quarter'] }}</h3>
+                                            <h3 class="text-dark mb-0">{{ $data['quarter'] }}</h3>
                                         </div>
-                                        <div class="text-info">
-                                            <iconify-icon icon="mdi:calendar-clock" width="36" height="36"></iconify-icon>
+                                        <div class="bg-light p-2 rounded-circle">
+                                            <iconify-icon icon="mdi:calendar-clock" width="32" height="32" class="text-secondary"></iconify-icon>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-6 mb-3">
-                            <div class="card bg-light h-100 radius-12 border-start border-warning border-3">
+                            <div class="card h-100 radius-12 border shadow-sm">
                                 <div class="card-body p-3">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
                                             <h6 class="text-muted mb-0">Potential Income</h6>
-                                            <h3 class="text-warning mb-0">${{ number_format($data['potentialIncome'], 2) }}</h3>
+                                            <h3 class="text-dark mb-0">${{$data['potenialIncomeAfterFilter']}} </h3>
                                         </div>
-                                        <div class="text-warning">
-                                            <iconify-icon icon="mdi:cash-multiple" width="36" height="36"></iconify-icon>
+                                        <div class="bg-light p-2 rounded-circle">
+                                            <iconify-icon icon="mdi:cash-multiple" width="32" height="32" class="text-secondary"></iconify-icon>
                                         </div>
                                     </div>
                                 </div>
@@ -213,10 +213,11 @@
                         </table>
                     </div>
                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">
-                        <span>Showing {{ $data['invoices']->firstItem() }} to {{ $data['invoices']->lastItem() }} of
-                            {{ $data['invoices']->total() }} entries</span>
+                        <span>Showing {{ $data['properties']->firstItem() }} to {{ $data['properties']->lastItem() }} of
+                            {{ $data['properties']->total() }} entries</span>
                         <ul class="pagination d-flex flex-wrap align-items-center gap-2 justify-content-center">
-                            @if ($data['invoices']->onFirstPage())
+                            <!-- Previous Page Link -->
+                            @if ($data['properties']->onFirstPage())
                                 <li class="page-item disabled">
                                     <a class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md"
                                         href="javascript:void(0)">
@@ -226,36 +227,27 @@
                             @else
                                 <li class="page-item">
                                     <a class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md"
-                                        href="{{ $data['invoices']->previousPageUrl() }}">
+                                        href="{{ $data['properties']->previousPageUrl() }}">
                                         <iconify-icon icon="ep:d-arrow-left"></iconify-icon>
                                     </a>
                                 </li>
                             @endif
 
-                            @foreach ($data['invoices']->links()->elements as $element)
-                                @if (is_string($element))
-                                    <li class="page-item disabled"><span class="page-link">{{ $element }}</span></li>
-                                @endif
-
-                                @if (is_array($element))
-                                    @foreach ($element as $page => $url)
-                                        @if ($page == $data['invoices']->currentPage())
-                                            <li class="page-item active"><a
-                                                    class="page-link bg-primary-600 text-white fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md"
-                                                    href="{{ $url }}">{{ $page }}</a></li>
-                                        @else
-                                            <li class="page-item"><a
-                                                    class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md"
-                                                    href="{{ $url }}">{{ $page }}</a></li>
-                                        @endif
-                                    @endforeach
-                                @endif
+                            <!-- Pagination Elements -->
+                            @foreach ($data['properties']->getUrlRange(1, $data['properties']->lastPage()) as $page => $url)
+                                <li class="page-item {{ $data['properties']->currentPage() == $page ? 'active' : '' }}">
+                                    <a class="page-link {{ $data['properties']->currentPage() == $page ? 'bg-primary text-white' : 'bg-neutral-200 text-secondary-light' }} fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md"
+                                        href="{{ $url }}">
+                                        {{ $page }}
+                                    </a>
+                                </li>
                             @endforeach
 
-                            @if ($data['invoices']->hasMorePages())
+                            <!-- Next Page Link -->
+                            @if ($data['properties']->hasMorePages())
                                 <li class="page-item">
                                     <a class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md"
-                                        href="{{ $data['invoices']->nextPageUrl() }}">
+                                        href="{{ $data['properties']->nextPageUrl() }}">
                                         <iconify-icon icon="ep:d-arrow-right"></iconify-icon>
                                     </a>
                                 </li>

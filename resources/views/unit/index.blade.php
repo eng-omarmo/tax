@@ -114,18 +114,28 @@
                             <td>{{ $unit->unit_number }}</td>
                             <td>{{ $unit->unit_type }}</td>
                             {{-- <td>{{ $unit->unit_type }}</td> --}}
+                            <!-- Availability -->
                             <td class="text-center">
                                 <span
-                                    class="{{ $unit->is_available == 1 ? 'bg-danger-focus text-danger-600 border border-danger-main' : 'bg-success-focus text-success-600 border border-success-main' }} px-24 py-4 radius-4 fw-medium text-sm">
-                                    {{ $unit->is_available == 0 ? 'Available' : 'Occupied' }}
+                                    class="{{ $unit->is_available == 1
+                                        ? 'bg-danger-focus text-danger-600 border border-danger-main'
+                                        : 'bg-success-focus text-success-600 border border-success-main' }}
+            px-24 py-4 radius-4 fw-medium text-sm">
+                                    {{ $unit->is_available == 1 ? '🟥 Occupied' : '✅ Available' }}
                                 </span>
                             </td>
+
+                            <!-- Ownership -->
                             <td class="text-center">
                                 <span
-                                    class="{{ $unit->is_owner == 'Yes' ? 'bg-success-focus text-success-600 border border-success-main' : 'bg-danger-focus text-danger-600 border border-danger-main' }} px-24 py-4 radius-4 fw-medium text-sm">
-                                    {{ $unit->is_owner == 'Yes' ? 'Yes' : 'No' }}
+                                    class="{{ strtolower($unit->is_owner) === 'yes'
+                                        ? 'bg-success-focus text-success-600 border border-success-main'
+                                        : 'bg-danger-focus text-danger-600 border border-danger-main' }}
+            px-24 py-4 radius-4 fw-medium text-sm">
+                                    {{ strtolower($unit->is_owner) === 'yes' ? '🏠 Owned by Landlord' : '👤 Rented by Tenant' }}
                                 </span>
                             </td>
+
 
                             <td class="text-center">
                                 <div class="d-flex align-items-center gap-10 justify-content-center">

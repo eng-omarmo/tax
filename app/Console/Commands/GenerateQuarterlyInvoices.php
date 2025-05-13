@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use App\Jobs\GenerateInvoiceJob;
 use Illuminate\Support\Facades\Log;
 use App\Jobs\NotifyPropertyOwnerJob;
+use Illuminate\Support\Facades\Artisan;
 
 class GenerateQuarterlyInvoices extends Command
 {
@@ -34,6 +35,14 @@ class GenerateQuarterlyInvoices extends Command
                 GenerateInvoiceJob::dispatch($unit);
             }
         });
+            // This runs one job then stops
+            Artisan::call('queue:work', [
+                '--once' => true,
+                '--queue' => 'default', // optional
+                '--delay' => 0,
+                '--sleep' => 1,
+                '--tries' => 3
+            ]);
 
 
 

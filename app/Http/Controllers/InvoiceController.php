@@ -35,6 +35,7 @@ class InvoiceController extends Controller
 
     public function invoiceList(Request $request)
     {
+
         $data['zones'] = Property::distinct('zone')->pluck('zone');
         $data['districts'] = District::whereIn('id', Property::distinct()->pluck('district_id'))->get(['id', 'name']);
         $data['houseNumbers'] = Property::distinct('house_code')->pluck('house_code');
@@ -44,29 +45,10 @@ class InvoiceController extends Controller
         $taxRate = 0.05;
 
         // Filters from request
-        $filters = $request->only(['zone', 'district_id', 'house_code', 'house_type', 'unit_type']);
+        $filters = $request->only(['zone', 'district', 'house_number', 'property_type']);
 
-        $baseQuery = Unit::where(['is_available' => 1, 'is_owner' => 'no'])
-            ->whereHas('property', function ($query) use ($filters) {
-                $query->where('status', 'active')
-                    ->where('monitoring_status', 'Approved');
-
-                if (!empty($filters['zone'])) {
-                    $query->where('zone', $filters['zone']);
-                }
-
-                if (!empty($filters['district_id'])) {
-                    $query->where('district_id', $filters['district_id']);
-                }
-
-                if (!empty($filters['house_code'])) {
-                    $query->where('house_code', $filters['house_code']);
-                }
-
-                if (!empty($filters['house_type'])) {
-                    $query->where('house_type', $filters['house_type']);
-                }
-            });
+        // Base query for income calculations
+        $baseQuery = Unit::where(['is_available' => 1, 'is_owner' => 'no'])->get();
 
 
         $data['potentialIncome'] = $baseQuery->sum('unit_price') * $taxRate * 3;
@@ -76,39 +58,22 @@ class InvoiceController extends Controller
         $data['shopIncome'] = (clone $baseQuery)->where('unit_type', 'Shop')->sum('unit_price') * $taxRate * 3;
         $data['otherIncome'] = (clone $baseQuery)->where('unit_type', 'Other')->sum('unit_price') * $taxRate;
 
-        // Filtered properties
-        $data['properties'] = Unit::whereHas('property', function ($query) use ($filters) {
-            $query->where('status', 'active')
-                ->where('monitoring_status', 'Approved');
+        // Filtered & paginated properties
+        $data['properties'] = Property::where('status', 'active')
+            ->where('monitoring_status', 'Approved')
+            ->when(!empty($filters['zone']), fn($q) => $q->where('zone', $filters['zone']))
+            ->when(!empty($filters['district']), fn($q) => $q->where('district_id', $filters['district']))
+            ->when(!empty($filters['house_number']), fn($q) => $q->where('house_code', $filters['house_number']))
+            ->when(!empty($filters['property_type']), fn($q) => $q->where('house_type', $filters['property_type']))
+            ->whereHas('units', fn($q) => $q->where(['is_available' => 1, 'is_owner' => 'no']))
+            ->with(['landlord.user', 'district', 'units.invoices'])
+            ->paginate(10);
 
-            if (!empty($filters['zone'])) {
-                $query->where('zone', $filters['zone']);
-            }
-
-            if (!empty($filters['district_id'])) {
-                $query->where('district_id', $filters['district_id']);
-            }
-
-            if (!empty($filters['house_code'])) {
-                $query->where('house_code', $filters['house_code']);
-            }
-
-            if (!empty($filters['house_type'])) {
-                $query->where('house_type', $filters['house_type']);
-            }
-        })
-            ->with([
-                'property.landlord.user',
-                'property.district',
-                'invoices'
-            ])
-            ->get()
-            ->pluck('property')
-            ->unique();
-
-        // Invoices
+        // Invoice filtering (optional: if needed)
         $invoiceQuery = Invoice::with(['unit.property'])
             ->where('frequency', $quarter);
+
+            $data['potenialIncomeAfterFilter'] =  $baseQuery->sum('unit_price') * $taxRate * 3;
 
         if (!empty($filters['unit_type'])) {
             $invoiceQuery->whereHas('unit', function ($q) use ($filters) {
@@ -116,12 +81,11 @@ class InvoiceController extends Controller
             });
         }
 
-        $data['invoices'] = $invoiceQuery->latest()->paginate(10);
+        $data['invoices'] = $invoiceQuery->latest()->get(); // no pagination here
 
         $data['quarter'] = $quarter;
-        $data['filters'] = $filters; // For passing to the view and repopulating filter inputs
+        $data['filters'] = $filters;
 
-;
         return view('Invoice.index', ['data' => $data]);
     }
 
