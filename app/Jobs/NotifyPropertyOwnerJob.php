@@ -9,7 +9,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Artisan;
 use App\Mail\PropertyInvoiceSummaryMail;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -51,7 +50,7 @@ class NotifyPropertyOwnerJob implements ShouldQueue
             Mail::to($landlord->email)->send(
                 new PropertyInvoiceSummaryMail($this->propertyInvoices)
             );
-     
+
             Log::info("✅ Sent invoice summary to {$landlord->email} for property '{$property->property_name}' (ID: {$property->id})");
         } catch (Throwable $e) {
             Log::error("❌ Failed to send invoice summary to property ID " . ($property ? $property->id : 'N/A') . ": {$e->getMessage()}");

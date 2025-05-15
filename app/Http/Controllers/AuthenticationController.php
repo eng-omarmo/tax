@@ -56,7 +56,6 @@ class AuthenticationController extends Controller
         }
         $maskedPhone = substr_replace(Auth::user()->phone, str_repeat('*', 4), 3, 4);
         return redirect()->route('otp.index')->with('success', 'OTP sent successfully to your ' . $maskedPhone . '. Please check.');
-
     }
 
     /**
@@ -92,7 +91,7 @@ class AuthenticationController extends Controller
     {
         // $otp = mt_rand(100000, 999999);
         $otp = 123456;
-        Otp::create([
+        Otp::updateOrCreate([
             'user_id' => $user->id,
             'otp' => $otp,
             'expires_at' => now()->addMinutes(5),

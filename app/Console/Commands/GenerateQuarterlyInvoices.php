@@ -35,14 +35,7 @@ class GenerateQuarterlyInvoices extends Command
                 GenerateInvoiceJob::dispatch($unit);
             }
         });
-            // This runs one job then stops
-            Artisan::call('queue:work', [
-                '--once' => true,
-                '--queue' => 'default', // optional
-                '--delay' => 0,
-                '--sleep' => 1,
-                '--tries' => 3
-            ]);
+  
 
 
 
