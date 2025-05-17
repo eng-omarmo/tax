@@ -36,9 +36,6 @@ class GenerateQuarterlyInvoices extends Command
             }
         });
   
-
-
-
         $this->info("✅ All invoice jobs dispatched successfully.");
     }
 }

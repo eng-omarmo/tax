@@ -160,7 +160,7 @@
                                 <div class="card-body p-3">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
-                                            <h6 class="text-muted mb-0">Potential Income</h6>
+                                            <h6 class="text-muted mb-0">Total Invoice Amount</h6>
                                             <h3 class="text-dark mb-0">${{$data['potentialIncomeAfterFilter']}} </h3>
                                         </div>
                                         <div class="bg-light p-2 rounded-circle">
