@@ -97,7 +97,7 @@
                                         <div>
                                             <h6 class="mb-1">Property Location</h6>
                                             <p class="mb-0 text-muted text-primary-light">
-                                                {{ $property->landlord->address }}</p>
+                                                {{ $property->district->name . ', ' . $property->branch->name . ', ' . $property->zone }}</p>
                                         </div>
                                     </div>
                                 </div>
