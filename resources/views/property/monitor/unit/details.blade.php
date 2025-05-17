@@ -87,7 +87,7 @@
                         <strong class="text-muted  text-primary-light">Location:</strong>
                         <span class="ms-2 fw-medium">
                             <i class="ri-map-pin-line me-1 text-success"></i>
-                            {{ $unit->property->address }}
+                            {{  $unit-property->district->name . ', ' . $unit-property->branch->name . ', ' . $unit-property->zone }}
                         </span>
                     </div>
                 </div>

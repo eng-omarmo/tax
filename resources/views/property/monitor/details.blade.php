@@ -54,7 +54,7 @@
                                         </div>
                                         <div>
                                             <h6 class="mb-1">Property Owner</h6>
-                                            <p class="mb-0 fw-medium">{{ $property->landlord->user->name ?? '' }}</p>
+                                            <p class="mb-0 fw-medium">{{ $property->landlord->name ?? '' }}</p>
                                             <small class="text-muted text-primary-light">
                                                 <i class="ri-phone-line text-primary-light"></i>
                                                 {{ $property->phone_number ?? ($property->landlord->phone_number ?? '') }}
