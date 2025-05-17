@@ -80,7 +80,7 @@
                         <strong class="text-muted  text-primary-light">Contact:</strong>
                         <span class="ms-2 fw-medium">
                             <i class="ri-phone-line me-1 text-success "></i>
-                            {{ $unit->property->phone_number }}
+                            {{ $unit->property->property_phone }}
                         </span>
                     </div>
                     <div class="mb-3">
