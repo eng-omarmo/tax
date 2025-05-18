@@ -290,4 +290,10 @@ class paymentController extends Controller
             'additional_info' => $request->additional_info,
         ]);
     }
+
+    public function selfPayment($id)
+    {
+        dd($id);
+        return view('payment.self-payment', compact('payment'));
+    }
 }

@@ -331,7 +331,7 @@
             </div>
 
             <div style="text-align: center; margin-top: 20px;">
-                <a href="{{ isset($invoices) && count($invoices) > 0 ? route('invoice.pay', $invoices->first()->id) : route('invoice.pay', $invoice->id) }}" class="button">Pay Now</a>
+                <a href="{{route('self.payment', $property->id) }}" class="button">Pay Now</a>
             </div>
         </div>
 

@@ -184,8 +184,12 @@ Route::prefix('business')->middleware(['auth.admin'])->group(function () {
     });
 });
 
-
-
+//self payment url
+Route::prefix('self-payment')->middleware(['auth.admin'])->group(function () {
+    Route::controller(paymentController::class)->group(function () {
+        Route::get('/{payment}', 'selfPayment')->name('self.payment');
+    });
+});
 Route::prefix('lanlord')->middleware(['auth.admin'])->group(function () {
     Route::controller(landlordController::class)->group(function () {
         Route::get('/index', 'index')->name('lanlord.index');
