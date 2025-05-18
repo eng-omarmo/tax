@@ -7,9 +7,12 @@ use App\Models\Tax;
 use App\Models\Rent;
 use App\Models\Tenant;
 use App\Models\Payment;
-use App\Models\PaymentDetail;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Models\PaymentDetail;
+use App\Models\Property;
+use App\Services\PaymentService;
+use App\Services\TimeService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -293,7 +296,82 @@ class paymentController extends Controller
 
     public function selfPayment($id)
     {
-        dd($id);
-        return view('payment.self-payment', compact('payment'));
+        try {
+            $timeService = new TimeService();
+            $quarter = $timeService->currentQuarter();
+            $year = $timeService->currentYear();
+            $property = Property::with(['units.invoices' => function ($query, $quarter, $year) {
+                $query->where('frequency', $quarter)
+                    ->whereYear('invoice_date', $year);
+            }])->findOrFail($id);
+
+            // // Check if any unit is missing an invoice for the current period
+            // $unitsWithoutInvoices = $property->units->filter(function ($unit) {
+            //     return $unit->invoices->isEmpty();
+            // });
+
+            // if ($unitsWithoutInvoices->isNotEmpty()) {
+            //     $unitNumber = $unitsWithoutInvoices->first()->unit_number;
+            //     return back()->with('error', "Invoice not found for Unit #{$unitNumber} | Q{$quarter}-{$year}");
+            // }
+
+            // Calculate total amount from all invoices
+            $amount = $property->units->sum(function ($unit) {
+                return $unit->invoices->sum('amount');
+            });
+
+            // Create transaction data
+            $data = [
+                "phone" => $property->property_phone,
+                "amount" => $amount,
+                "currency" => config('app.currency', 'USD'),
+                "successUrl" => config('app.url') . "/payment/success/{$property->id}",
+                "cancelUrl" => config('app.url') . "/payment/fail/{$property->id}",
+                "order_info" => [
+                    "item_name" => "Q{$quarter}-{$year} Property Tax",
+                    "order_no" => $property->house_code,
+                ]
+            ];
+            DB::beginTransaction();
+
+            //create payment record
+            $payment = Payment::create([
+                'property_id' => $property->id,
+                'amount' => $amount,
+                'payment_date' => now(),
+                'payment_method' => 'somxchange',
+                'status' => 'Pending',
+                'payment_type' => 'tax',
+            ]);
+            PaymentDetail::create([
+                'payment_id' => $payment->id,
+                'bank_name' => 'Somxchange',
+                'account_number' => $property->property_phone,
+                'mobile_number' => $property->property_phone,
+                'additional_info' => 'Self Payment',
+            ]);
+            DB::commit();
+
+            // Create transaction record in database (optional)
+            // Transaction::create([
+            //     'property_id' => $property->id,
+            //     'amount' => $amount,
+            //     'status' => 'pending',
+            //     'type' => 'payment',
+            //     'reference' => uniqid('TX-'),
+            // ]);
+
+            $payment = new PaymentService();
+            $url = $payment->createTransaction($data);
+
+            return redirect($url);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Log::error('Payment processing error: ' . $th->getMessage(), [
+                'property_id' => $id,
+                'trace' => $th->getTraceAsString()
+            ]);
+            return back()->with('error', $th->getMessage());
+        }
     }
 }
