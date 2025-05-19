@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Otp;
 use App\Models\User;
+use App\Services\SmsService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Otp;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
@@ -50,9 +51,14 @@ class AuthenticationController extends Controller
             return back()->with('error', 'The provided credentials are incorrect.');
         }
         RateLimiter::clear($this->throttleKey($request));
+        $otp  = $this->generateOtp(Auth::user());
 
-        if (!$this->generateOtp(Auth::user())) {
+        if (!$otp) {
             return back()->with('error', 'Failed to generate OTP.');
+        }
+        $phone = Auth::user()->phone;
+        if ($phone && $otp) {
+            $this->sendSms($phone , $otp);
         }
         $maskedPhone = substr_replace(Auth::user()->phone, str_repeat('*', 4), 3, 4);
         return redirect()->route('otp.index')->with('success', 'OTP sent successfully to your ' . $maskedPhone . '. Please check.');
@@ -97,5 +103,10 @@ class AuthenticationController extends Controller
             'expires_at' => now()->addMinutes(5),
         ]);
         return true;
+    }
+    public function sendSms($phone, $otp)
+    {
+        $smsService = new SmsService();
+        $smsService->hormuud_sms($phone,$otp);
     }
 }

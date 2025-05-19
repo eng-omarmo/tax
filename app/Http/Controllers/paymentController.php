@@ -350,16 +350,18 @@ class paymentController extends Controller
                 'mobile_number' => $property->property_phone,
                 'additional_info' => 'Self Payment',
             ]);
-            DB::commit();
+            foreach ($ as unit) {
 
-            // Create transaction record in database (optional)
-            // Transaction::create([
-            //     'property_id' => $property->id,
-            //     'amount' => $amount,
-            //     'status' => 'pending',
-            //     'type' => 'payment',
-            //     'reference' => uniqid('TX-'),
-            // ]);
+                Transaction::create([
+                    'property_id' => $property->id,
+                    'amount' => $amount,
+                    'status' => 'pending',
+                    'type' => 'payment',
+                    'reference' => uniqid('TX-'),
+                ]);
+            }
+
+            DB::commit();
 
             $payment = new PaymentService();
             $url = $payment->createTransaction($data);

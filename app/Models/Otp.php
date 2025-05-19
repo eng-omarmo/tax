@@ -10,4 +10,9 @@ class Otp extends Model
 
     protected $table = 'otps';
     protected $fillable = ['user_id', 'otp', 'expires_at'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
