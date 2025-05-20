@@ -296,13 +296,14 @@ class paymentController extends Controller
 
     public function selfPayment($id)
     {
+        //when you error happens create an error page for this self payment
         try {
             $timeService = new TimeService();
             $quarter = $timeService->currentQuarter();
             $year = $timeService->currentYear();
-            $property = Property::with(['units.invoices' => function ($query, $quarter, $year) {
+            $property = Property::with(['units.invoices' => function ($query) use ($quarter, $year) {
                 $query->where('frequency', $quarter)
-                    ->whereYear('invoice_date', $year);
+                      ->whereYear('invoice_date', $year);
             }])->findOrFail($id);
 
             // // Check if any unit is missing an invoice for the current period
@@ -328,7 +329,7 @@ class paymentController extends Controller
                 "successUrl" => config('app.url') . "/payment/success/{$property->id}",
                 "cancelUrl" => config('app.url') . "/payment/fail/{$property->id}",
                 "order_info" => [
-                    "item_name" => "Q{$quarter}-{$year} Property Tax",
+                    "item_name" => "{$quarter}-{$year} Property Tax",
                     "order_no" => $property->house_code,
                 ]
             ];
@@ -343,23 +344,13 @@ class paymentController extends Controller
                 'status' => 'Pending',
                 'payment_type' => 'tax',
             ]);
+
             PaymentDetail::create([
                 'payment_id' => $payment->id,
                 'bank_name' => 'Somxchange',
                 'account_number' => $property->property_phone,
-                'mobile_number' => $property->property_phone,
                 'additional_info' => 'Self Payment',
             ]);
-            foreach ($ as unit) {
-
-                Transaction::create([
-                    'property_id' => $property->id,
-                    'amount' => $amount,
-                    'status' => 'pending',
-                    'type' => 'payment',
-                    'reference' => uniqid('TX-'),
-                ]);
-            }
 
             DB::commit();
 
@@ -368,11 +359,12 @@ class paymentController extends Controller
 
             return redirect($url);
         } catch (\Throwable $th) {
-            DB::rollBack();
             Log::error('Payment processing error: ' . $th->getMessage(), [
                 'property_id' => $id,
                 'trace' => $th->getTraceAsString()
             ]);
+            DB::rollBack();
+
             return back()->with('error', $th->getMessage());
         }
     }

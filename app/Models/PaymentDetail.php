@@ -14,7 +14,7 @@ class PaymentDetail extends Model
         'payment_id',
         'bank_name',
         'account_number',
-        'mobile_number',
+
         'additional_info',
     ];
 
