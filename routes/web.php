@@ -185,7 +185,7 @@ Route::prefix('business')->middleware(['auth.admin'])->group(function () {
 });
 
 //self payment url
-Route::prefix('self-payment')->middleware(['auth.admin'])->group(function () {
+Route::prefix('self-payment')->group(function () {
     Route::controller(paymentController::class)->group(function () {
         Route::get('/{payment}', 'selfPayment')->name('self.payment');
     });
