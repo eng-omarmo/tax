@@ -331,7 +331,7 @@
             </div>
 
             <div style="text-align: center; margin-top: 20px;">
-                <a href="{{route('self.payment', $property->id) }}" class="button">Pay Now</a>
+                <a href="{{ url('/self-payment/' . $property->house_code) }}" class="button">Pay Now</a>
             </div>
         </div>
 

@@ -304,7 +304,7 @@ class paymentController extends Controller
             $property = Property::with(['units.invoices' => function ($query) use ($quarter, $year) {
                 $query->where('frequency', $quarter)
                       ->whereYear('invoice_date', $year);
-            }])->findOrFail($id);
+            }])->where('house_code', $id)->first();
 
             // // Check if any unit is missing an invoice for the current period
             // $unitsWithoutInvoices = $property->units->filter(function ($unit) {
