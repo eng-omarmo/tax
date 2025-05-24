@@ -32,7 +32,7 @@ use App\Http\Controllers\RoleandaccessController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\changePasswordController;
 use App\Http\Controllers\CryptocurrencyController;
-
+use App\Http\Controllers\SelfPaymentController;
 
 Route::controller(AuthenticationController::class)->group(function () {
     Route::get('/', 'signin')->name('signin');
@@ -186,8 +186,10 @@ Route::prefix('business')->middleware(['auth.admin'])->group(function () {
 
 //self payment url
 Route::prefix('self-payment')->group(function () {
-    Route::controller(paymentController::class)->group(function () {
+    Route::controller(SelfPaymentController::class)->group(function () {
         Route::get('/{payment}', 'selfPayment')->name('self.payment');
+        Route::get('/success/{payment}', 'success')->name('sucess.payment');
+        Route::get('/fail/{payment}', 'fail')->name('fail.payment');
     });
 });
 Route::prefix('lanlord')->middleware(['auth.admin'])->group(function () {
@@ -208,7 +210,6 @@ Route::prefix('monitor')->middleware(['auth.admin'])->group(function () {
         Route::get('/unit-rent/{id}', 'rentIndex')->name('monitor.rent.index');
         Route::post('/unit-rent', 'rentStore')->name('monitor.rent.store');
         Route::post('/approve', 'approve')->name('monitor.approve');
-
     });
 });
 
@@ -344,7 +345,6 @@ Route::prefix('invoice')->middleware(['auth.admin'])->group(function () {
         Route::post('/q-1', 'quarter1')->name('invoice.quarter1');
         Route::post('/transaction', 'transaction')->name('invoice.transaction');
         Route::get('/property/{id}', 'propertyDetails')->name('invoice.property.details');
-
     });
 });
 

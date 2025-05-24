@@ -27,10 +27,8 @@ class OtpController extends Controller
                 'otp' => 'required'
             ]);
             $otpService = new OtpService();
-            $user = $otpService->getOtpUser($request->otp);
-            if (!$user) {
-                return redirect()->back()->with('error', 'Invalid OTP.');
-            }
+            $user =  session()->get('user');
+   
             $otpDetails = $otpService->verifyOtp($user, $request->otp);
             if (!$otpDetails) {
                 return redirect()->back()->with('error', 'Invalid OTP.');

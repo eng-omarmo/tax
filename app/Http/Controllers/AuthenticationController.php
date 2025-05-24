@@ -44,23 +44,25 @@ class AuthenticationController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-        $this->ensureIsNotRateLimited($request);
+        $user = User::where('email', $credentials['email'])->first();
 
-        if (!Auth::attempt($credentials, $request->filled('remember'))) {
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
 
             RateLimiter::hit($this->throttleKey($request));
 
             return back()->with('error', 'The provided credentials are incorrect.');
         }
         RateLimiter::clear($this->throttleKey($request));
+
         $otpService = new OtpService();
-        $otp  = $otpService->generate(Auth::user());
+        $otp  = $otpService->generate($user);
         if (!$otp) {
             return back()->with('error', 'Failed to generate OTP.');
         }
-        $phone = Auth::user()->phone;
+        session()->put('user', $user);
+        $phone = $user->phone;
 
-        $maskedPhone = substr_replace(Auth::user()->phone, str_repeat('*', 4), 3, 4);
+        $maskedPhone = substr_replace($phone, str_repeat('*', 4), 3, 4);
         return redirect()->route('otp.index')->with('success', 'OTP sent successfully to your ' . $maskedPhone . '. Please check.');
     }
 

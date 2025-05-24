@@ -10,15 +10,24 @@ class OtpService
 {
     public function generate(User $user)
     {
-      //  $otp = rand(100000, 999999);
+        //  $otp = rand(100000, 999999);
         $otp = 123456;
         $expiresAt = now()->addMinutes(5);
+        $model = Otp::where('user_id', $user->id)->first();
 
-        Otp::updateOrCreate([
-            'user_id' => $user->id,
-            'otp' => $otp,
-            'expires_at' => $expiresAt
-        ]);
+        if ($model) {
+            $model->update([
+                'otp' => $otp,
+                'expires_at' => $expiresAt
+            ]);
+        } else {
+            Otp::create([
+                'user_id' => $user->id,
+                'otp' => $otp,
+                'expires_at' => $expiresAt
+            ]);
+        }
+
         return true;
     }
     public function verifyOtp(User $user, $otp)

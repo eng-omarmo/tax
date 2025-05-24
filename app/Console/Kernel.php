@@ -11,8 +11,10 @@ class Kernel extends ConsoleKernel
     {
 
         $schedule->command('invoices:generate-quarterly')
-            ->monthlyOn(1, '00:00')
-            ->when(fn() => in_array(now()->month, [1, 4, 7, 10]));
+            ->now();
+
+        $schedule->command('invoices:notify-property-owner')
+            ->now();
     }
 
     protected function commands()
