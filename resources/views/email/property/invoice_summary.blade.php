@@ -331,7 +331,7 @@
             </div>
 
             <div style="text-align: center; margin-top: 20px;">
-                <a href="{{ url('/self-payment/' . $property->id) }}" class="button">Pay Now</a>
+                <a href="{{'https://tax.somxchange.dev/self-payment/' . $property->id) }}" class="button">Pay Now</a>
             </div>
         </div>
 
