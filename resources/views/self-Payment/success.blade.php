@@ -95,7 +95,7 @@
                                 <a href="{{ route('self.payment', $property->id) }}"
                                    class="btn btn-primary d-flex align-items-center">
                                     <iconify-icon icon="mdi:home" class="me-2"></iconify-icon>
-                                    Dashboard
+                                    view property details
                                 </a>
                                 <button onclick="window.print()"
                                         class="btn btn-outline-secondary d-flex align-items-center">
