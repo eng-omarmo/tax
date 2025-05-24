@@ -18,9 +18,7 @@ class SelfPaymentController extends Controller
         try {
             $data = $this->common($id);
             $property = $data['property'];
-
             DB::beginTransaction();
-
             foreach ($property->units as $unit) {
                 foreach ($unit->invoices as $invoice) {
                     if (!Payment::where('invoice_id', $invoice->id)->exists()) {
