@@ -5,95 +5,52 @@ namespace App\Http\Controllers;
 use App\Models\Payment;
 use App\Models\Property;
 use App\Models\Transaction;
-use Illuminate\Http\Request;
 use App\Models\PaymentDetail;
-use App\Services\TimeService;
-use App\Services\PaymentService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Services\TimeService;
+use App\Services\PaymentService;
 
 class SelfPaymentController extends Controller
 {
-    //
-
     public function selfPayment($id)
     {
-
         try {
-
-
-            $data =  $this->common($id);
-            // Check if any unit is missing an invoice for the current period
-            $unitsWithoutInvoices = $data['property']->units->filter(function ($unit) {
-                return $unit->invoices->isEmpty();
-            });
-
-            if ($unitsWithoutInvoices->isNotEmpty()) {
-                $unitNumber = $unitsWithoutInvoices->first()->unit_number;
-                Log::info('Units without invoices: ' . $unitNumber);
-            }
+            $data = $this->common($id);
+            $property = $data['property'];
 
             DB::beginTransaction();
-            foreach ($data['property']->units as $unit) {
+
+            foreach ($property->units as $unit) {
                 foreach ($unit->invoices as $invoice) {
-                    $paymentExists = Payment::where('invoice_id', $invoice->id)->first();
-                    if (!$paymentExists) {
-                        $payment = Payment::create([
-                            'invoice_id' => $invoice->id,
-                            'amount' => $invoice->amount,
-                            'payment_date' => now(),
-                            'status' => 'Pending',
-                            'reference' => 'tax',
-                        ]);
-                        PaymentDetail::create([
-                            'payment_id' => $payment->id,
-                            'bank_name' => 'Somxchange',
-                            'account_number' => $data['property']->property_phone,
-                            'additional_info' => 'Self Payment',
-                        ]);
-                        Transaction::create(
-                            [
-                                'transaction_id' => 'TXN-' . now()->format('YmdHis') . '-' . $invoice->id,
-                                'amount' => $invoice->amount,
-                                'credit' => 0,
-                                'debit' => $invoice->amount,
-                                'transaction_type' => 'invoice',
-                                'description' => 'Year  ' . $data['year'] . '   Quarter '  . $data['quarter'],
-                                'property_id' => $data['property']->id,
-                                'status' => 'Completed',
-                                'unit_id' => $unit->id
-                            ]
+                    if (!Payment::where('invoice_id', $invoice->id)->exists()) {
+                        $this->createPaymentForInvoice(
+                            $invoice,
+                            $property->property_phone,
+                            $property->id,
+                            $data['year'],
+                            $data['quarter'],
+                            $unit->id
                         );
                     }
                 }
             }
-            $transData = [
-                "phone" => $data['property']->property_phone,
-                "amount" => $data['amount'],
-                "currency" => config('app.currency', 'USD'),
-                "successUrl" => config('app.url') . "/self-payment/success/{$data['property']->id}",
-                "cancelUrl" => config('app.url') . "/self-payment/fail/{$data['property']->id}",
-                "order_info" => [
-                    "item_name" => "{$data['quarter']}-{$data['year']} Property Tax",
-                    "order_no" => $data['property']->house_code,
-                ]
-            ];
+
+            $transData = $this->generateTransactionPayload($property, $data['amount'], $data['year'], $data['quarter']);
             DB::commit();
-            //  return 'success';
-            $payment = new PaymentService();
-            $url = $payment->createTransaction($transData);
-            return redirect($url);
+
+            return redirect((new PaymentService())->createTransaction($transData));
         } catch (\Throwable $th) {
-            Log::error('Payment processing error: ' . $th->getMessage(), [
+            DB::rollBack();
+            Log::error('Payment processing error', [
                 'property_id' => $id,
+                'error' => $th->getMessage(),
                 'trace' => $th->getTraceAsString()
             ]);
-            DB::rollBack();
             return back()->with('error', $th->getMessage());
         }
     }
 
-    //success url
     public function success($id)
     {
         DB::beginTransaction();
@@ -103,36 +60,14 @@ class SelfPaymentController extends Controller
             $year = $timeService->currentYear();
             $property = Property::with('units.invoices')->findOrFail($id);
             $now = now();
+
             $updatedInvoiceCount = 0;
             $totalAmount = 0;
 
-            $units  = $property->units;
-            foreach ($units as $unit) {
+            foreach ($property->units as $unit) {
                 foreach ($unit->invoices as $invoice) {
-
-                    if ($invoice->payment_status != 'Paid') {
-                        $invoice->update([
-                            'payment_status' => 'Paid',
-                            'paid_at' => $now
-                        ]);
-
-                        $payment = Payment::where('invoice_id', $invoice->id)->first();
-                        $payment->status = 'Completed';
-
-                        $payment->save();
-
-                        Transaction::create([
-                            'transaction_id' => 'TXN-' . $now->format('YmdHis') . '-' . $invoice->id,
-                            'amount' => $invoice->amount,
-                            'credit' => $invoice->amount,
-                            'debit' => 0,
-                            'transaction_type' => 'tax_payment',
-                            'description' => 'Year  ' . $year . '   Quarter '  . $quarter,
-                            'property_id' => $property->id,
-                            'status' => 'Completed',
-                            'unit_id' => $unit->id
-                        ]);
-
+                    if ($invoice->payment_status !== 'Paid') {
+                        $this->markInvoiceAsPaid($invoice, $now, $property->id, $year, $quarter, $unit->id);
                         $updatedInvoiceCount++;
                         $totalAmount += $invoice->amount;
                     }
@@ -141,17 +76,18 @@ class SelfPaymentController extends Controller
 
             Log::info('Payment processed successfully', [
                 'property_id' => $id,
-                'Payment' => $payment->status,
                 'invoices_updated' => $updatedInvoiceCount,
                 'total_amount' => $totalAmount
             ]);
 
             DB::commit();
+
             return view('self-Payment.success', compact('property', 'totalAmount', 'updatedInvoiceCount'));
         } catch (\Throwable $th) {
             DB::rollBack();
-            Log::error('Payment processing error: ' . $th->getMessage(), [
+            Log::error('Payment processing error (success callback)', [
                 'property_id' => $id,
+                'error' => $th->getMessage(),
                 'trace' => $th->getTraceAsString()
             ]);
 
@@ -160,47 +96,46 @@ class SelfPaymentController extends Controller
         }
     }
 
-    //fail url
     public function fail($id)
     {
         try {
-            $property = Property::with('unit', 'unit.invoices')->findOrFail($id);
-            $units  = $property->units;
-            foreach ($units as $unit) {
+            $property = Property::with('units.invoices')->findOrFail($id);
+
+            foreach ($property->units as $unit) {
                 foreach ($unit->invoices as $invoice) {
                     $payment = Payment::where('invoice_id', $invoice->id)->first();
-                    $payment->status = 'Completed';
+                    if ($payment && $payment->status !== 'Completed') {
+                        $payment->status = 'Failed';
+                        $payment->save();
+                    }
                 }
             }
+
             return view('self-Payment.fail', compact('property'));
         } catch (\Throwable $th) {
-            Log::error('Payment processing error: ' . $th->getMessage(), [
+            Log::error('Payment fail callback error', [
                 'property_id' => $id,
+                'error' => $th->getMessage(),
                 'trace' => $th->getTraceAsString()
             ]);
-            DB::rollBack();
             return back()->with('error', $th->getMessage());
         }
     }
+
     public function retryPayment($id)
     {
         try {
             $data = $this->common($id);
-            $data = [
-                "phone" => $data['property']->property_phone,
-                "amount" => $data['amount'],
-                "currency" => config('app.currency', 'USD'),
-                "successUrl" => config('app.url') . "/self-payment/success/{$data['property']->id}",
-                "cancelUrl" => config('app.url') . "/self-payment/fail/{$data['property']->id}",
-                "order_info" => [
-                    "item_name" => "{$data['quarter']}-{$data['year']} Property Tax",
-                    "order_no" => $data['property']->house_code,
-                ]
-            ];
-            $payment = new PaymentService();
-            $url = $payment->createTransaction($data);
-            return redirect($url);
+            $transData = $this->generateTransactionPayload($data['property'], $data['amount'], $data['year'], $data['quarter']);
+
+            return redirect((new PaymentService())->createTransaction($transData));
         } catch (\Throwable $th) {
+            Log::error('Retry payment error', [
+                'property_id' => $id,
+                'error' => $th->getMessage(),
+                'trace' => $th->getTraceAsString()
+            ]);
+            return back()->with('error', 'Retry failed: ' . $th->getMessage());
         }
     }
 
@@ -209,19 +144,92 @@ class SelfPaymentController extends Controller
         $timeService = new TimeService();
         $quarter = $timeService->currentQuarter();
         $year = $timeService->currentYear();
+
         $property = Property::with(['units.invoices' => function ($query) use ($quarter, $year) {
             $query->where('frequency', $quarter)
                 ->whereYear('invoice_date', $year);
-        }])->where('id', $id)->first();
+        }])->findOrFail($id);
+
         $amount = $property->units->sum(function ($unit) {
             return $unit->invoices->sum('amount');
         });
-        $data = [
-            'quater' => $quarter,
+
+        return [
+            'quarter' => $quarter,
             'year' => $year,
             'property' => $property,
             'amount' => $amount
         ];
-        return  $data;
+    }
+
+    private function createPaymentForInvoice($invoice, $phone, $propertyId, $year, $quarter, $unitId)
+    {
+        $payment = Payment::create([
+            'invoice_id' => $invoice->id,
+            'amount' => $invoice->amount,
+            'payment_date' => now(),
+            'status' => 'Pending',
+            'reference' => 'tax',
+        ]);
+
+        PaymentDetail::create([
+            'payment_id' => $payment->id,
+            'bank_name' => 'Somxchange',
+            'account_number' => $phone,
+            'additional_info' => 'Self Payment',
+        ]);
+
+        Transaction::create([
+            'transaction_id' => 'TXN-' . now()->format('YmdHis') . '-' . $invoice->id,
+            'amount' => $invoice->amount,
+            'credit' => 0,
+            'debit' => $invoice->amount,
+            'transaction_type' => 'invoice',
+            'description' => "Year $year Quarter $quarter",
+            'property_id' => $propertyId,
+            'status' => 'Completed',
+            'unit_id' => $unitId
+        ]);
+    }
+
+    private function markInvoiceAsPaid($invoice, $timestamp, $propertyId, $year, $quarter, $unitId)
+    {
+        $invoice->update([
+            'payment_status' => 'Paid',
+            'paid_at' => $timestamp
+        ]);
+
+        $payment = Payment::where('invoice_id', $invoice->id)->first();
+        if ($payment) {
+            $payment->status = 'Completed';
+            $payment->save();
+        }
+
+        Transaction::create([
+            'transaction_id' => 'TXN-' . $timestamp->format('YmdHis') . '-' . $invoice->id,
+            'amount' => $invoice->amount,
+            'credit' => $invoice->amount,
+            'debit' => 0,
+            'transaction_type' => 'tax_payment',
+            'description' => "Year $year Quarter $quarter",
+            'property_id' => $propertyId,
+            'status' => 'Completed',
+            'unit_id' => $unitId
+        ]);
+    }
+
+    private function generateTransactionPayload($property, $amount, $year, $quarter)
+    {
+        return [
+            "phone" => $property->property_phone,
+            "amount" => $amount,
+            "currency" => config('app.currency', 'USD'),
+            "successUrl" => config('app.url') . "/self-payment/success/{$property->id}",
+            "cancelUrl" => config('app.url') . "/self-payment/fail/{$property->id}",
+            "order_info" => [
+                "item_name" => "$quarter-$year Property Tax",
+                "order_no" => $property->house_code,
+            ]
+        ];
     }
 }
