@@ -160,7 +160,7 @@
                 <li class="dropdown">
                     <a href="javascript:void(0)">
                         <iconify-icon icon="mdi:file-document-outline" class="menu-icon"></iconify-icon>
-                        <span>Invoice</span>
+                        <span>Invoice Managment</span>
                     </a>
                     <ul class="sidebar-submenu">
                         <li><a href="{{ route('invoiceList') }}">Pending </a></li>

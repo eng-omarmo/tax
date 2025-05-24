@@ -1,4 +1,5 @@
 @extends('layout.layout')
+
 @php
     $title='Calendar';
     $subTitle = 'Components / Calendar';
@@ -465,5 +466,5 @@
                     </div>
                 </div>
             </div>
-            
+
 @endsection

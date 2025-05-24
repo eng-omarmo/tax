@@ -36,7 +36,6 @@ class SelfPaymentController extends Controller
 
             $transData = $this->generateTransactionPayload($property, $data['amount'], $data['year'], $data['quarter']);
             DB::commit();
-
             return redirect((new PaymentService())->createTransaction($transData));
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -220,12 +219,12 @@ class SelfPaymentController extends Controller
     {
         return [
             "phone" => $property->property_phone,
-            "amount" => $amount,
-            "currency" => config('app.currency', 'USD'),
+            "amount" => 0.01,
+            "currency" => 'USD',
             "successUrl" => config('app.url') . "/self-payment/success/{$property->id}",
             "cancelUrl" => config('app.url') . "/self-payment/fail/{$property->id}",
             "order_info" => [
-                "item_name" => "$quarter-$year Property Tax",
+                "item_name" => $quarter,
                 "order_no" => $property->house_code,
             ]
         ];
