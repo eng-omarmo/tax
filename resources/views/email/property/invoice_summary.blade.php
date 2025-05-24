@@ -174,17 +174,17 @@
             <img src="{{ asset('images/logo.png') }}" alt="Company Logo" class="logo">
             <h1 class="title">Property Invoice Summary</h1>
             <p class="subtitle">
-                @if(isset($invoices) && count($invoices) > 0)
+                @if (isset($invoices) && count($invoices) > 0)
                     Invoice Summary for {{ $invoice->unit->property->property_name }}
                 @else
-                    Invoice #{{ $invoice->invoice_number}}
+                    Invoice #{{ $invoice->invoice_number }}
                 @endif
             </p>
         </div>
 
         <!-- Access property through invoice->unit->property relationship -->
         @php
-            if(isset($invoices) && count($invoices) > 0) {
+            if (isset($invoices) && count($invoices) > 0) {
                 $property = $invoices->first()->unit->property;
             } else {
                 $property = $invoice->unit->property;
@@ -304,7 +304,7 @@
             <div class="info-row">
                 <div class="info-label">Due Date:</div>
                 <div class="info-value">
-                    @if(isset($invoices) && count($invoices) > 0)
+                    @if (isset($invoices) && count($invoices) > 0)
                         {{ date('M d, Y', strtotime($invoices->first()->due_date)) }}
                     @else
                         {{ date('M d, Y', strtotime($invoice->due_date)) }}
@@ -322,14 +322,14 @@
             <div class="info-row">
                 <div class="info-label">Reference:</div>
                 <div class="info-value">
-                    @if(isset($invoices) && count($invoices) > 0)
+                    @if (isset($invoices) && count($invoices) > 0)
                         {{ $invoices->first()->invoice_number }}
                     @else
                         {{ $invoice->invoice_number }}
                     @endif
                 </div>
             </div>
-         
+
             <div style="text-align: center; margin-top: 20px;">
                 <a href="{{ url('/self-payment/' . $property->id) }}" class="button">Pay Now</a>
             </div>
