@@ -135,7 +135,8 @@ Route::prefix('self-payment')->group(function () {
     Route::controller(SelfPaymentController::class)->group(function () {
         Route::get('/{payment}', 'selfPayment')->name('self.payment');
         Route::get('/success/{payment}', 'success')->name('sucess.payment');
-        Route::get('/fail/{payment}', 'fail')->name('fail.payment');
+        Route::get('/fail/{payment}', 'fail')->name('self.payment');
+        Route::get('/retry/{payment}', 'retry')->name('retry.payment');
     });
 });
 Route::prefix('lanlord')->middleware(['auth.admin'])->group(function () {

@@ -168,8 +168,9 @@
                         <span>Invoice Management</span>
                     </a>
                     <ul class="sidebar-submenu">
-                        <li><a href="{{ route('invoiceList') }}"><iconify-icon icon="mdi:file-clock" class="inline-icon"></iconify-icon> Pending Invoices</a></li>
-                        <li><a href="{{ route('invoice.paid') }}"><iconify-icon icon="mdi:file-check" class="inline-icon"></iconify-icon> Paid Invoices</a></li>
+                        <li><a href="{{ route('invoice.paid') }}"><iconify-icon icon="mdi:file-check" class="inline-icon"></iconify-icon> Paid </a></li>
+                        <li><a href="{{ route('invoiceList') }}"><iconify-icon icon="mdi:file-clock" class="inline-icon"></iconify-icon> Pending </a></li>
+
                     </ul>
                 </li>
             @endif

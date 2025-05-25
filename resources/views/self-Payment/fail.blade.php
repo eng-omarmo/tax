@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Success</title>
+    <title>Payment Failed</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <style>
@@ -13,16 +13,16 @@
             display: flex;
             align-items: center;
         }
-        .success-card {
+        .failure-card {
             border: none;
             border-radius: 20px;
             overflow: hidden;
             transition: transform 0.3s ease;
         }
-        .success-card:hover {
+        .failure-card:hover {
             transform: translateY(-5px);
         }
-        .success-icon {
+        .failure-icon {
             animation: bounce 1s ease;
         }
         @keyframes bounce {
@@ -31,16 +31,16 @@
         }
         .detail-card {
             background: rgba(255, 255, 255, 0.9);
-            border-left: 4px solid #28a745;
+            border-left: 4px solid #dc3545;
         }
-        .btn-primary {
-            background: #28a745;
+        .btn-danger {
+            background: #dc3545;
             border: none;
             padding: 12px 30px;
             border-radius: 8px;
         }
-        .btn-primary:hover {
-            background: #218838;
+        .btn-danger:hover {
+            background: #bb2d3b;
         }
         .btn-outline-secondary {
             border-color: #dee2e6;
@@ -53,18 +53,18 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8 col-xl-6">
-                <div class="success-card card shadow-lg">
+                <div class="failure-card card shadow-lg">
                     <div class="card-body px-5 py-4">
                         <div class="text-center py-4">
-                            <div class="success-icon mb-3">
-                                <iconify-icon icon="mdi:check-circle" style="color: #28a745; font-size: 80px;"></iconify-icon>
+                            <div class="failure-icon mb-3">
+                                <iconify-icon icon="mdi:close-circle" style="color: #dc3545; font-size: 80px;"></iconify-icon>
                             </div>
-                            <h1 class="display-5 fw-bold text-success mb-3">Payment Successful!</h1>
-                            <p class="lead text-muted mb-4">Your transaction has been completed successfully.</p>
+                            <h1 class="display-5 fw-bold text-danger mb-3">Payment Failed!</h1>
+                            <p class="lead text-muted mb-4">We couldn't complete your transaction. Please try again.</p>
                         </div>
 
                         <div class="detail-card p-4 mb-4">
-                            <h4 class="fw-bold mb-4 text-success">Property Details</h4>
+                            <h4 class="fw-bold mb-4 text-danger">Property Details</h4>
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="mb-3">
@@ -90,17 +90,17 @@
                         </div>
 
                         <div class="text-center py-4">
-                            <p class="text-muted mb-4">A detailed receipt has been sent to your registered email address.</p>
+                            <p class="text-muted mb-4">No amount has been deducted from your account. Please verify your payment details.</p>
                             <div class="d-flex flex-column flex-lg-row justify-content-center gap-3">
-                                <a href="{{ route('self.payment', $property->id) }}"
-                                   class="btn btn-primary d-flex align-items-center">
-                                    <iconify-icon icon="mdi:home" class="me-2"></iconify-icon>
-                                    view property details
+                                <a href="{{ route('retry.payment', $property->id) }}"
+                                   class="btn btn-danger d-flex align-items-center">
+                                    <iconify-icon icon="mdi:credit-card-refresh" class="me-2"></iconify-icon>
+                                    Retry Payment
                                 </a>
-                                <button onclick="window.print()"
+                                <button onclick="window.history.back()"
                                         class="btn btn-outline-secondary d-flex align-items-center">
-                                    <iconify-icon icon="mdi:printer" class="me-2"></iconify-icon>
-                                    Print Receipt
+                                    <iconify-icon icon="mdi:arrow-left" class="me-2"></iconify-icon>
+                                    Go Back
                                 </button>
                             </div>
                         </div>

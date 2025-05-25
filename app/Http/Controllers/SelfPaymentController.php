@@ -119,7 +119,7 @@ class SelfPaymentController extends Controller
         }
     }
 
-    public function retryPayment($id)
+    public function retry($id)
     {
         try {
             $data = $this->common($id);

@@ -168,7 +168,11 @@
                             </tr>
                         </thead>
                         <tbody>
+
+
                             @foreach ($property->units as $unit)
+
+
                                 @foreach ($unit->invoices as $invoice)
                                     <tr>
                                         <td>{{ $invoice->invoice_number }}</td>
@@ -189,7 +193,8 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <a href="#" class="btn btn-sm btn-primary" title="Print Invoice">
+
+                                            <a href="{{route('receipt.tax' , $invoice->id)}}" class="btn btn-sm btn-primary" title="Print Invoice">
                                                 <i class="ri-printer-line"></i>
                                             </a>
                                         </td>

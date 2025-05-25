@@ -12,7 +12,8 @@ class receiptController extends Controller
 
     public function taxReceipt(Request $request, $id)
     {
-        $payment = Payment::with('invoice.unit.property.landlord.user', 'paymentDetail')->find($id);
+
+        $payment = Payment::with('invoice.unit.property.landlord.user', 'paymentDetail')->where('invoice_id', $id)->first();
 
         if (!$payment) {
             return redirect()->back()->with('error', 'Payment not found');
@@ -21,16 +22,16 @@ class receiptController extends Controller
         $data = [
             'amount' => $payment->amount,
             'invoice_number' => $payment->invoice->invoice_number,
-            'tax_code' =>'Tax-' . strtoupper(Str::random(3)) . '-' . rand(100, 999),
-            'owner' => $payment->invoice->unit->property->landlord->user->name,
+            'tax_code' => 'Tax-' . strtoupper(Str::random(3)) . '-' . rand(100, 999),
+            'owner' => $payment->invoice->unit->property->landlord->name,
             'property' => $payment->invoice->unit->property->house_code,
             'bank' => $payment->paymentDetail->bank_name,
             'account_number' => $payment->paymentDetail->account_number,
             'payment_date' => $payment->payment_date,
             'reference' => $payment->reference,
             'phone' => $payment->invoice->unit->property->property_phone,
-            'email' => $payment->invoice->unit->property->landlord->user->email,
-            'address' => $payment->invoice->unit->property->landlord->user->address,
+            'email' => $payment->invoice->unit->property->landlord->email,
+            'address' => $payment->invoice->unit->property->landlord->address,
             'payment_method' => $payment->paymentDetail->bank_name,
         ];
 
@@ -50,9 +51,9 @@ class receiptController extends Controller
             'tenant' => $payment->rent->tenant->user->name,
             'property' => $payment->rent->property->house_code,
             'unit' => $payment->rent->unit->unit_type,
-            'bank' => $payment->paymentDetail->bank_name  ,
-            'account_number' => $payment->paymentDetail->account_number ,
-            'mobile_number' => $payment->paymentDetail->mobile_number ,
+            'bank' => $payment->paymentDetail->bank_name,
+            'account_number' => $payment->paymentDetail->account_number,
+            'mobile_number' => $payment->paymentDetail->mobile_number,
             'payment_date' => $payment->payment_date,
             'reference' => $payment->reference,
             'phone' => $payment->rent->tenant->user->phone,
@@ -63,5 +64,4 @@ class receiptController extends Controller
 
         return view('receipt.rent', compact('data'));
     }
-
 }
