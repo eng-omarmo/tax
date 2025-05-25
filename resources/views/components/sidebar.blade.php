@@ -155,7 +155,7 @@
                         <span>Monitoring</span>
                     </a>
                     <ul class="sidebar-submenu">
-                        <li><a href="{{ route('monitor.index') }}"><iconify-icon icon="mdi:home-analytics" class="inline-icon"></iconify-icon> Monitoring Properties</a></li>
+                        <li><a href="{{ route('monitor.index') }}"><iconify-icon icon="mdi:home-analytics" class="inline-icon"></iconify-icon>  Properties</a></li>
                     </ul>
                 </li>
             @endif
