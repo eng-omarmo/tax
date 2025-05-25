@@ -16,24 +16,25 @@ class OtpController extends Controller
 
     public function index()
     {
+  
         return view('otp.index');
     }
 
     public function verifyOtp(Request $request)
     {
-
         try {
             $request->validate([
                 'otp' => 'required'
             ]);
             $otpService = new OtpService();
-            $user =  session()->get('user');
-   
+            $user = session()->get('user');
             $otpDetails = $otpService->verifyOtp($user, $request->otp);
             if (!$otpDetails) {
                 return redirect()->back()->with('error', 'Invalid OTP.');
             }
+            session()->forget('user');
             Auth::login($user);
+
             return redirect()->route('index')->with('success', 'OTP verified successfully.');
         } catch (\Throwable $th) {
             return redirect()->route('signin')->with('error', $th->getMessage());

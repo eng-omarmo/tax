@@ -32,10 +32,6 @@ class AuthenticationController extends Controller
         return view('authentication.signin');
     }
 
-    // public function signUp()
-    // {
-    //     return view('authentication.signUp');
-    // }
 
     public function login(Request $request)
     {
@@ -49,13 +45,13 @@ class AuthenticationController extends Controller
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
 
             RateLimiter::hit($this->throttleKey($request));
-
             return back()->with('error', 'The provided credentials are incorrect.');
         }
         RateLimiter::clear($this->throttleKey($request));
 
         $otpService = new OtpService();
-        $otp  = $otpService->generate($user);
+        $otp = $otpService->generate($user);
+
         if (!$otp) {
             return back()->with('error', 'Failed to generate OTP.');
         }
@@ -94,7 +90,4 @@ class AuthenticationController extends Controller
         Auth::logout();
         return redirect()->route('signin');
     }
-
-
-
 }

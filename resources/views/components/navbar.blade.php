@@ -417,7 +417,7 @@
                             </li>
                             <li>
                                 <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-primary d-flex align-items-center gap-3"
-                                    href="{{ route('email') }}">
+                                    href="#">
                                     <iconify-icon icon="tabler:message-check" class="icon text-xl"></iconify-icon>
                                     Inbox
                                 </a>

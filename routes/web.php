@@ -3,36 +3,30 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\taxController;
-use App\Http\Controllers\BlogController;
-use App\Http\Controllers\HomeController;
+
 use App\Http\Controllers\rentController;
+
 use App\Http\Controllers\unitController;
-use App\Http\Controllers\ChartController;
-use App\Http\Controllers\FormsController;
-use App\Http\Controllers\TableController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\BranchController;
+
 use App\Http\Controllers\tenantController;
-use App\Http\Controllers\accountController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\paymentController;
+
 use App\Http\Controllers\receiptController;
-use App\Http\Controllers\taxRateController;
-use App\Http\Controllers\businessController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\landlordController;
+
 use App\Http\Controllers\propertyController;
-use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\DashboardController;
+
+
 use App\Http\Controllers\monitoringContoller;
-use App\Http\Controllers\AiapplicationController;
-use App\Http\Controllers\ComponentpageController;
-use App\Http\Controllers\paymentMethodController;
-use App\Http\Controllers\RoleandaccessController;
+use App\Http\Controllers\SelfPaymentController;
+
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\changePasswordController;
-use App\Http\Controllers\CryptocurrencyController;
-use App\Http\Controllers\SelfPaymentController;
 
 Route::controller(AuthenticationController::class)->group(function () {
     Route::get('/', 'signin')->name('signin');
@@ -58,7 +52,6 @@ Route::controller(PropertyController::class)->prefix('property')->middleware(['a
     Route::get('/branches/{districtId}', 'getBranches')->name('property.branches');
     Route::get('/create/property', 'propertyCreate')->name('property.create.landlord');
     Route::post('/store/property', 'propertyStore')->name('property.store.landlord');
-
     //search property
     Route::get('/search', 'search')->name('property.lanlord.search');
 });
@@ -75,39 +68,6 @@ Route::controller(rentController::class)->prefix('rent')->middleware(['auth.admi
     Route::get('/rent/property/search', 'search')->name('rent.property.search');
 });
 
-Route::controller(HomeController::class)->group(function () {
-    Route::get('calendar', 'calendar')->name('calendar');
-    Route::get('chatmessage', 'chatMessage')->name('chatMessage');
-    Route::get('chatempty', 'chatempty')->name('chatempty');
-    Route::get('email', 'email')->name('email');
-    Route::get('error', 'error1')->name('error');
-    Route::get('faq', 'faq')->name('faq');
-    Route::get('gallery', 'gallery')->name('gallery');
-    Route::get('kanban', 'kanban')->name('kanban');
-    Route::get('pricing', 'pricing')->name('pricing');
-    Route::get('termscondition', 'termsCondition')->name('termsCondition');
-    Route::get('widgets', 'widgets')->name('widgets');
-    Route::get('chatprofile', 'chatProfile')->name('chatProfile');
-    Route::get('veiwdetails', 'veiwDetails')->name('veiwDetails');
-    Route::get('blankPage', 'blankPage')->name('blankPage');
-    Route::get('comingSoon', 'comingSoon')->name('comingSoon');
-    Route::get('maintenance', 'maintenance')->name('maintenance');
-    Route::get('starred', 'starred')->name('starred');
-    Route::get('testimonials', 'testimonials')->name('testimonials');
-});
-
-// aiApplication
-Route::prefix('aiapplication')->group(function () {
-    Route::controller(AiapplicationController::class)->group(function () {
-        Route::get('/codegenerator', 'codeGenerator')->name('codeGenerator');
-        Route::get('/codegeneratornew', 'codeGeneratorNew')->name('codeGeneratorNew');
-        Route::get('/imagegenerator', 'imageGenerator')->name('imageGenerator');
-        Route::get('/textgeneratornew', 'textGeneratorNew')->name('textGeneratorNew');
-        Route::get('/textgenerator', 'textGenerator')->name('textGenerator');
-        Route::get('/videogenerator', 'videoGenerator')->name('videoGenerator');
-        Route::get('/voicegenerator', 'voiceGenerator')->name('voiceGenerator');
-    });
-});
 
 // Authentication
 Route::prefix('authentication')->group(function () {
@@ -147,7 +107,6 @@ Route::prefix('tenant')->middleware(['auth.admin'])->group(function () {
         Route::get('/edit/{tenant}', 'edit')->name('tenant.edit');
         Route::put('/update/{tenant}', 'update')->name('tenant.update');
         Route::get('/delete/{tenant}', 'destroy')->name('tenant.delete');
-        //tenant search
         Route::get('/search', 'search')->name('tenant.search');
     });
 });
@@ -163,8 +122,6 @@ Route::prefix('payment')->middleware(['auth.admin'])->group(function () {
         Route::get('/edit/{payment}', 'edit')->name('payment.edit');
         Route::put('/update/{payment}', 'update')->name('payment.update');
         Route::get('/delete/{payment}', 'destroy')->name('payment.delete');
-        //tax search
-
         Route::get('/search/tax-code', 'searchTax')->name('tax.payment.search');
         Route::get('/get-payment-amount/{tenantId}/{paymentType}', 'getPaymentAmount')->name('tenant.payment.getPaymentAmount');
 
@@ -172,17 +129,6 @@ Route::prefix('payment')->middleware(['auth.admin'])->group(function () {
     });
 });
 
-
-Route::prefix('business')->middleware(['auth.admin'])->group(function () {
-    Route::controller(businessController::class)->group(function () {
-        Route::get('/index', 'index')->name('business.index');
-        Route::get('/create', 'create')->name('business.create');
-        Route::post('/store', 'store')->name('business.store');
-        Route::get('/edit/{business}', 'edit')->name('business.edit');
-        Route::put('/update/{business}', 'update')->name('business.update');
-        Route::get('/delete/{business}', 'destroy')->name('business.delete');
-    });
-});
 
 //self payment url
 Route::prefix('self-payment')->group(function () {
@@ -227,31 +173,11 @@ Route::prefix('unit')->middleware(['auth.admin'])->group(function () {
     });
 });
 
-Route::prefix('payment-method')->middleware(['auth.admin'])->group(function () {
-    Route::controller(paymentMethodController::class)->group(function () {
-        Route::get('/index', 'index')->name('payment.method.index');
-        Route::get('/create', 'create')->name('payment.method.create');
-        Route::post('/store', 'store')->name('payment.method.store');
-        Route::get('/edit/{id}', 'edit')->name('payment.method.edit');
-        Route::put('/update/{id}', 'update')->name('payment.method.update');
-        Route::get('/destroy/{id}', 'destroy')->name('payment.method.destroy');
-    });
-});
 
-// Route::prefix('account')->middleware(['auth.admin'])->group(function () {
-//     Route::controller(accountController::class)->group(function () {
-//         Route::get('/index', 'index')->name('account.index');
-//         Route::get('/create', 'create')->name('account.create');
-//         Route::post('/store', 'store')->name('account.store');
-//         Route::get('/edit/{id}', 'edit')->name('account.edit');
-//         Route::put('/update/{id}', 'update')->name('account.update');
-//         Route::get('/destroy/{id}', 'destroy')->name('account.destroy');
-//     });
-// });
+
 
 
 Route::prefix('tax')->middleware(['auth.admin'])->group(function () {
-
     Route::controller(taxController::class)->group(function () {
         Route::get('/index', 'index')->name('tax.index');
         Route::get('/create', 'create')->name('tax.create');
@@ -262,47 +188,12 @@ Route::prefix('tax')->middleware(['auth.admin'])->group(function () {
         Route::get('/property/search', 'search')->name('property.tax.search');
     });
 });
-// chart
-Route::prefix('chart')->group(function () {
-    Route::controller(ChartController::class)->group(function () {
-        Route::get('/columnchart', 'columnChart')->name('columnChart');
-        Route::get('/linechart', 'lineChart')->name('lineChart');
-        Route::get('/piechart', 'pieChart')->name('pieChart');
-    });
-});
 
-// Componentpage
-Route::prefix('componentspage')->group(function () {
-    Route::controller(ComponentpageController::class)->group(function () {
-        Route::get('/alert', 'alert')->name('alert');
-        Route::get('/avatar', 'avatar')->name('avatar');
-        Route::get('/badges', 'badges')->name('badges');
-        Route::get('/button', 'button')->name('button');
-        Route::get('/calendar', 'calendar')->name('calendar');
-        Route::get('/card', 'card')->name('card');
-        Route::get('/carousel', 'carousel')->name('carousel');
-        Route::get('/colors', 'colors')->name('colors');
-        Route::get('/dropdown', 'dropdown')->name('dropdown');
-        Route::get('/imageupload', 'imageUpload')->name('imageUpload');
-        Route::get('/list', 'list')->name('list');
-        Route::get('/pagination', 'pagination')->name('pagination');
-        Route::get('/progress', 'progress')->name('progress');
-        Route::get('/radio', 'radio')->name('radio');
-        Route::get('/starrating', 'starRating')->name('starRating');
-        Route::get('/switch', 'switch')->name('switch');
-        Route::get('/tabs', 'tabs')->name('tabs');
-        Route::get('/tags', 'tags')->name('tags');
-        Route::get('/tooltip', 'tooltip')->name('tooltip');
-        Route::get('/typography', 'typography')->name('typography');
-        Route::get('/videos', 'videos')->name('videos');
-    });
-});
 
 // Dashboard
 Route::prefix('dashboard')->middleware(['auth.admin'])->group(function () {
     Route::controller(DashboardController::class)->group(function () {
         Route::get('/index', 'index')->name('index');
-
     });
 });
 
@@ -354,7 +245,7 @@ Route::prefix('users')->middleware(['auth.admin'])->group(function () {
 
 
 // Users
-Route::prefix('otp')->middleware(['auth.admin'])->group(function () {
+Route::prefix('otp')->group(function () {
     Route::controller(OtpController::class)->group(function () {
         Route::get('/show-otp', 'index')->name('otp.index');
         Route::post('/verify-otp', 'verifyOtp')->name('verify.otp');
