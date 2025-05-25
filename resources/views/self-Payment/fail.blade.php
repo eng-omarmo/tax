@@ -97,11 +97,7 @@
                                     <iconify-icon icon="mdi:credit-card-refresh" class="me-2"></iconify-icon>
                                     Retry Payment
                                 </a>
-                                <button onclick="window.history.back()"
-                                        class="btn btn-outline-secondary d-flex align-items-center">
-                                    <iconify-icon icon="mdi:arrow-left" class="me-2"></iconify-icon>
-                                    Go Back
-                                </button>
+                               
                             </div>
                         </div>
                     </div>

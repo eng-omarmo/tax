@@ -92,11 +92,7 @@
                         <div class="text-center py-4">
                             <p class="text-muted mb-4">A detailed receipt has been sent to your registered email address.</p>
                             <div class="d-flex flex-column flex-lg-row justify-content-center gap-3">
-                                <a href="{{ route('self.payment', $property->id) }}"
-                                   class="btn btn-primary d-flex align-items-center">
-                                    <iconify-icon icon="mdi:home" class="me-2"></iconify-icon>
-                                    view property details
-                                </a>
+                        
                                 <button onclick="window.print()"
                                         class="btn btn-outline-secondary d-flex align-items-center">
                                     <iconify-icon icon="mdi:printer" class="me-2"></iconify-icon>
