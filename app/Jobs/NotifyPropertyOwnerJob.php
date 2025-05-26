@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use Throwable;
+use App\Models\Notification;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Collection;
@@ -47,9 +48,24 @@ class NotifyPropertyOwnerJob implements ShouldQueue
         }
 
         try {
+            $existingNotification = Notification::where('property_id', $property->id)
+                ->where('quarter', $firstInvoice->quarter)
+                ->where('year', $firstInvoice->year)
+                ->where('is_notified', true)
+                ->first();
+            if ($existingNotification) {
+                Log::warning("⚠️ Notification already exists for property ID " . ($property ? $property->id : 'N/A'));
+                return;
+            }
             Mail::to($landlord->email)->send(
                 new PropertyInvoiceSummaryMail($this->propertyInvoices)
             );
+            Notification::create([
+                'property_id' => $property->id,
+                'is_notified' => true,
+                'quarter' => $firstInvoice->quarter,
+                'year' => $firstInvoice->year,
+            ]);
 
             Log::info("✅ Sent invoice summary to {$landlord->email} for property '{$property->property_name}' (ID: {$property->id})");
         } catch (Throwable $e) {

@@ -48,8 +48,9 @@
 
                                         <div class="text-center">
                                             <div class="image-preview mb-3">
+
                                                 <img id="profileImagePreview"
-                                                    src="{{ isset($landlord->user) && $landlord->user->profile_image ? asset('storage/' . $landlord->user->profile_image) : asset('assets/images/default-avatar.png') }}"
+                                                    src="{{ isset($lanlord->user) && $lanlord->user->profile_image ? asset('storage/' . $lanlord->user->profile_image) : asset('assets/images/default-avatar.png') }}"
                                                     alt="Profile Preview" class="img-thumbnail rounded-circle shadow-sm"
                                                     style="width: 180px; height: 180px; object-fit: cover; border: 2px solid var(--bs-primary-subtle);">
                                             </div>
@@ -245,7 +246,7 @@
         </div>
     </div>
 
-    <script>
+    {{-- <script>
         function previewImage(event) {
             const reader = new FileReader();
             const preview = document.getElementById('profileImagePreview');
@@ -260,5 +261,5 @@
                 reader.readAsDataURL(event.target.files[0]);
             }
         }
-    </script>
+    </script> --}}
 @endsection
