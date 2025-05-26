@@ -27,6 +27,7 @@ use App\Http\Controllers\SelfPaymentController;
 
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\changePasswordController;
+use App\Http\Controllers\NotificationController; // Add this line at the top
 
 Route::controller(AuthenticationController::class)->group(function () {
     Route::get('/', 'signin')->name('signin');
@@ -254,3 +255,10 @@ Route::prefix('otp')->group(function () {
 });
 
 // Users
+Route::middleware(['auth.admin'])->group(function () {
+    Route::controller(NotificationController::class)->prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/renotify/{propertyId}', 'reNotify')->name('renotify');
+        Route::get('/history/{propertyId}', 'history')->name('history'); // Optional
+    });
+});

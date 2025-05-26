@@ -3,10 +3,13 @@
 namespace App\Jobs;
 
 use Throwable;
+
 use App\Models\Notification;
+use App\Services\TimeService;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
@@ -31,55 +34,81 @@ class NotifyPropertyOwnerJob implements ShouldQueue
 
     public function handle(): void
     {
-        Log::info("📬 Processing " . $this->propertyInvoices->count() . " invoices for property ID " . ($this->propertyInvoices->first()->unit?->property?->id ?? 'N/A'));
         if ($this->propertyInvoices->isEmpty()) {
             Log::warning("⚠️ No invoices to process in job.");
             return;
         }
 
-        $firstInvoice = $this->propertyInvoices->first();
-        $unit = $firstInvoice->unit ?? null;
-        $property = $unit ? $unit->property : null;
-        $landlord = $property ? $property->landlord : null;
+        // Assume all invoices belong to the same property
+        $property = $this->propertyInvoices->first()?->unit?->property;
 
-        if (!$landlord || empty($landlord->email)) {
-            Log::warning("⚠️ Missing landlord or email for property ID " . ($property ? $property->id : 'N/A'));
+        if (!$property) {
+            Log::warning("⚠️ Could not determine the property from the invoice.");
             return;
         }
 
-        try {
-            $existingNotification = Notification::where('property_id', $property->id)
-                ->where('quarter', $firstInvoice->quarter)
-                ->where('year', $firstInvoice->year)
-                ->where('is_notified', true)
-                ->first();
-            if ($existingNotification) {
-                Log::warning("⚠️ Notification already exists for property ID " . ($property ? $property->id : 'N/A'));
+        $landlord = $property->landlord;
+        $email = $landlord?->email;
+
+        if (!$landlord || empty($email)) {
+            Log::warning("⚠️ Missing landlord or email.");
+            return;
+        }
+
+        $timeService = app(TimeService::class);
+        $year = $timeService->currentYear();
+        $quarter = $this->propertyInvoices->first()?->frequency;
+
+        if (empty($quarter)) {
+            $quarter = $timeService->currentQuarter();
+        }
+
+        if (empty($quarter)) {
+            Log::error("❌ Still missing quarter value after fallback. Aborting notification creation.");
+            return;
+        }
+
+
+        Log::withContext([
+            'property_id' => $property->id,
+            'landlord_email' => $email,
+            'invoice_count' => $this->propertyInvoices->count(),
+        ]);
+
+        DB::transaction(function () use ($property, $email, $year, $quarter) {
+            $notificationExists = Notification::where('property_id', $property->id)
+                ->where('quarter', $quarter)
+                ->where('year', $year)
+                ->where('is_notified', 1)
+                ->exists();
+
+            if ($notificationExists) {
+                Log::warning("⚠️ Notification already exists for property.");
                 return;
             }
-            Mail::to($landlord->email)->send(
+
+            // Send the email
+            Mail::to($email)->send(
                 new PropertyInvoiceSummaryMail($this->propertyInvoices)
             );
+
+            // Create the notification
             Notification::create([
                 'property_id' => $property->id,
-                'is_notified' => true,
-                'quarter' => $firstInvoice->quarter,
-                'year' => $firstInvoice->year,
+                'is_notified' => 1,
+                'quarter' => $quarter,
+                'year' => $year,
             ]);
 
-            Log::info("✅ Sent invoice summary to {$landlord->email} for property '{$property->property_name}' (ID: {$property->id})");
-        } catch (Throwable $e) {
-            Log::error("❌ Failed to send invoice summary to property ID " . ($property ? $property->id : 'N/A') . ": {$e->getMessage()}");
-            throw $e;
-        }
+            Log::info("✅ Sent invoice summary email to landlord for property '{$property->property_name}' (ID: {$property->id})");
+        });
     }
+
 
     public function failed(Throwable $exception): void
     {
-        $firstInvoice = $this->propertyInvoices->first();
-        $unit = $firstInvoice->unit ?? null;
-        $property = $unit ? $unit->property : null;
+        $propertyId = $this->propertyInvoices->first()?->unit?->property?->id ?? 'N/A';
 
-        Log::error("❌ Job failed for property ID " . ($property ? $property->id : 'N/A') . ": {$exception->getMessage()}");
+        Log::error("❌ Job failed for property ID {$propertyId}: {$exception->getMessage()}");
     }
 }

@@ -34,8 +34,10 @@
                         <span>Users</span>
                     </a>
                     <ul class="sidebar-submenu">
-                        <li><a href="{{ route('user.index') }}"><iconify-icon icon="heroicons:users" class="inline-icon"></iconify-icon>List</a></li>
-                        <li><a href="{{ route('user.create') }}"><iconify-icon icon="heroicons:user-plus" class="inline-icon"></iconify-icon> Create </a></li>
+                        <li><a href="{{ route('user.index') }}"><iconify-icon icon="heroicons:users"
+                                    class="inline-icon"></iconify-icon>List</a></li>
+                        <li><a href="{{ route('user.create') }}"><iconify-icon icon="heroicons:user-plus"
+                                    class="inline-icon"></iconify-icon> Create </a></li>
                     </ul>
                 </li>
 
@@ -46,8 +48,10 @@
                         <span>Landlord</span>
                     </a>
                     <ul class="sidebar-submenu">
-                        <li><a href="{{ route('lanlord.index') }}"><iconify-icon icon="mdi:account-group" class="inline-icon"></iconify-icon>  List</a></li>
-                        <li><a href="{{ route('lanlord.create') }}"><iconify-icon icon="mdi:account-plus" class="inline-icon"></iconify-icon> Create</a></li>
+                        <li><a href="{{ route('lanlord.index') }}"><iconify-icon icon="mdi:account-group"
+                                    class="inline-icon"></iconify-icon> List</a></li>
+                        <li><a href="{{ route('lanlord.create') }}"><iconify-icon icon="mdi:account-plus"
+                                    class="inline-icon"></iconify-icon> Create</a></li>
                     </ul>
                 </li>
 
@@ -58,8 +62,10 @@
                         <span>Location</span>
                     </a>
                     <ul class="sidebar-submenu">
-                        <li><a href="{{ route('district.index') }}"><iconify-icon icon="mdi:map" class="inline-icon"></iconify-icon> District</a></li>
-                        <li><a href="{{ route('branch.index') }}"><iconify-icon icon="mdi:office-building" class="inline-icon"></iconify-icon> Branch</a></li>
+                        <li><a href="{{ route('district.index') }}"><iconify-icon icon="mdi:map"
+                                    class="inline-icon"></iconify-icon> District</a></li>
+                        <li><a href="{{ route('branch.index') }}"><iconify-icon icon="mdi:office-building"
+                                    class="inline-icon"></iconify-icon> Branch</a></li>
                     </ul>
                 </li>
             @endif
@@ -73,15 +79,19 @@
                     <span>Property</span>
                 </a>
                 <ul class="sidebar-submenu">
-                    <li><a href="{{ route('property.index') }}"><iconify-icon icon="mdi:view-list" class="inline-icon"></iconify-icon>  List</a></li>
+                    <li><a href="{{ route('property.index') }}"><iconify-icon icon="mdi:view-list"
+                                class="inline-icon"></iconify-icon> List</a></li>
 
                     @if (Auth::user()->role === 'Admin')
-                        <li><a href="{{ route('property.create') }}"><iconify-icon icon="mdi:home-plus" class="inline-icon"></iconify-icon>Create</a></li>
-                        <li><a href="{{ route('property.report') }}"><iconify-icon icon="mdi:file-document" class="inline-icon"></iconify-icon>  Report</a></li>
+                        <li><a href="{{ route('property.create') }}"><iconify-icon icon="mdi:home-plus"
+                                    class="inline-icon"></iconify-icon>Create</a></li>
+                        <li><a href="{{ route('property.report') }}"><iconify-icon icon="mdi:file-document"
+                                    class="inline-icon"></iconify-icon> Report</a></li>
                     @endif
 
                     @if (Auth::user()->role === 'lanlord')
-                        <li><a href="{{ route('property.create.landlord') }}"><iconify-icon icon="mdi:home-plus" class="inline-icon"></iconify-icon> Add Property</a></li>
+                        <li><a href="{{ route('property.create.landlord') }}"><iconify-icon icon="mdi:home-plus"
+                                    class="inline-icon"></iconify-icon> Add Property</a></li>
                     @endif
                 </ul>
             </li>
@@ -94,8 +104,10 @@
                         <span>Property Units</span>
                     </a>
                     <ul class="sidebar-submenu">
-                        <li><a href="{{ route('unit.index') }}"><iconify-icon icon="mdi:view-list" class="inline-icon"></iconify-icon>  List</a></li>
-                        <li><a href="{{ route('unit.create') }}"><iconify-icon icon="mdi:plus-circle" class="inline-icon"></iconify-icon>  Create</a></li>
+                        <li><a href="{{ route('unit.index') }}"><iconify-icon icon="mdi:view-list"
+                                    class="inline-icon"></iconify-icon> List</a></li>
+                        <li><a href="{{ route('unit.create') }}"><iconify-icon icon="mdi:plus-circle"
+                                    class="inline-icon"></iconify-icon> Create</a></li>
                     </ul>
                 </li>
             @endif
@@ -108,8 +120,10 @@
                         <span>Rent</span>
                     </a>
                     <ul class="sidebar-submenu">
-                        <li><a href="{{ route('rent.index') }}"><iconify-icon icon="mdi:view-list" class="inline-icon"></iconify-icon>  List</a></li>
-                        <li><a href="{{ route('rent.create') }}"><iconify-icon icon="mdi:plus-circle" class="inline-icon"></iconify-icon>  Create</a></li>
+                        <li><a href="{{ route('rent.index') }}"><iconify-icon icon="mdi:view-list"
+                                    class="inline-icon"></iconify-icon> List</a></li>
+                        <li><a href="{{ route('rent.create') }}"><iconify-icon icon="mdi:plus-circle"
+                                    class="inline-icon"></iconify-icon> Create</a></li>
                     </ul>
                 </li>
             @endif
@@ -125,8 +139,10 @@
                         <span>Rent Payment</span>
                     </a>
                     <ul class="sidebar-submenu">
-                        <li><a href="{{ route('payment.index') }}"><iconify-icon icon="mdi:view-list" class="inline-icon"></iconify-icon>  List</a></li>
-                        <li><a href="{{ route('payment.create') }}"><iconify-icon icon="mdi:cash-plus" class="inline-icon"></iconify-icon>  Create</a></li>
+                        <li><a href="{{ route('payment.index') }}"><iconify-icon icon="mdi:view-list"
+                                    class="inline-icon"></iconify-icon> List</a></li>
+                        <li><a href="{{ route('payment.create') }}"><iconify-icon icon="mdi:cash-plus"
+                                    class="inline-icon"></iconify-icon> Create</a></li>
                     </ul>
                 </li>
             @endif
@@ -139,7 +155,8 @@
                         <span>Tax Payment</span>
                     </a>
                     <ul class="sidebar-submenu">
-                        <li><a href="{{ route('payment.index.tax') }}"><iconify-icon icon="mdi:receipt" class="inline-icon"></iconify-icon>  List</a></li>
+                        <li><a href="{{ route('payment.index.tax') }}"><iconify-icon icon="mdi:receipt"
+                                    class="inline-icon"></iconify-icon> List</a></li>
                         {{-- <li><a href="{{ route('payment.create.tax') }}"><iconify-icon icon="mdi:cash-plus" class="inline-icon"></iconify-icon> Add Payment</a></li> --}}
                     </ul>
                 </li>
@@ -155,7 +172,8 @@
                         <span>Monitoring</span>
                     </a>
                     <ul class="sidebar-submenu">
-                        <li><a href="{{ route('monitor.index') }}"><iconify-icon icon="mdi:home-analytics" class="inline-icon"></iconify-icon>  Properties</a></li>
+                        <li><a href="{{ route('monitor.index') }}"><iconify-icon icon="mdi:home-analytics"
+                                    class="inline-icon"></iconify-icon> Properties</a></li>
                     </ul>
                 </li>
             @endif
@@ -168,11 +186,31 @@
                         <span>Invoice Management</span>
                     </a>
                     <ul class="sidebar-submenu">
-                        <li><a href="{{ route('invoice.paid') }}"><iconify-icon icon="mdi:file-check" class="inline-icon"></iconify-icon> Paid </a></li>
-                        <li><a href="{{ route('invoiceList') }}"><iconify-icon icon="mdi:file-clock" class="inline-icon"></iconify-icon> Pending </a></li>
+                        <li><a href="{{ route('invoice.paid') }}"><iconify-icon icon="mdi:file-check"
+                                    class="inline-icon"></iconify-icon> Paid </a></li>
+                        <li><a href="{{ route('invoiceList') }}"><iconify-icon icon="mdi:file-clock"
+                                    class="inline-icon"></iconify-icon> Pending </a></li>
 
                     </ul>
                 </li>
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="mdi:file-document-outline" class="menu-icon"></iconify-icon>
+                        <span>Notification Management</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li class="menu-item {{ request()->routeIs('notifications.*') ? 'active' : '' }}">
+                            <a href="{{ route('notifications.index') }}" class="menu-link">
+                                <span class="menu-icon">
+                                    <iconify-icon icon="solar:bell-bing-bold-duotone"></iconify-icon>
+                                </span>
+                                <span class="menu-title">Notified Properties</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+
             @endif
 
         </ul>
