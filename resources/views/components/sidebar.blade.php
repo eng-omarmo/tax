@@ -105,7 +105,7 @@
                     </a>
                     <ul class="sidebar-submenu">
                         <li><a href="{{ route('rent.index') }}"><iconify-icon icon="mdi:view-list" class="inline-icon"></iconify-icon>List</a></li>
-                        <li><a href="{{ route('rent.create') }}"><iconify-icon icon="mdi:cash-plus" class="inline-icon"></iconify-icon>Create</a></li>
+
                     </ul>
                 </li>
             @endif
@@ -126,8 +126,7 @@
                 </li>
             @endif
 
-            {{-- Reports & Monitoring --}}
-            <li class="sidebar-menu-group-title">Reports & Analytics</li>
+            <li class="sidebar-menu-group-title"> Analytics</li>
 
             @if (Auth::user()->role === 'Admin' || Auth::user()->role === 'Tax officer')
                 <li class="dropdown">
@@ -165,7 +164,23 @@
                     </ul>
                 </li>
             @endif
+            <li class="sidebar-menu-group-title"> Reports</li>
 
+            <li class="dropdown">
+                <a href="javascript:void(0)">
+                    <iconify-icon icon="mdi:file-chart" class="menu-icon text-blue-500"></iconify-icon>
+                    <span>Report</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li><a href="#"><iconify-icon icon="mdi:file-chart" class="inline-icon"></iconify-icon>Income</a></li>
+                </ul>
+            </li>
         </ul>
+
+
+
+
+    </div>
+
     </div>
 </aside>
