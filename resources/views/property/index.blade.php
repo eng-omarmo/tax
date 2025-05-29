@@ -31,7 +31,7 @@
 
                     <select name="status" class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px">
                         <option value="">Property Status</option>
-                        <option value="" > All</option>
+                        <option value=""> All</option>
                         @foreach ($statuses as $status)
                             <option value="{{ $status }}" {{ request()->status == $status ? 'selected' : '' }}>
                                 {{ $status }}</option>
@@ -42,9 +42,10 @@
                         <option value="">Property Monetering Status</option>
                         <option value=""> All</option>
                         @foreach ($monitoringStatuses as $moneteringStatus)
-                        <option value="{{ $moneteringStatus }}" {{ request()->monetering_status == $moneteringStatus ? 'selected' : '' }}>
-                            {{ $moneteringStatus }}</option>
-                    @endforeach
+                            <option value="{{ $moneteringStatus }}"
+                                {{ request()->monetering_status == $moneteringStatus ? 'selected' : '' }}>
+                                {{ $moneteringStatus }}</option>
+                        @endforeach
                     </select>
 
                 </div>
@@ -61,12 +62,7 @@
                         <iconify-icon icon="ic:baseline-filter-alt-off" class="icon text-xl line-height-1"></iconify-icon>
                         Reset
                     </a>
-                    @if(Auth::user()->role == 'Admin')
-                    <a href="{{ route('property.create') }}"  class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
-                        <iconify-icon icon="ic:baseline-plus" class="icon text-xl line-height-1"></iconify-icon>
-                        Add Property
-                    </a>
-                    @endif
+
 
                 </div>
             </div>
@@ -88,25 +84,15 @@
                             </div>
                         </th>
                         <th scope="col">Property Name</th>
-                        <th scope="col">Phone</th>
-                        @if(Auth::user()->role == 'Admin')
-                        <th scope="col">Lanlord</th>
-                        @endif
-                        {{-- <th scope="col">Branch</th>
-                        <th scope="col">NBR</th> --}}
-                        {{-- <th scope="col">Designation</th> --}}
+                        <th scope="col">Property Phone</th>
                         <th scope="col">Property Type</th>
                         <th scope="col">Property code</th>
+                        <th scope="col">Lanlord</th>
+                        <th scope="col">Branch</th>
 
-                        {{-- <th scope="col">Latitude</th>
-                        <th scope="col">Longitude</th> --}}
                         <th scope="col">Monitoring Status</th>
-                        {{-- <th scope="col">Tax Balance</th> --}}
                         <th scope="col">Status</th>
-
                         <th scope="col">Action</th>
-
-
                     </tr>
                 </thead>
                 <tbody>
@@ -123,48 +109,51 @@
                             </td>
                             <td>{{ $property->property_name }}</td>
                             <td>{{ $property->property_phone }}</td>
-                            @if(Auth::user()->role == 'Admin')
-                            <td><a href="{{ route('landlord.show', $property->landlord->id) }}">{{ $property->landlord->name }}</a></td>
-                            @endif
                             <td>{{ $property->house_type }}</td>
+
+                            <td><a
+                                    href="{{ route('landlord.show', $property->landlord->id) }}">{{ $property->landlord->name }}</a>
+                            </td>
+
+
                             <td>{{ $property->house_code }}</td>
                             <td>{{ $property->monitoring_status }}</td>
-                          {{-- //  <td>{{ $property->balance ? $property->balance : '0' }}</td> --}}
+
                             <td class="text-center">
                                 <span
                                     class="{{ $property->status == 'Available' ? 'bg-success-focus text-success-600' : 'bg-danger-focus text-danger-600' }} border px-24 py-4 radius-4 fw-medium text-sm">
                                     {{ ucfirst($property->status) }}
                                 </span>
                             </td>
-                            @if(Auth::user()->role == 'Admin')
+                            @if (Auth::user()->role == 'Admin')
+                                <td class="text-center">
+                                    <div class="d-flex align-items-center gap-10 justify-content-center">
+                                        <a href="{{ route('property.edit', $property->id) }}"
+                                            class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
+                                            <iconify-icon icon="lucide:edit" class="menu-icon"></iconify-icon>
+                                        </a>
 
-                            <td class="text-center">
-                                <div class="d-flex align-items-center gap-10 justify-content-center">
-                                    <a href="{{ route('property.edit', $property->id) }}"
-                                        class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
-                                        <iconify-icon icon="lucide:edit" class="menu-icon"></iconify-icon>
-                                    </a>
-
-                                    <a href="{{ route('property.delete', $property->id) }}"
-                                        class="remove-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
-                                        <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
-                                    </a>
-                                    <a href="{{ route('monitor.show', $property->id) }}" class="bg-success-focus text-success-600 w-40-px h-40-px rounded-circle d-flex justify-content-center align-items-center">
-                                        <iconify-icon icon="lucide:view" class="menu-icon"></iconify-icon>
-                                    </a>
-                                </div>
-                            </td>
+                                        <a href="{{ route('property.delete', $property->id) }}"
+                                            class="remove-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
+                                            <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
+                                        </a>
+                                        <a href="{{ route('monitor.show', $property->id) }}"
+                                            class="bg-success-focus text-success-600 w-40-px h-40-px rounded-circle d-flex justify-content-center align-items-center">
+                                            <iconify-icon icon="lucide:view" class="menu-icon"></iconify-icon>
+                                        </a>
+                                    </div>
+                                </td>
                             @else
-                            <td class="text-center">
-                                <div class="d-flex align-items-center gap-10 justify-content-center">
-                                    <a href="{{ route('property.show', $property->id) }}"
-                                        class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
-                                        <iconify-icon icon="lucide:eye" class="menu-icon"></iconify-icon>
+                                <td class="text-center">
+                                    <div class="d-flex align-items-center gap-10 justify-content-center">
+                                        <a href="{{ route('property.show', $property->id) }}"
+                                            class="bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
+                                            <iconify-icon icon="lucide:eye" class="menu-icon"></iconify-icon>
 
-                                    </a>
+                                        </a>
 
-                                </div>
-                            </td>
+                                    </div>
+                                </td>
                             @endif
                         </tr>
                     @endforeach
@@ -173,45 +162,55 @@
         </div>
 
         <div class="d-flex align-items-center  bg-base px-24 py-12 justify-content-between flex-wrap gap-2 mt-24">
-            <span>Showing {{ $properties->firstItem() }} to {{ $properties->lastItem() }} of {{ $properties->total() }} entries</span>
+            <span>Showing {{ $properties->firstItem() }} to {{ $properties->lastItem() }} of {{ $properties->total() }}
+                entries</span>
             <div class="pagination-container">
                 <div class="card-body p-24">
                     <ul class="pagination d-flex flex-wrap bg-base align-items-center gap-2 justify-content-center">
                         @if ($properties->onFirstPage())
                             <li class="page-item disabled">
-                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="javascript:void(0)">First</a>
+                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px"
+                                    href="javascript:void(0)">First</a>
                             </li>
                             <li class="page-item disabled">
-                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="javascript:void(0)">Previous</a>
+                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px"
+                                    href="javascript:void(0)">Previous</a>
                             </li>
                         @else
                             <li class="page-item">
-                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $properties->url(1) }}">First</a>
+                                <a class="page-link text-secondary-light fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px"
+                                    href="{{ $properties->url(1) }}">First</a>
                             </li>
                             <li class="page-item">
-                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $properties->previousPageUrl() }}">Previous</a>
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px"
+                                    href="{{ $properties->previousPageUrl() }}">Previous</a>
                             </li>
                         @endif
 
                         @foreach ($properties->getUrlRange(1, $properties->lastPage()) as $page => $url)
                             <li class="page-item {{ $properties->currentPage() == $page ? 'active' : '' }}">
-                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px w-48-px {{ $properties->currentPage() == $page ? 'bg-primary-600 text-white' : '' }}" href="{{ $url }}">{{ $page }}</a>
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px w-48-px {{ $properties->currentPage() == $page ? 'bg-primary-600 text-white' : '' }}"
+                                    href="{{ $url }}">{{ $page }}</a>
                             </li>
                         @endforeach
 
                         @if ($properties->hasMorePages())
                             <li class="page-item">
-                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $properties->nextPageUrl() }}">Next</a>
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px"
+                                    href="{{ $properties->nextPageUrl() }}">Next</a>
                             </li>
                             <li class="page-item">
-                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="{{ $properties->url($properties->lastPage()) }}">Last</a>
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px"
+                                    href="{{ $properties->url($properties->lastPage()) }}">Last</a>
                             </li>
                         @else
                             <li class="page-item disabled">
-                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px " href="javascript:void(0)">Next</a>
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px "
+                                    href="javascript:void(0)">Next</a>
                             </li>
                             <li class="page-item disabled">
-                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px" href="javascript:void(0)">Last</a>
+                                <a class="page-link fw-medium radius-8 border-0 px-20 py-10 d-flex align-items-center justify-content-center h-48-px"
+                                    href="javascript:void(0)">Last</a>
                             </li>
                         @endif
                     </ul>

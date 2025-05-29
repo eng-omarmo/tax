@@ -6,48 +6,10 @@
 @endphp
 
 @section('content')
-    @if (empty($property))
-        <!-- Search Form - Original Style -->
-        <div class="card h-100 p-0 radius-12 mb-4">
-            <div class="card-body p-24">
-                <div class="text-primary mb-16 fw-semibold">Property Search</div>
-                <div class="row justify-content-center">
-                    <div class="col-xxl-6 col-xl-8 col-lg-10">
-                        <form action="{{ route('unit.property.search') }}" method="GET" class="d-flex align-items-center">
-                            <div class="d-flex flex-grow-1 align-items-center">
-                                <iconify-icon icon="ic:baseline-search"
-                                    class="icon text-xl line-height-1 me-8 text-primary-light"></iconify-icon>
-                                <input type="text" class="form-control radius-8 flex-grow-1 system-input"
-                                    id="search_property" name="search_property"
-                                    placeholder="Enter Property House code (PH-XXXX)" value="{{ old('search_property') }}"
-                                    required>
-                            </div>
-                            <button type="submit"
-                                class="btn btn-primary text-sm btn-medium px-24 py-8 d-flex align-items-center ms-16">
-                                <span class="ms-1">Search</span>
-                            </button>
-                        </form>
-                        <div class="text-xs text-primary-light mt-8">
-                            <iconify-icon icon="bi:info-circle" class="me-4"></iconify-icon>
-                            Enter the property code found on the property registration documents
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @else
-        <!-- Registration Form - Existing Style Enhanced -->
+
         <div class="card h-100 p-0 radius-12">
             <div class="card-body p-24">
-                <div class="d-flex justify-content-between align-items-center mb-24">
-                    <div class="text-primary fw-semibold">Unit Registration</div>
-                    <a href="{{ route('unit.create') }}" class="btn btn-outline-primary btn-medium text-sm">
 
-                        New Search
-                    </a>
-                </div>
-
-                <!-- Property Info Card - Existing Style -->
                 <div class="card bg-primary-50 border-primary-100 radius-8 mb-24">
                     <div class="card-body p-16">
                         <div class="row">
@@ -203,7 +165,7 @@
 
                         <!-- Buttons -->
                         <div class="d-flex align-items-center justify-content-center gap-16 mt-24">
-                            <a href="{{ route('unit.create') }}"
+                            <a href="{{ route('unit.index') }}"
                                 class="btn btn-outline-danger-600 text-danger-600 btn-medium px-56 py-12 radius-8">
                                 Cancel
                             </a>
@@ -215,5 +177,5 @@
 
             </div>
         </div>
-    @endif
+
 @endsection

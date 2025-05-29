@@ -51,11 +51,7 @@
                         <iconify-icon icon="ic:baseline-filter-alt-off" class="icon text-xl line-height-1"></iconify-icon>
                         Reset
                     </a>
-                    <a href="{{ route('unit.create') }}"
-                        class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
-                        <iconify-icon icon="ic:baseline-plus" class="icon text-xl line-height-1"></iconify-icon>
-                        Add New Unit Property
-                    </a>
+                  
                 </div>
             </div>
         </form>

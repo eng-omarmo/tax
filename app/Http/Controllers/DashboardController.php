@@ -207,6 +207,10 @@ class DashboardController extends Controller
                 'description' => 'Average monthly collection'
             ]
         ];
+        $availableQuarters = Invoice::distinct('frequency')
+            ->pluck('frequency')
+            ->sort()
+            ->values();
 
         return view('dashboard.index', compact(
             'quarterlyStats',
@@ -214,7 +218,9 @@ class DashboardController extends Controller
             'topProperties',
             'unpaidUnits',
             'currentQuarter',
-            'revenueAnalysis'  // Add this to the compact function
+            'revenueAnalysis' ,
+            'availableQuarters'
+
         ));
     }
 

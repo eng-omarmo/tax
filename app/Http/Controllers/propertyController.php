@@ -131,9 +131,12 @@ class propertyController extends Controller
 
 
 
-    public function create()
+    public function create($id)
     {
         $data['districts'] = District::select('id', 'name')->get();
+        $data['branches'] = Branch::select('id', 'name')->get();
+        $data['landlord'] = Landlord::findorFail($id);
+    
         return view('property.create', $data);
     }
 
@@ -216,13 +219,6 @@ class propertyController extends Controller
         }
     }
 
-
-    public function propertyCreate()
-    {
-
-        $data['districts'] = District::select('id', 'name')->get();
-        return view('property.lanlord.create', $data);
-    }
 
 
     public function edit($id)

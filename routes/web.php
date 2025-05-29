@@ -40,7 +40,7 @@ Route::controller(changePasswordController::class)->group(function () {
 });
 Route::controller(PropertyController::class)->prefix('property')->middleware(['auth.admin'])->group(function () {
     Route::get('/index', 'index')->name('property.index');
-    Route::get('/create', 'create')->name('property.create');
+    Route::get('/create/{id}', 'create')->name('property.create');
     Route::post('/store', 'store')->name('property.store');
     Route::get('/edit/{id}', 'edit')->name('property.edit');
     Route::get('/show/{id}', 'show')->name('property.show');
@@ -164,7 +164,7 @@ Route::prefix('monitor')->middleware(['auth.admin'])->group(function () {
 Route::prefix('unit')->middleware(['auth.admin'])->group(function () {
     Route::controller(unitController::class)->group(function () {
         Route::get('/index', 'index')->name('unit.index');
-        Route::get('/create', 'create')->name('unit.create');
+        Route::get('/create/{id}', 'create')->name('unit.create');
         Route::post('/store', 'store')->name('unit.store');
         Route::get('/show/{unit}', 'show')->name('unit.show');
         Route::get('/edit/{unit}', 'edit')->name('unit.edit');

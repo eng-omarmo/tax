@@ -10,36 +10,7 @@
 
 
 
-    @if (!isset($lanlord) || empty($lanlord->id))
-        <!-- Search Form -->
 
-        @if (session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
-        <div class="card h-100 p-0 radius-12 mb-4">
-            <div class="card-body p-24">
-                <div class="row justify-content-center">
-                    <div class="col-xxl-6 col-xl-8 col-lg-10">
-                        <form action="{{ route('property.lanlord.search') }}" method="GET" class="d-flex align-items-center">
-                            <div class="d-flex flex-grow-1 align-items-center">
-                                <input type="text" class="form-control radius-8 me-2 flex-grow-1" id="search_lanlord"
-                                    name="search_lanlord" placeholder="Enter lanlord Phone Number"
-                                    value="{{ old('search_lanlord') }}" required>
-                            </div>
-                            <!-- Add New Tenant Button -->
-                            <button type="submit"
-                                class="btn btn-primary text-sm btn-medium px-4 py-2 d-flex align-items-center ms-2">
-                                <iconify-icon icon="ic:baseline-search" class="icon text-xl line-height-1"></iconify-icon>
-                                <span class="ms-1">Search</span>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @else
         <div class="card h-100 p-0 radius-12">
             <div class="card-body p-24">
                 <div class="row justify-content-center">
@@ -65,7 +36,7 @@
 
                                 <form action="{{ route('property.store') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
-                                    <input type="hidden" name="lanlord_id" value="{{ $lanlord->id }}">
+                                    <input type="hidden" name="lanlord_id" value="{{ $landlord->id }}">
 
 
                                     <div class="row">
@@ -76,7 +47,7 @@
                                             </label>
                                             <input type="text" class="form-control radius-8" id="property_name"
                                                 name="property_name" placeholder="Enter property name"
-                                                value="{{ $lanlord->name }}" readonly>
+                                                value="{{ $landlord->name }}" readonly>
                                         </div>
                                         <div class="col-md-6 mb-20">
                                             <label for="property_name"
@@ -85,7 +56,7 @@
                                             </label>
                                             <input type="text" class="form-control radius-8" id="property_name"
                                                 name="property_name" placeholder="Enter property name"
-                                                value="{{ $lanlord->phone_number }}" readonly>
+                                                value="{{ $landlord->phone_number }}" readonly>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -221,7 +192,7 @@
                 </div>
             </div>
         </div>
-    @endif
+
 
 
 @endsection

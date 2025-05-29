@@ -6,7 +6,7 @@
 @endphp
 
 @section('content')
-{{-- @if (session('error'))
+    {{-- @if (session('error'))
 <div class="alert alert-danger   alert-dismissible fade show" role="alert">
     {{ session('error') }}
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -27,10 +27,13 @@
             <div class="col-12">
                 <div class="card border-0 shadow-sm">
                     <div class="card-header  border-bottom p-24">
-                        <h5 class="card-title text-primary-600 mb-0">
-                            <i class="ri-user-settings-line me-2"></i>Edit Landlord Information
-                        </h5>
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{{ route('property.create', $lanlord->id) }}" class="btn btn-primary btn-sm">
+                                <i class="ri-add-line me-1"></i>Add New Property
+                            </a>
+                        </div>
                     </div>
+
 
                     <div class="card-body p-24">
                         <form action="{{ route('lanlord.update', $lanlord->id) }}" method="POST"
@@ -174,6 +177,8 @@
                                 @foreach ($lanlord->properties as $property)
                                     <div class="col-md-6 col-lg-4">
                                         <div class="property-card border rounded-3 p-3">
+                                            <img src="{{ asset('storage/' . $property->image ?? 'images/default.jpg') }}" alt="{{ $property->name }}" class="img-fluid rounded-top" />
+
                                             <div class="d-flex justify-content-between align-items-center mb-3">
                                                 <h6 class="text-primary-600 mb-0">{{ $property->name }}</h6>
                                                 <div class="property-status">
@@ -220,8 +225,12 @@
                                                     class="btn btn-light-primary btn-sm  text-primary-light flex-grow-1">
                                                     <i class="ri-eye-line me-1 text-primary-light"></i>View Details
                                                 </a>
-
+                                                <a href="{{ route('unit.create', $property->id) }}"
+                                                    class="btn btn-light-primary btn-sm  text-primary-light flex-grow-1">
+                                                    <i class="ri-add-line me-1 text-primary-light"></i>Add Units
+                                                </a>
                                             </div>
+
                                         </div>
                                     </div>
                                 @endforeach
@@ -235,7 +244,8 @@
                                 <i class="ri-building-2-line text-muted" style="font-size: 48px;"></i>
                                 <h6 class="mt-3 text-secondary-600">No Properties Found</h6>
                                 <p class="text-muted">This landlord hasn't added any properties yet.</p>
-                                <a href="{{ route('property.create') }}" class="btn btn-primary btn-sm mt-2">
+                                <a href="{{ route('property.create', $lanlord->id) }}"
+                                    class="btn btn-primary btn-sm mt-2">
                                     <i class="ri-add-line me-1"></i>Add New Property
                                 </a>
                             </div>
@@ -245,21 +255,4 @@
             </div>
         </div>
     </div>
-
-    {{-- <script>
-        function previewImage(event) {
-            const reader = new FileReader();
-            const preview = document.getElementById('profileImagePreview');
-
-            reader.onload = function() {
-                if (reader.readyState === 2) {
-                    preview.src = reader.result;
-                }
-            }
-
-            if (event.target.files[0]) {
-                reader.readAsDataURL(event.target.files[0]);
-            }
-        }
-    </script> --}}
 @endsection

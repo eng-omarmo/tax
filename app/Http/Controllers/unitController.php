@@ -40,9 +40,14 @@ class unitController extends Controller
         return view('unit.index', compact('units'));
     }
 
-    public function create()
+    public function create(Request $request, $id)
     {
-        return view('unit.create');
+
+        $data['property'] = Property::where('id', $id)->first();
+        if (!$data['property']) {
+            return back()->with('error', 'Property not found.');
+        }
+        return view('unit.create', $data);
     }
 
     public function store(Request $request)
