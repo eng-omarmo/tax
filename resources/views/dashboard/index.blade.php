@@ -243,7 +243,7 @@
                 </div>
             </div>
         </div>
-        <div class="row gy-4 mt-1">
+        {{-- <div class="row gy-4 mt-1">
             <!-- Property Units Taxed -->
             <div class="col-xxl-3 col-sm-6">
                 <div class="card p-3 shadow-2 radius-8 border input-form-light h-100 bg-gradient-end-1">
@@ -372,7 +372,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <!-- Tax Trend and Revenue Growth -->
         <div class="row gy-4 mt-4">
             <!-- Tax Trend Chart -->
