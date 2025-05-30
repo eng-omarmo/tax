@@ -380,43 +380,29 @@
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-header bg-transparent border-0 pt-4 pb-0 px-4">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">Quarterly Tax Collection Trend</h5>
-                            <div class="dropdown">
-                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
-                                    id="trendDropdown" data-bs-toggle="dropdown">
-                                    Last 4 Quarters
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="#">Last 4 Quarters</a></li>
-                                    <li><a class="dropdown-item" href="#">Last Year</a></li>
-                                    <li><a class="dropdown-item" href="#">Last 2 Years</a></li>
-                                </ul>
-                            </div>
+
                         </div>
                     </div>
                     <div class="card-body p-4">
-                        <!-- Legend with improved styling -->
-                        <div class="d-flex align-items-center gap-4 mb-4 flex-wrap">
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="badge bg-primary-600 rounded-circle"
-                                    style="width: 10px; height: 10px; padding: 0;"></span>
-                                <span class="text-sm fw-medium">Tax Billed</span>
-                            </div>
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="badge bg-success-600 rounded-circle"
-                                    style="width: 10px; height: 10px; padding: 0;"></span>
-                                <span class="text-sm fw-medium">Tax Collected</span>
-                            </div>
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="badge bg-warning-600 rounded-circle"
-                                    style="width: 10px; height: 10px; padding: 0;"></span>
-                                <span class="text-sm fw-medium">Outstanding</span>
-                            </div>
+                        <div class="row g-3">
+                            <!-- Example Card for One Quarter -->
+                            @foreach ($quarterSummaries as $summary)
+                                <div class="col-md-6 col-xl-6">
+                                    <div class="card shadow-sm border-0">
+                                        <div class="card-body">
+                                            <h6 class="mb-2">{{ $summary['label'] ?? 'Q1 2024' }}</h6>
+                                            <p class="mb-1 text-muted">Tax Billed: <strong class="text-primary">${{ number_format($summary['billed']) }}</strong></p>
+                                            <p class="mb-1 text-muted">Tax Collected: <strong class="text-success">${{ number_format($summary['collected']) }}</strong></p>
+                                            <p class="mb-0 text-muted">Outstanding: <strong class="text-warning">${{ number_format($summary['outstanding']) }}</strong></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
-                        <div id="taxTrendChart" style="height: 350px;"></div>
                     </div>
                 </div>
             </div>
+
 
             <!-- Revenue Growth -->
             <div class="col-xxl-4">

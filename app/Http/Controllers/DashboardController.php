@@ -212,6 +212,36 @@ class DashboardController extends Controller
             ->sort()
             ->values();
 
+            $quarterSummaries = [
+                [
+                    'label' => 'Q1 2025',
+                    'billed' => 20000,
+                    'collected' => 15000,
+                    'outstanding' => 5000,
+                ],
+                [
+                    'label' => 'Q2 2025',
+                    'billed' => 18000,
+                    'collected' => 16000,
+                    'outstanding' => 2000,
+                ],
+
+                [
+                    'label' => 'Q3 2025',
+                    'billed' => 18000,
+                    'collected' => 16000,
+                    'outstanding' => 2000,
+                ],
+                [
+                    'label' => 'Q4 2025',
+                    'billed' => 18000,
+                    'collected' => 16000,
+                    'outstanding' => 2000,
+                ],
+                // Add more as needed
+            ];
+
+
         return view('dashboard.index', compact(
             'quarterlyStats',
             'trendData',
@@ -219,7 +249,8 @@ class DashboardController extends Controller
             'unpaidUnits',
             'currentQuarter',
             'revenueAnalysis' ,
-            'availableQuarters'
+            'availableQuarters',
+            'quarterSummaries'
 
         ));
     }
