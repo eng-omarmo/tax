@@ -110,13 +110,13 @@
                             <td>{{ $property->property_name }}</td>
                             <td>{{ $property->property_phone }}</td>
                             <td>{{ $property->house_type }}</td>
-
+                            <td>{{ $property->house_code }}</td>
                             <td><a
                                     href="{{ route('landlord.show', $property->landlord->id) }}">{{ $property->landlord->name }}</a>
                             </td>
+                            <td>{{ $property->branch->name }}</td>
 
 
-                            <td>{{ $property->house_code }}</td>
                             <td>{{ $property->monitoring_status }}</td>
 
                             <td class="text-center">
