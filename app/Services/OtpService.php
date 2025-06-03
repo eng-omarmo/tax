@@ -27,7 +27,9 @@ class OtpService
                 'expires_at' => $expiresAt
             ]);
         }
-
+        //call sms service
+        $smsService = new SmsService();
+        $smsService->hormuud_sms($user->phone, $otp);
         return true;
     }
     public function verifyOtp(User $user, $otp)
