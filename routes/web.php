@@ -10,21 +10,22 @@ use App\Http\Controllers\unitController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\BranchController;
 
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\tenantController;
 use App\Http\Controllers\InvoiceController;
-use App\Http\Controllers\paymentController;
 
+use App\Http\Controllers\paymentController;
 use App\Http\Controllers\receiptController;
 use App\Http\Controllers\DistrictController;
+
 use App\Http\Controllers\landlordController;
-
 use App\Http\Controllers\propertyController;
+
+
 use App\Http\Controllers\DashboardController;
-
-
 use App\Http\Controllers\monitoringContoller;
-use App\Http\Controllers\SelfPaymentController;
 
+use App\Http\Controllers\SelfPaymentController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\changePasswordController;
 use App\Http\Controllers\NotificationController; // Add this line at the top
@@ -34,6 +35,8 @@ Route::controller(AuthenticationController::class)->group(function () {
     Route::post('/', 'login')->name('signin.handler');
     Route::post('/logout', 'logout')->name('logout');
 });
+// ... existing routes ...
+
 
 Route::controller(changePasswordController::class)->group(function () {
     Route::post('/change-password', 'changePassword')->name('change.password');
@@ -196,6 +199,8 @@ Route::prefix('tax')->middleware(['auth.admin'])->group(function () {
 Route::prefix('dashboard')->middleware(['auth.admin'])->group(function () {
     Route::controller(DashboardController::class)->group(function () {
         Route::get('/index', 'index')->name('index');
+        Route::get('/export-quarterly-report',  'exportQuarterlyReport')
+            ->name('dashboard.export-quarterly-report');
     });
 });
 
@@ -261,4 +266,11 @@ Route::middleware(['auth.admin'])->group(function () {
         Route::post('/renotify/{propertyId}', 'reNotify')->name('renotify');
         Route::get('/history/{propertyId}', 'history')->name('history'); // Optional
     });
+});
+Route::prefix('reports')->name('reports.')->group(function () {
+    Route::get('/landlords', [ReportController::class, 'landlords'])->name('landlords');
+    Route::get('/today-properties', [ReportController::class, 'todayProperties'])->name('today_properties');
+    Route::get('/tax-units', [ReportController::class, 'taxUnits'])->name('tax_units');
+    Route::get('/untaxed-units', [ReportController::class, 'untaxedUnits'])->name('untaxed_units');
+    Route::get('/income-quarter', [ReportController::class, 'incomeQuarter'])->name('income_quarter');
 });

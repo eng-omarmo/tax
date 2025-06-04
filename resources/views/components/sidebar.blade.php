@@ -166,15 +166,48 @@
             @endif
             <li class="sidebar-menu-group-title"> Reports</li>
 
+
+
             <li class="dropdown">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="mdi:file-chart" class="menu-icon text-blue-500"></iconify-icon>
-                    <span>Report</span>
+                    <span>Reports</span>
                 </a>
                 <ul class="sidebar-submenu">
-                    <li><a href="#"><iconify-icon icon="mdi:file-chart" class="inline-icon"></iconify-icon>Income</a></li>
+
+                    <li>
+                        <a href="{{ route('reports.landlords') }}">
+                            <iconify-icon icon="mdi:account-tie" class="inline-icon"></iconify-icon> Landlords
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ route('reports.today_properties') }}">
+                            <iconify-icon icon="mdi:home-city" class="inline-icon"></iconify-icon> Today’s Properties
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ route('reports.tax_units') }}">
+                            <iconify-icon icon="mdi:finance" class="inline-icon"></iconify-icon> Tax Units
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ route('reports.untaxed_units') }}">
+                            <iconify-icon icon="mdi:home-remove" class="inline-icon"></iconify-icon> Untaxed Units
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ route('reports.income_quarter') }}">
+                            <iconify-icon icon="mdi:cash-multiple" class="inline-icon"></iconify-icon> Quarterly Income
+                        </a>
+                    </li>
+
                 </ul>
             </li>
+
         </ul>
 
 

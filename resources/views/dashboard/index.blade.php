@@ -86,12 +86,13 @@
                                             <span class="d-none d-md-inline">Refresh</span>
                                         </button>
 
-                                        <button type="button"
-                                            class="btn btn-light border d-flex align-items-center justify-content-center px-3 py-2"
-                                            data-bs-toggle="tooltip" title="Export Report" style="min-width: 120px;">
+                                        <!-- Replace the existing Export button with this: -->
+                                        <a href="{{ route('dashboard.export-quarterly-report') }}"
+                                           class="btn btn-light border d-flex align-items-center justify-content-center px-3 py-2"
+                                           data-bs-toggle="tooltip" title="Export Report" style="min-width: 120px;">
                                             <iconify-icon icon="solar:export-bold" class="me-2"></iconify-icon>
                                             <span class="d-none d-md-inline">Export</span>
-                                        </button>
+                                        </a>
 
                                         <button type="button"
                                             class="btn btn-primary d-flex align-items-center justify-content-center px-3 py-2"
@@ -243,136 +244,11 @@
                 </div>
             </div>
         </div>
-        {{-- <div class="row gy-4 mt-1">
-            <!-- Property Units Taxed -->
-            <div class="col-xxl-3 col-sm-6">
-                <div class="card p-3 shadow-2 radius-8 border input-form-light h-100 bg-gradient-end-1">
-                    <div class="card-body p-0">
-                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-1 mb-8">
-                            <div class="d-flex align-items-center gap-2">
-                                <span
-                                    class="mb-0 w-48-px h-48-px bg-primary-600 flex-shrink-0 text-white d-flex justify-content-center align-items-center rounded-circle h6 mb-0">
-                                    <iconify-icon icon="solar:home-bold" class="icon"></iconify-icon>
-                                </span>
-                                <div>
-                                    <span class="mb-2 fw-medium text-secondary-light text-sm">Property Units Taxed</span>
-                                    <h6 class="fw-semibold">{{ number_format(1520) }}</h6>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <span class="bg-success-light text-success-main px-2 py-1 rounded-2 fw-medium">
-                                    <iconify-icon icon="solar:arrow-up-bold" class="me-1"></iconify-icon>
-                                    5.2%
-                                </span>
-                            </div>
-                        </div>
-                        <p class="text-sm mb-0">
-                            <span class="text-muted">Active properties:</span>
-                            <span class="fw-medium">{{ number_format(1380) }}</span>
-                        </p>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Payment Information -->
-            <div class="col-xxl-3 col-sm-6">
-                <div class="card p-3 shadow-2 radius-8 border input-form-light h-100 bg-gradient-end-2">
-                    <div class="card-body p-0">
-                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-1 mb-8">
-                            <div class="d-flex align-items-center gap-2">
-                                <span
-                                    class="mb-0 w-48-px h-48-px bg-success-main flex-shrink-0 text-white d-flex justify-content-center align-items-center rounded-circle h6">
-                                    <iconify-icon icon="solar:wallet-money-bold" class="icon"></iconify-icon>
-                                </span>
-                                <div>
-                                    <span class="mb-2 fw-medium text-secondary-light text-sm">Payment Status</span>
-                                    <h6 class="fw-semibold">${{ number_format(985000, 2) }}</h6>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <span class="bg-success-light text-success-main px-2 py-1 rounded-2 fw-medium">
-                                    <iconify-icon icon="solar:arrow-up-bold" class="me-1"></iconify-icon>
-                                    3.8%
-                                </span>
-                            </div>
-                        </div>
-                        <p class="text-sm mb-0">
-                            <span class="text-muted">Paid invoices:</span>
-                            <span class="fw-medium">{{ number_format(1380) }}</span>
-                        </p>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Active Properties -->
-            <div class="col-xxl-3 col-sm-6">
-                <div class="card p-3 shadow-2 radius-8 border input-form-light h-100 bg-gradient-end-3">
-                    <div class="card-body p-0">
-                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-1 mb-8">
-                            <div class="d-flex align-items-center gap-2">
-                                <span
-                                    class="mb-0 w-48-px h-48-px bg-warning text-white flex-shrink-0 d-flex justify-content-center align-items-center rounded-circle h6">
-                                    <iconify-icon icon="solar:home-smile-bold" class="icon"></iconify-icon>
-                                </span>
-                                <div>
-                                    <span class="mb-2 fw-medium text-secondary-light text-sm">Active Properties</span>
-                                    <h6 class="fw-semibold">{{ number_format(1380) }}</h6>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <span class="bg-success-light text-success-main px-2 py-1 rounded-2 fw-medium">
-                                    <iconify-icon icon="solar:arrow-up-bold" class="me-1"></iconify-icon>
-                                    2.1%
-                                </span>
-                            </div>
-                        </div>
-                        <p class="text-sm mb-0">
-                            <span class="text-muted">Monitoring required:</span>
-                            <span class="fw-medium text-danger">{{ number_format(85) }}</span>
-                        </p>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Invoice Status -->
-            <div class="col-xxl-3 col-sm-6">
-                <div class="card p-3 shadow-2 radius-8 border input-form-light h-100 bg-gradient-end-4">
-                    <div class="card-body p-0">
-                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-1 mb-8">
-                            <div class="d-flex align-items-center gap-2">
-                                <span
-                                    class="mb-0 w-48-px h-48-px bg-info text-white flex-shrink-0 d-flex justify-content-center align-items-center rounded-circle h6">
-                                    <iconify-icon icon="solar:document-bold" class="icon"></iconify-icon>
-                                </span>
-                                <div>
-                                    <span class="mb-2 fw-medium text-secondary-light text-sm">Invoice Status</span>
-                                    <div class="d-flex gap-3">
-                                        <div>
-                                            <span class="text-xs text-muted">Paid</span>
-                                            <h6 class="fw-semibold mb-0">{{ number_format(1380) }}</h6>
-                                        </div>
-                                        <div>
-                                            <span class="text-xs text-muted">Pending</span>
-                                            <h6 class="fw-semibold mb-0">{{ number_format(240) }}</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <span class="bg-danger-light text-danger-main px-2 py-1 rounded-2 fw-medium">
-                                    <iconify-icon icon="solar:arrow-down-bold" class="me-1"></iconify-icon>
-                                    1.2%
-                                </span>
-                            </div>
-                        </div>
-                        <p class="text-sm mb-0">
-                            <span class="text-muted">Eligible properties:</span>
-                            <span class="fw-medium">{{ number_format(1250) }}</span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
+
+  
         <!-- Tax Trend and Revenue Growth -->
         <div class="row gy-4 mt-4">
             <!-- Tax Trend Chart -->

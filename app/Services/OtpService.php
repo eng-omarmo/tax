@@ -29,8 +29,10 @@ class OtpService
         }
         //call sms service
         $smsService = new SmsService();
-       $response = $smsService->send('hormuud', $user->phone , $otp);
-       Log::info($response);
+        $message = "Lambarkaaga xaqiijinta (OTP) waa: {{ $otp }}.
+Fadlan geli nambarkan si aad u xaqiijiso aqoonsigaaga. Nambarkani wuu dhacayaa kaddib dhowr daqiiqo. Ha la wadaagin cid kale";
+        $response = $smsService->send('hormuud', $user->phone, $message);
+        Log::info($response);
 
         return true;
     }
