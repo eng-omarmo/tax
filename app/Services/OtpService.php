@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Otp;
 use App\Models\User;
+use App\Services\SmsService;
 use Illuminate\Support\Facades\Log;
 
 class OtpService
