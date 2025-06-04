@@ -6,17 +6,19 @@ use App\Models\Payment;
 use App\Models\Property;
 use App\Models\Transaction;
 use App\Models\PaymentDetail;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Services\TimeService;
 use App\Services\PaymentService;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Crypt;
 
 class SelfPaymentController extends Controller
 {
     public function selfPayment($id)
     {
         try {
-            $data = $this->common($id);
+            $decryptedId= Crypt::decrypt($id);
+            $data = $this->common($decryptedId);
             $property = $data['property'];
             DB::beginTransaction();
             foreach ($property->units as $unit) {
@@ -122,7 +124,7 @@ class SelfPaymentController extends Controller
     public function retry($id)
     {
         try {
-            $data = $this->common($id);
+            $data = $this->common(decrypt($id));
             $transData = $this->generateTransactionPayload($data['property'], $data['amount'], $data['year'], $data['quarter']);
 
             return redirect((new PaymentService())->createTransaction($transData));

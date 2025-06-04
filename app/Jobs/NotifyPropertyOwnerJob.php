@@ -10,10 +10,12 @@ use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use App\Services\InvoiceSmsService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
 use App\Mail\PropertyInvoiceSummaryMail;
+use App\Services\SMSService;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -67,8 +69,6 @@ class NotifyPropertyOwnerJob implements ShouldQueue
             Log::error("❌ Still missing quarter value after fallback. Aborting notification creation.");
             return;
         }
-
-
         Log::withContext([
             'property_id' => $property->id,
             'landlord_email' => $email,
@@ -91,6 +91,17 @@ class NotifyPropertyOwnerJob implements ShouldQueue
             Mail::to($email)->send(
                 new PropertyInvoiceSummaryMail($this->propertyInvoices)
             );
+
+
+            $landlord = $property->landlord;
+            if (!$landlord || !$landlord->phone_number) {
+                Log::warning("No landlord or phone number for property ID {$property->id}");
+                return;
+            }
+
+            $invoiceSms = new InvoiceSmsService();
+            $invoiceSms->sendPropertyInvoiceSummary($landlord->phone_number, $this->propertyInvoices);
+
 
             // Create the notification
             Notification::create([

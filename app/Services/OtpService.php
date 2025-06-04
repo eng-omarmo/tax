@@ -29,7 +29,9 @@ class OtpService
         }
         //call sms service
         $smsService = new SmsService();
-        $smsService->hormuud_sms($user->phone, $otp);
+       $response = $smsService->send('hormuud', $user->phone , $otp);
+       Log::info($response);
+
         return true;
     }
     public function verifyOtp(User $user, $otp)
