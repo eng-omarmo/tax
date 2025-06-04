@@ -6,7 +6,7 @@ use App\Models\Sms;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 
-class SMSService
+class SmsService
 {
     private const HORMUUD_TOKEN_URL = 'https://smsapi.hormuud.com/token';
     private const HORMUUD_SEND_SMS_URL = 'https://smsapi.hormuud.com/api/SendSMS';
