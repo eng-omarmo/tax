@@ -22,10 +22,13 @@ class Invoice extends Model
     protected $casts = [
         'invoice_date' => 'datetime',
         'due_date' => 'datetime',
-        'paid_at' => 'datetime' 
+        'paid_at' => 'datetime'
     ];
     public function unit()
     {
         return $this->belongsTo(Unit::class);
+    }
+    public function payments(){
+        return $this->hasMany(Payment::class);
     }
 }

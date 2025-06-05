@@ -267,10 +267,8 @@ Route::middleware(['auth.admin'])->group(function () {
         Route::get('/history/{propertyId}', 'history')->name('history'); // Optional
     });
 });
-Route::prefix('reports')->name('reports.')->group(function () {
+Route::middleware(['auth.admin'])->prefix('reports')->name('reports.')->group(function () {
     Route::get('/landlords', [ReportController::class, 'landlords'])->name('landlords');
-    Route::get('/today-properties', [ReportController::class, 'todayProperties'])->name('today_properties');
-    Route::get('/tax-units', [ReportController::class, 'taxUnits'])->name('tax_units');
-    Route::get('/untaxed-units', [ReportController::class, 'untaxedUnits'])->name('untaxed_units');
     Route::get('/income-quarter', [ReportController::class, 'incomeQuarter'])->name('income_quarter');
+    Route::get('/today-report', [ReportController::class, 'todayReport'])->name('today_report');
 });

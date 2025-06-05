@@ -177,40 +177,22 @@
 
                     <li>
                         <a href="{{ route('reports.landlords') }}">
-                            <iconify-icon icon="mdi:account-tie" class="inline-icon"></iconify-icon> Landlords
+                            <iconify-icon icon="mdi:account-tie" class="inline-icon"></iconify-icon> Income Report
                         </a>
                     </li>
 
                     <li>
-                        <a href="{{ route('reports.today_properties') }}">
-                            <iconify-icon icon="mdi:home-city" class="inline-icon"></iconify-icon> Today’s Properties
+                        <a href="{{ route('reports.today_report') }}">
+                            <iconify-icon icon="mdi:home-city" class="inline-icon"></iconify-icon> Today’s Activities
                         </a>
                     </li>
 
-                    <li>
-                        <a href="{{ route('reports.tax_units') }}">
-                            <iconify-icon icon="mdi:finance" class="inline-icon"></iconify-icon> Tax Units
-                        </a>
-                    </li>
 
-                    <li>
-                        <a href="{{ route('reports.untaxed_units') }}">
-                            <iconify-icon icon="mdi:home-remove" class="inline-icon"></iconify-icon> Untaxed Units
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="{{ route('reports.income_quarter') }}">
-                            <iconify-icon icon="mdi:cash-multiple" class="inline-icon"></iconify-icon> Quarterly Income
-                        </a>
-                    </li>
 
                 </ul>
             </li>
 
         </ul>
-
-
 
 
     </div>

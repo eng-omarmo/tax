@@ -17,8 +17,9 @@ class SelfPaymentController extends Controller
     public function selfPayment($id)
     {
         try {
-            $decryptedId= Crypt::decrypt($id);
-            $data = $this->common($decryptedId);
+            // $decryptedId= Crypt::decrypt($id);
+            // $data = $this->common($decryptedId);
+            $data = $this->common($id);
             $property = $data['property'];
             DB::beginTransaction();
             foreach ($property->units as $unit) {

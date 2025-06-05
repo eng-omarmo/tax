@@ -248,7 +248,7 @@
 
 
 
-  
+
         <!-- Tax Trend and Revenue Growth -->
         <div class="row gy-4 mt-4">
             <!-- Tax Trend Chart -->
@@ -579,36 +579,36 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($topProperties as $property)
+                                    @foreach ($topDistricts as $district)
                                         <tr>
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="bg-light rounded-circle p-2 me-3">
-                                                        <iconify-icon icon="solar:home-2-bold-duotone"
-                                                            class="fs-5 text-primary"></iconify-icon>
+                                                        <iconify-icon icon="mdi:map-marker" class="fs-5 text-primary"></iconify-icon>
                                                     </div>
                                                     <div>
-                                                        <h6 class="mb-0">{{ $property->name }}</h6>
-                                                        <small class="text-muted">{{ $property->location }}</small>
+                                                        <h6 class="mb-0">{{ $district->name }}</h6>
+                                                        <small class="text-muted">District</small>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>{{ $property->units_count }}</td>
+                                            <td>${{ number_format($district->total_billed, 2) }}</td>
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="flex-grow-1 me-2" style="max-width: 100px;">
                                                         <div class="progress" style="height: 6px;">
                                                             <div class="progress-bar bg-success"
-                                                                style="width: {{ $property->collection_rate }}%"></div>
+                                                                style="width: {{ $district->collection_rate }}%">
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <span>{{ round($property->collection_rate) }}%</span>
+                                                    <span>{{ round($district->collection_rate) }}%</span>
                                                 </div>
                                             </td>
                                             <td>
-                                                @if ($property->collection_rate >= 90)
+                                                @if ($district->collection_rate >= 90)
                                                     <span class="badge bg-success-100 text-success-600">Excellent</span>
-                                                @elseif($property->collection_rate >= 70)
+                                                @elseif($district->collection_rate >= 70)
                                                     <span class="badge bg-warning-100 text-warning-600">Good</span>
                                                 @else
                                                     <span class="badge bg-danger-100 text-danger-600">Poor</span>
@@ -617,6 +617,7 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
+
                             </table>
                         </div>
                     </div>
@@ -644,113 +645,61 @@
                                 <tr>
                                     <th scope="col">SL</th>
                                     <th scope="col">Date </th>
-                                    <th scope="col">Payment Type</th>
+                                    <th scope="col">Invoice</th>
                                     <th scope="col">Paid Amount</th>
                                     <th scope="col">Due Amount</th>
                                     <th scope="col">Payable Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <span class="text-secondary-light">1</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">21 Jun 2024</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">Cash</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">$0.00</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">$150.00</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">$150.00</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="text-secondary-light">2</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">21 Jun 2024</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">Bank</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">$570 </span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">$0.00</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">$570.00</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="text-secondary-light">3</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">21 Jun 2024</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">PayPal</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">$300.00</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">$100.00</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">$200.00</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="text-secondary-light">4</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">21 Jun 2024</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">Cash</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">$0.00</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">$150.00</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">$150.00</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="text-secondary-light">3</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">21 Jun 2024</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">PayPal</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">$300.00</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">$100.00</span>
-                                    </td>
-                                    <td>
-                                        <span class="text-secondary-light">$200.00</span>
-                                    </td>
-                                </tr>
+
+                                <tbody>
+                                    @forelse ($payments as $index => $payment)
+                                        <tr>
+                                            <td><span class="text-secondary-light">{{ $index + 1 }}</span></td>
+
+                                            {{-- Payment Date --}}
+                                            <td>
+                                                <span class="text-secondary-light">
+                                                    {{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}
+                                                </span>
+                                            </td>
+
+                                            {{-- Payment Method --}}
+                                            <td>
+                                                <span class="text-secondary-light">{{ ucfirst($payment->invoice->invoice_number ?? 'N/A') }}</span>
+                                            </td>
+
+                                            {{-- Paid Amount --}}
+                                            <td>
+                                                <span class="text-secondary-light">${{ number_format($payment->amount, 2) }}</span>
+                                            </td>
+
+                                            {{-- Due Amount --}}
+                                            <td>
+                                                <span class="text-secondary-light">
+                                                    @if($payment->invoice)
+                                                        ${{ number_format($payment->invoice->amount - $payment->invoice->payments()->where('status', 'success')->sum('amount'), 2) }}
+                                                    @else
+                                                        $0.00
+                                                    @endif
+                                                </span>
+                                            </td>
+
+                                            {{-- Total Payable --}}
+                                            <td>
+                                                <span class="text-secondary-light">
+                                                    ${{ number_format($payment->invoice->amount ?? 0, 2) }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted">No payments found.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+
                             </tbody>
                         </table>
                     </div>

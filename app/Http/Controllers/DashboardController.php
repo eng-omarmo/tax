@@ -6,13 +6,15 @@ use Carbon\Carbon;
 use App\Models\Unit;
 use App\Models\Tenant;
 use App\Models\Invoice;
+use App\Models\Payment;
 use App\Models\Property;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Services\TimeService;
+use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class DashboardController extends Controller
@@ -109,7 +111,7 @@ class DashboardController extends Controller
         // Trend data for 4 past quarters
         $trendData = [];
         for ($i = 0; $i < 4; $i++) {
-            $quarter = str_replace('Q' , ' ' , $currentQuarter ) - $i;
+            $quarter = str_replace('Q', ' ', $currentQuarter) - $i;
             $year = $currentYear;
             if ($quarter <= 0) {
                 $quarter += 4;
@@ -216,34 +218,56 @@ class DashboardController extends Controller
             ->sort()
             ->values();
 
-            $quarterSummaries = [
-                [
-                    'label' => 'Q1 2025',
-                    'billed' => 20000,
-                    'collected' => 15000,
-                    'outstanding' => 5000,
-                ],
-                [
-                    'label' => 'Q2 2025',
-                    'billed' => 18000,
-                    'collected' => 16000,
-                    'outstanding' => 2000,
-                ],
+        $quarterSummaries = [
+            [
+                'label' => 'Q1 2025',
+                'billed' => 20000,
+                'collected' => 15000,
+                'outstanding' => 5000,
+            ],
+            [
+                'label' => 'Q2 2025',
+                'billed' => 18000,
+                'collected' => 16000,
+                'outstanding' => 2000,
+            ],
 
-                [
-                    'label' => 'Q3 2025',
-                    'billed' => 18000,
-                    'collected' => 16000,
-                    'outstanding' => 2000,
-                ],
-                [
-                    'label' => 'Q4 2025',
-                    'billed' => 18000,
-                    'collected' => 16000,
-                    'outstanding' => 2000,
-                ],
+            [
+                'label' => 'Q3 2025',
+                'billed' => 18000,
+                'collected' => 16000,
+                'outstanding' => 2000,
+            ],
+            [
+                'label' => 'Q4 2025',
+                'billed' => 18000,
+                'collected' => 16000,
+                'outstanding' => 2000,
+            ],
 
-            ];
+        ];
+        // Top Performing Districts
+
+        $topDistricts = Invoice::select(
+            'districts.name',
+            DB::raw('SUM(invoices.amount) as total_billed'),
+            DB::raw('SUM(CASE WHEN invoices.payment_status = "paid" THEN invoices.amount ELSE 0 END) as total_collected')
+        )
+            ->join('units', 'invoices.unit_id', '=', 'units.id')
+            ->join('properties', 'units.property_id', '=', 'properties.id')
+            ->join('districts', 'properties.district_id', '=', 'districts.id')
+            ->groupBy('districts.name')
+            ->orderByDesc('total_collected')
+            ->get()
+            ->map(function ($district) {
+                $district->collection_rate = $district->total_billed > 0
+                    ? ($district->total_collected / $district->total_billed) * 100
+                    : 0;
+                return $district;
+            });
+
+            $payments = Payment::with('invoice')->latest('payment_date')->take(10)->get();
+
 
 
         return view('dashboard.index', compact(
@@ -252,9 +276,11 @@ class DashboardController extends Controller
             'topProperties',
             'unpaidUnits',
             'currentQuarter',
-            'revenueAnalysis' ,
+            'revenueAnalysis',
             'availableQuarters',
-            'quarterSummaries'
+            'topDistricts',
+            'quarterSummaries',
+            'payments'
 
         ));
     }
@@ -449,8 +475,8 @@ class DashboardController extends Controller
     private function getTopProperties($currentQuarter, $currentYear)
     {
         return Property::withCount(['units' => function ($query) {
-                $query->where('is_available', 0);
-            }])
+            $query->where('is_available', 0);
+        }])
             ->withSum(['units' => function ($query) use ($currentYear, $currentQuarter) {
                 $query->whereHas('invoices', function ($q) use ($currentYear, $currentQuarter) {
                     $q->whereYear('invoice_date', $currentYear)
@@ -487,12 +513,12 @@ class DashboardController extends Controller
     private function getUnpaidUnits($currentQuarter, $currentYear)
     {
         return Property::withCount(['units' => function ($query) use ($currentYear, $currentQuarter) {
-                $query->whereHas('invoices', function ($q) use ($currentYear, $currentQuarter) {
-                    $q->whereYear('invoice_date', $currentYear)
-                        ->whereRaw('frequency = ?', [$currentQuarter])
-                        ->where('payment_status', 'unpaid');
-                });
-            }])
+            $query->whereHas('invoices', function ($q) use ($currentYear, $currentQuarter) {
+                $q->whereYear('invoice_date', $currentYear)
+                    ->whereRaw('frequency = ?', [$currentQuarter])
+                    ->where('payment_status', 'unpaid');
+            });
+        }])
             ->having('units_count', '>', 0)
             ->orderByDesc('units_count')
             ->take(5)
