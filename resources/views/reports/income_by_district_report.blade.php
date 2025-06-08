@@ -1,6 +1,6 @@
 @extends('layout.layout')
 @php
-    $title = 'Income Report';
+    $title = 'Income Report By District';
     $subTitle = 'Financial Summary for ' . $currentQuarter . ' ' . $currentYear;
 @endphp
 
