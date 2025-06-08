@@ -579,7 +579,7 @@
                                     <tr>
                                         <th scope="col" class="fw-medium">District</th>
                                         <th scope="col" class="fw-medium">Tax billed</th>
-                                        <th scope="col" class="fw-medium">Collect Amount </th>
+                                        <th scope="col" class="fw-medium">Collection Rate </th>
                                         <th scope="col" class="fw-medium">Status</th>
                                     </tr>
                                 </thead>
