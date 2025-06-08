@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Invoice;
 use Carbon\Carbon;
 use App\Models\Unit;
-use App\Models\Landlord;
+use App\Models\Invoice;
 use App\Models\Payment;
+use App\Models\District;
+use App\Models\Landlord;
 use App\Models\Property;
 use App\Models\Transaction;
-use App\Services\TimeService;
 use Illuminate\Http\Request;
+use App\Services\TimeService;
 
 class ReportController extends Controller
 {
@@ -29,16 +30,16 @@ class ReportController extends Controller
 
         // Get today's paid units
         $paidUnits = Invoice::with('unit')
-        ->where('payment_status', 'Paid')
-        ->whereDate('updated_at', $today)
-        ->get();
+            ->where('payment_status', 'Paid')
+            ->whereDate('updated_at', $today)
+            ->get();
 
         // Get today's registered landlords
         $landlords = Landlord::whereDate('created_at', $today)->get();
 
-        $payments= Payment::with('invoice')
-        ->where('status', 'Completed')
-        ->whereDate('updated_at', $today)->get();
+        $payments = Payment::with('invoice')
+            ->where('status', 'Completed')
+            ->whereDate('updated_at', $today)->get();
 
         return view('reports.today_report', compact('properties', 'unpaidUnits', 'paidUnits', 'landlords', 'payments'));
     }
@@ -90,9 +91,9 @@ class ReportController extends Controller
         $monthlyRevenue = $payments->groupBy(function ($payment) {
             return Carbon::parse($payment->payment_date)->format('F');
         })
-        ->map(function ($monthPayments) {
-            return $monthPayments->sum('amount');
-        });
+            ->map(function ($monthPayments) {
+                return $monthPayments->sum('amount');
+            });
 
         // Get payment methods breakdown
         $paymentMethods = $payments->groupBy('payment_method')
@@ -136,5 +137,50 @@ class ReportController extends Controller
         $quarterNumber = (int) substr($quarter, 1, 1);
         $month = $quarterNumber * 3;
         return Carbon::createFromDate($year, $month, 1)->endOfMonth()->endOfDay();
+    }
+
+    //income by distrct report
+    public function incomeByDistrictReport()
+    {
+        $districts = Property::distinct()->pluck('district_id');
+        $districtData = [];
+
+        foreach ($districts as $district) {
+            $invoices = Invoice::whereHas('unit.property', function ($query) use ($district) {
+                $query->where('district_id', $district);
+            })->get();
+
+            $totalRevenue = $invoices->sum('amount');
+            $totalPaid = $invoices->where('payment_status', 'Paid')->sum('amount');
+            $totalOutstanding = $invoices->where('payment_status', '!=', 'Paid')->sum('amount');
+            $collectionRate = $totalRevenue > 0 ? ($totalPaid / $totalRevenue) * 100 : 0;
+
+            $districtData[] = [
+                'district_name' => $this->getDistrictName($district),
+                'totalRevenue' => $totalRevenue,
+                'totalPaid' => $totalPaid,
+                'totalOutstanding' => $totalOutstanding,
+                'collectionRate' => $collectionRate,
+            ];
+        }
+        $currentYear = '2023';
+        $currentQuarter = 'Q2';
+
+        return view(
+            'reports.income_by_district_report',
+            [
+                'incomeByDistrict' => $districtData,
+                'currentYear' => $currentYear,
+                'currentQuarter' => $currentQuarter,
+            ]
+        );
+    }
+
+    private function getDistrictName($districtId)
+    {
+
+        $district = District::find($districtId);
+
+        return $district ? $district->name : 'Unknown';
     }
 }

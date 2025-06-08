@@ -1,34 +1,26 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\BranchController;
+use App\Http\Controllers\changePasswordController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DistrictController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\landlordController;
+use App\Http\Controllers\monitoringContoller;
+use App\Http\Controllers\NotificationController;  // Add this line at the top
 use App\Http\Controllers\OtpController;
-use App\Http\Controllers\taxController;
-
+use App\Http\Controllers\paymentController;
+use App\Http\Controllers\propertyController;
+use App\Http\Controllers\receiptController;
 use App\Http\Controllers\rentController;
-
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SelfPaymentController;
+use App\Http\Controllers\taxController;
+use App\Http\Controllers\tenantController;
 use App\Http\Controllers\unitController;
 use App\Http\Controllers\UsersController;
-use App\Http\Controllers\BranchController;
-
-use App\Http\Controllers\ReportController;
-use App\Http\Controllers\tenantController;
-use App\Http\Controllers\InvoiceController;
-
-use App\Http\Controllers\paymentController;
-use App\Http\Controllers\receiptController;
-use App\Http\Controllers\DistrictController;
-
-use App\Http\Controllers\landlordController;
-use App\Http\Controllers\propertyController;
-
-
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\monitoringContoller;
-
-use App\Http\Controllers\SelfPaymentController;
-use App\Http\Controllers\AuthenticationController;
-use App\Http\Controllers\changePasswordController;
-use App\Http\Controllers\NotificationController; // Add this line at the top
+use Illuminate\Support\Facades\Route;
 
 Route::controller(AuthenticationController::class)->group(function () {
     Route::get('/', 'signin')->name('signin');
@@ -36,7 +28,6 @@ Route::controller(AuthenticationController::class)->group(function () {
     Route::post('/logout', 'logout')->name('logout');
 });
 // ... existing routes ...
-
 
 Route::controller(changePasswordController::class)->group(function () {
     Route::post('/change-password', 'changePassword')->name('change.password');
@@ -56,7 +47,7 @@ Route::controller(PropertyController::class)->prefix('property')->middleware(['a
     Route::get('/branches/{districtId}', 'getBranches')->name('property.branches');
     Route::get('/create/property', 'propertyCreate')->name('property.create.landlord');
     Route::post('/store/property', 'propertyStore')->name('property.store.landlord');
-    //search property
+    // search property
     Route::get('/search', 'search')->name('property.lanlord.search');
 });
 Route::controller(rentController::class)->prefix('rent')->middleware(['auth.admin'])->group(function () {
@@ -71,7 +62,6 @@ Route::controller(rentController::class)->prefix('rent')->middleware(['auth.admi
     Route::get('/rent/report/pdf', 'exportPdf')->name('rent.report.print');
     Route::get('/rent/property/search', 'search')->name('rent.property.search');
 });
-
 
 // Authentication
 Route::prefix('authentication')->group(function () {
@@ -101,7 +91,6 @@ Route::prefix('branch')->middleware(['auth.admin'])->group(function () {
         Route::get('/delete/{branch}', 'destroy')->name('branch.delete');
     });
 });
-
 
 Route::prefix('tenant')->middleware(['auth.admin'])->group(function () {
     Route::controller(tenantController::class)->group(function () {
@@ -133,8 +122,7 @@ Route::prefix('payment')->middleware(['auth.admin'])->group(function () {
     });
 });
 
-
-//self payment url
+// self payment url
 Route::prefix('self-payment')->group(function () {
     Route::controller(SelfPaymentController::class)->group(function () {
         Route::get('/{payment}', 'selfPayment')->name('self.payment');
@@ -178,10 +166,6 @@ Route::prefix('unit')->middleware(['auth.admin'])->group(function () {
     });
 });
 
-
-
-
-
 Route::prefix('tax')->middleware(['auth.admin'])->group(function () {
     Route::controller(taxController::class)->group(function () {
         Route::get('/index', 'index')->name('tax.index');
@@ -194,17 +178,16 @@ Route::prefix('tax')->middleware(['auth.admin'])->group(function () {
     });
 });
 
-
 // Dashboard
 Route::prefix('dashboard')->middleware(['auth.admin'])->group(function () {
     Route::controller(DashboardController::class)->group(function () {
         Route::get('/index', 'index')->name('index');
         Route::get('/income', [ReportController::class, 'incomeReport'])->name('reports.income');
-        Route::get('/export-quarterly-report',  'exportQuarterlyReport')
+
+        Route::get('/export-quarterly-report', 'exportQuarterlyReport')
             ->name('dashboard.export-quarterly-report');
     });
 });
-
 
 Route::prefix('invoice')->middleware(['auth.admin'])->group(function () {
     Route::controller(InvoiceController::class)->group(function () {
@@ -217,7 +200,7 @@ Route::prefix('invoice')->middleware(['auth.admin'])->group(function () {
         Route::get('/create', 'create')->name('invoice.create');
         Route::get('/invoice-edit', 'invoiceEdit')->name('invoiceEdit');
         Route::get('/invoice-list', 'invoiceList')->name('invoiceList');
-        Route::get('/paid-invoice-list', 'paidInvoiceList')->name('invoice.paid'); // New route for paid invoices
+        Route::get('/paid-invoice-list', 'paidInvoiceList')->name('invoice.paid');  // New route for paid invoices
         Route::post('/generate', 'generateInvoice')->name('invoice.generate');
         Route::get('/invoice-preview', 'invoicePreview')->name('invoicePreview');
         Route::post('/q-1', 'quarter1')->name('invoice.quarter1');
@@ -226,7 +209,6 @@ Route::prefix('invoice')->middleware(['auth.admin'])->group(function () {
     });
 });
 
-
 // receipt
 Route::prefix('receipt')->group(function () {
     Route::controller(receiptController::class)->group(function () {
@@ -234,7 +216,6 @@ Route::prefix('receipt')->group(function () {
         Route::get('tax/rent/{id}', 'rentReceipt')->name('receipt.rent');
     });
 });
-
 
 // Users
 Route::prefix('users')->middleware(['auth.admin'])->group(function () {
@@ -251,7 +232,6 @@ Route::prefix('users')->middleware(['auth.admin'])->group(function () {
     });
 });
 
-
 // Users
 Route::prefix('otp')->group(function () {
     Route::controller(OtpController::class)->group(function () {
@@ -265,11 +245,12 @@ Route::middleware(['auth.admin'])->group(function () {
     Route::controller(NotificationController::class)->prefix('notifications')->name('notifications.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/renotify/{propertyId}', 'reNotify')->name('renotify');
-        Route::get('/history/{propertyId}', 'history')->name('history'); // Optional
+        Route::get('/history/{propertyId}', 'history')->name('history');  // Optional
     });
 });
 Route::middleware(['auth.admin'])->prefix('reports')->name('reports.')->group(function () {
     Route::get('/landlords', [ReportController::class, 'landlords'])->name('landlords');
     Route::get('/income-quarter', [ReportController::class, 'incomeQuarter'])->name('income_quarter');
     Route::get('/today-report', [ReportController::class, 'todayReport'])->name('today_report');
+    Route::get('/income/district', [ReportController::class, 'incomeByDistrictReport'])->name('district.income');
 });

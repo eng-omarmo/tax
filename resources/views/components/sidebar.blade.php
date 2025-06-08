@@ -187,7 +187,13 @@
                         </a>
                     </li>
 
-
+                    <li>
+                        <a href="{{ route('reports.district.income') }}">
+                            <iconify-icon icon="mdi:map-marker-radius-outline" class="inline-icon"></iconify-icon>
+                            District Income
+                        </a>
+                        
+                    </li>
 
                 </ul>
             </li>
