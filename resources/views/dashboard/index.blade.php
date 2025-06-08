@@ -565,7 +565,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 class="mb-0"> District Performance </h5>
                             <a href="{{ route('reports.district.income') }}" class="btn btn-sm btn-outline-primary">
-                                <iconify-icon icon="mdi:table-eye" class="me-1"></iconify-icon>
+
                                 View All
                             </a>
 
