@@ -12,7 +12,7 @@
                 <div class="mb-3 mb-md-0">
 
                     <p class="mb-0 text-muted">
-           
+
                         {{ $currentQuarter }} {{ $currentYear }} Financial Summary
                     </p>
                 </div>
@@ -286,12 +286,7 @@
                                                                     Total Units
                                                                     <span class="badge bg-primary rounded-pill">{{ $district['unitCount'] }}</span>
                                                                 </li>
-                                                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                                    Units per Property
-                                                                    <span class="badge bg-info rounded-pill">
-                                                                        {{ $district['propertyCount'] > 0 ? number_format($district['unitCount'] / $district['propertyCount'], 1) : 0 }}
-                                                                    </span>
-                                                                </li>
+                                                           
                                                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                                                     Total Invoices
                                                                     <span class="badge bg-secondary rounded-pill">{{ $district['invoiceCount'] }}</span>
