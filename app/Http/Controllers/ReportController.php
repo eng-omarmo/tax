@@ -316,8 +316,8 @@ class ReportController extends Controller
 
         // Collection rate recommendations
         if ($district['collectionRate'] < $systemAvgRate) {
-            $recommendations[] = "Implement targeted collection campaigns in this district to improve the collection rate.";
-            $recommendations[] = "Review property management practices in this district.";
+            $recommendations[] = "Hirgeli ol’olayaal aruurin hormarsan soo  lagu hagaajinayo heerka daqliqa canshuurta degmadan.";
+            $recommendations[] = "Dib u eeg habraacyada maareynta guryaha ee degmadan.";
         }
 
         // Revenue growth recommendations

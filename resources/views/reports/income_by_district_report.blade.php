@@ -10,9 +10,9 @@
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
                 <!-- Left: Header Title -->
                 <div class="mb-3 mb-md-0">
-                    <h4 class="mb-1">District Income Analysis</h4>
+
                     <p class="mb-0 text-muted">
-                        <iconify-icon icon="solar:calendar-bold" class="me-2"></iconify-icon>
+           
                         {{ $currentQuarter }} {{ $currentYear }} Financial Summary
                     </p>
                 </div>
@@ -173,7 +173,7 @@
                 </div>
             </div>
 
-      
+
 
             <!-- District Performance Table -->
             <div class="card border mb-4">
