@@ -360,43 +360,7 @@
                             <small class="text-muted">Target: &lt; 15%</small>
                         </div>
 
-                        <!-- Payment Pattern Distribution -->
-                        <div class="mt-4 pt-2">
-                            <h6 class="fw-bold mb-3">Payment Pattern Distribution</h6>
-
-                            <!-- Early -->
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="text-sm text-muted">Early</span>
-                                <span class="fw-medium text-sm">{{ $quarterlyStats['earlyPaymentRate'] }}%</span>
-                            </div>
-                            <div class="progress mb-3" style="height: 6px;">
-                                <div class="progress-bar bg-success"
-                                    style="width: {{ $quarterlyStats['earlyPaymentRate'] }}%;"></div>
-                            </div>
-
-                            <!-- On-time -->
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="text-sm text-muted">On-time</span>
-                                <span class="fw-medium text-sm">
-                                    {{ 100 - $quarterlyStats['earlyPaymentRate'] - $quarterlyStats['overdueTaxRate'] }}%
-                                </span>
-                            </div>
-                            <div class="progress mb-3" style="height: 6px;">
-                                <div class="progress-bar bg-primary"
-                                    style="width: {{ 100 - $quarterlyStats['earlyPaymentRate'] - $quarterlyStats['overdueTaxRate'] }}%;">
-                                </div>
-                            </div>
-
-                            <!-- Overdue -->
-                            <div class="d-flex justify-content-between align-items-center mb-0">
-                                <span class="text-sm text-muted">Overdue</span>
-                                <span class="fw-medium text-sm">{{ $quarterlyStats['overdueTaxRate'] }}%</span>
-                            </div>
-                            <div class="progress" style="height: 6px;">
-                                <div class="progress-bar bg-danger"
-                                    style="width: {{ $quarterlyStats['overdueTaxRate'] }}%;"></div>
-                            </div>
-                        </div>
+                  
                     </div>
                 </div>
             </div>
