@@ -199,6 +199,7 @@ Route::prefix('tax')->middleware(['auth.admin'])->group(function () {
 Route::prefix('dashboard')->middleware(['auth.admin'])->group(function () {
     Route::controller(DashboardController::class)->group(function () {
         Route::get('/index', 'index')->name('index');
+        Route::get('/income', [ReportController::class, 'incomeReport'])->name('reports.income');
         Route::get('/export-quarterly-report',  'exportQuarterlyReport')
             ->name('dashboard.export-quarterly-report');
     });

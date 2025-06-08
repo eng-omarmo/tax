@@ -8,6 +8,8 @@ use App\Models\Unit;
 use App\Models\Landlord;
 use App\Models\Payment;
 use App\Models\Property;
+use App\Models\Transaction;
+use App\Services\TimeService;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -39,5 +41,100 @@ class ReportController extends Controller
         ->whereDate('updated_at', $today)->get();
 
         return view('reports.today_report', compact('properties', 'unpaidUnits', 'paidUnits', 'landlords', 'payments'));
+    }
+
+    /**
+     * Display income report with detailed financial information
+     */
+    public function incomeReport(Request $request)
+    {
+        // Get time period (default to current quarter)
+        $timeService = new TimeService();
+        $currentQuarter = $request->input('quarter', $timeService->currentQuarter());
+        $currentYear = $request->input('year', $timeService->currentYear());
+
+        // Get all payments for the selected period
+        $startDate = $this->getQuarterStartDate($currentQuarter, $currentYear);
+        $endDate = $this->getQuarterEndDate($currentQuarter, $currentYear);
+
+        // Get payments data
+        $payments = Payment::with(['invoice.unit.property', 'paymentDetail'])
+            ->whereBetween('payment_date', [$startDate, $endDate])
+            ->where('status', 'completed')
+            ->get();
+
+        // Calculate summary statistics
+        $totalRevenue = $payments->sum('amount');
+        $propertyRevenue = $payments->groupBy('invoice.unit.property_id')
+            ->map(function ($propertyPayments) {
+                return [
+                    'property' => $propertyPayments->first()->invoice->unit->property ?? null,
+                    'total' => $propertyPayments->sum('amount'),
+                    'count' => $propertyPayments->count(),
+                ];
+            })
+            ->sortByDesc('total')
+            ->values();
+
+        // Get invoices data for the period
+        $invoices = Invoice::with('unit.property')
+            ->whereBetween('invoice_date', [$startDate, $endDate])
+            ->get();
+
+        $totalBilled = $invoices->sum('amount');
+        $totalPaid = $invoices->where('payment_status', 'Paid')->sum('amount');
+        $totalOutstanding = $invoices->where('payment_status', '!=', 'Paid')->sum('amount');
+        $collectionRate = $totalBilled > 0 ? ($totalPaid / $totalBilled) * 100 : 0;
+
+        // Get monthly breakdown
+        $monthlyRevenue = $payments->groupBy(function ($payment) {
+            return Carbon::parse($payment->payment_date)->format('F');
+        })
+        ->map(function ($monthPayments) {
+            return $monthPayments->sum('amount');
+        });
+
+        // Get payment methods breakdown
+        $paymentMethods = $payments->groupBy('payment_method')
+            ->map(function ($methodPayments) {
+                return [
+                    'total' => $methodPayments->sum('amount'),
+                    'count' => $methodPayments->count(),
+                ];
+            });
+
+        return view('reports.income_report', compact(
+            'payments',
+            'totalRevenue',
+            'propertyRevenue',
+            'totalBilled',
+            'totalPaid',
+            'totalOutstanding',
+            'collectionRate',
+            'monthlyRevenue',
+            'paymentMethods',
+            'currentQuarter',
+            'currentYear'
+        ));
+    }
+
+    /**
+     * Helper method to get quarter start date
+     */
+    private function getQuarterStartDate($quarter, $year)
+    {
+        $quarterNumber = (int) substr($quarter, 1, 1);
+        $month = ($quarterNumber - 1) * 3 + 1;
+        return Carbon::createFromDate($year, $month, 1)->startOfDay();
+    }
+
+    /**
+     * Helper method to get quarter end date
+     */
+    private function getQuarterEndDate($quarter, $year)
+    {
+        $quarterNumber = (int) substr($quarter, 1, 1);
+        $month = $quarterNumber * 3;
+        return Carbon::createFromDate($year, $month, 1)->endOfMonth()->endOfDay();
     }
 }

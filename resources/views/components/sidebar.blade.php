@@ -176,7 +176,7 @@
                 <ul class="sidebar-submenu">
 
                     <li>
-                        <a href="{{ route('reports.landlords') }}">
+                        <a href="{{ route('reports.income') }}">
                             <iconify-icon icon="mdi:account-tie" class="inline-icon"></iconify-icon> Income Report
                         </a>
                     </li>
