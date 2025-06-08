@@ -25,7 +25,7 @@ class ReportController extends Controller
         $properties = Property::whereDate('created_at', $today)->get();
 
         // Get today's unpaid units
-        $unpaidUnits = Invoice::with('unit')->where('payment_status', 'Paid')->whereDate('created_at', $today)->get();
+        $unpaidUnits = Invoice::with('unit')->where('payment_status', 'Pending')->whereDate('created_at', $today)->get();
 
         // Get today's paid units
         $paidUnits = Invoice::with('unit')
