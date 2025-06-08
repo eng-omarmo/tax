@@ -563,8 +563,8 @@
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-header bg-transparent border-0 pt-4 pb-0 px-4">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">Top Performing Districts</h5>
-                            <button class="btn btn-sm btn-outline-primary">View All</button>
+                            <h5 class="mb-0"> District Performance </h5>
+                            <a href="{{route('district.income')}}" class="btn btn-sm btn-outline-primary">View All</a>
                         </div>
                     </div>
                     <div class="card-body p-4">
@@ -575,7 +575,7 @@
                                         <th scope="col" class="fw-medium">District</th>
                                         <th scope="col" class="fw-medium">Tax billed</th>
                                         <th scope="col" class="fw-medium">Collect Amount </th>
-                                        <th scope="col" class="fw-medium">Quarter</th>
+                                        <th scope="col" class="fw-medium">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
