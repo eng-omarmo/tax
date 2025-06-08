@@ -185,7 +185,7 @@
                                                                 {{ $inv->invoice_number }}
                                                             </span>
                                                         </td>
-                                                        <td>{{ $$inv->unit->property->property_name ?? '-' }}</td>
+                                                        <td>{{ $inv->unit->property->property_name ?? '-' }}</td>
                                                         <td><span class="badge bg-danger">Unpaid</span></td>
                                                     </tr>
                                                 @empty
