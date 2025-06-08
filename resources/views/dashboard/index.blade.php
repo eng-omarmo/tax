@@ -467,99 +467,10 @@
 
         <!-- Risk Monitoring and Top Properties -->
         <div class="row gy-4 mt-4">
-            <!-- Risk Monitoring -->
-            <div class="col-xl-6">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-header bg-transparent border-0 pt-4 pb-0 px-4">
-                        <h5 class="mb-0">Risk Monitoring</h5>
-                    </div>
-                    <div class="card-body p-4">
-                        <div class="row g-4">
-                            <div class="col-md-6">
-                                <div class="border rounded p-3 bg-white hover-shadow transition-all h-100">
-                                    <p class="text-sm text-muted mb-1">High Risk Properties</p>
-                                    <h4 class="mb-0 d-flex align-items-center gap-2">
-                                        {{ count($unpaidUnits) }}
-                                        <span class="badge bg-danger-100 text-danger-600 fs-xs">
-                                            <iconify-icon icon="solar:danger-triangle-bold" class="me-1"></iconify-icon>
-                                            Critical
-                                        </span>
-                                    </h4>
-                                    <small class="text-muted d-flex align-items-center gap-1 mt-1">
-                                        Properties with >50% unpaid units
-                                    </small>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="border rounded p-3 bg-white hover-shadow transition-all h-100">
-                                    <p class="text-sm text-muted mb-1">Overdue Amount</p>
-                                    <h4 class="mb-0 d-flex align-items-center gap-2">
-                                        ${{ number_format($quarterlyStats['totalOutstanding'], 2) }}
-                                        <span class="badge bg-warning-100 text-warning-600 fs-xs">
-                                            <iconify-icon icon="solar:clock-circle-bold" class="me-1"></iconify-icon>
-                                            Attention
-                                        </span>
-                                    </h4>
-                                    <small class="text-muted d-flex align-items-center gap-1 mt-1">
-                                        {{ $quarterlyStats['overdueTaxRate'] }}% of total billed amount
-                                    </small>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="border rounded p-3 bg-white hover-shadow transition-all h-100">
-                                    <p class="text-sm text-muted mb-1">Collection Efficiency</p>
-                                    <h4 class="mb-0 d-flex align-items-center gap-2">
-                                        {{ $quarterlyStats['collectionRate'] }}%
-                                        @if ($quarterlyStats['collectionRate'] < 70)
-                                            <span class="badge bg-warning-100 text-warning-600 fs-xs">
-                                                <iconify-icon icon="solar:danger-triangle-bold"
-                                                    class="me-1"></iconify-icon>
-                                                Below Target
-                                            </span>
-                                        @else
-                                            <span class="badge bg-success-100 text-success-600 fs-xs">
-                                                <iconify-icon icon="solar:check-circle-bold"
-                                                    class="me-1"></iconify-icon>
-                                                On Target
-                                            </span>
-                                        @endif
-                                    </h4>
-                                    <small class="text-muted d-flex align-items-center gap-1 mt-1">
-                                        Target: 85% collection rate
-                                    </small>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="border rounded p-3 bg-white hover-shadow transition-all h-100">
-                                    <p class="text-sm text-muted mb-1">Average Collection Time</p>
-                                    <h4 class="mb-0 d-flex align-items-center gap-2">
-                                        {{ round($quarterlyStats['averageCollectionDays']) }} days
-                                        @if ($quarterlyStats['averageCollectionDays'] > 30)
-                                            <span class="badge bg-warning-100 text-warning-600 fs-xs">
-                                                <iconify-icon icon="solar:danger-triangle-bold"
-                                                    class="me-1"></iconify-icon>
-                                                Delayed
-                                            </span>
-                                        @else
-                                            <span class="badge bg-success-100 text-success-600 fs-xs">
-                                                <iconify-icon icon="solar:check-circle-bold"
-                                                    class="me-1"></iconify-icon>
-                                                Good
-                                            </span>
-                                        @endif
-                                    </h4>
-                                    <small class="text-muted d-flex align-items-center gap-1 mt-1">
-                                        Target: 30 days or less
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
 
             <!-- Top Performing Properties -->
-            <div class="col-xl-6">
+            <div class="col-xl-12">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-header bg-transparent border-0 pt-4 pb-0 px-4">
                         <div class="d-flex justify-content-between align-items-center">
