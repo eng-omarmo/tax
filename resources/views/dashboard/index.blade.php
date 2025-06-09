@@ -1,6 +1,9 @@
 @extends('layout.layout')
 
 @php
+
+    use App\Models\Property;
+    use App\Models\Invoice;
     $title = 'Property Tax Management';
     $subTitle = 'Dashboard';
 
@@ -88,8 +91,8 @@
 
                                         <!-- Replace the existing Export button with this: -->
                                         <a href="{{ route('dashboard.export-quarterly-report') }}"
-                                           class="btn btn-light border d-flex align-items-center justify-content-center px-3 py-2"
-                                           data-bs-toggle="tooltip" title="Export Report" style="min-width: 120px;">
+                                            class="btn btn-light border d-flex align-items-center justify-content-center px-3 py-2"
+                                            data-bs-toggle="tooltip" title="Export Report" style="min-width: 120px;">
                                             <iconify-icon icon="solar:export-bold" class="me-2"></iconify-icon>
                                             <span class="d-none d-md-inline">Export</span>
                                         </a>
@@ -127,7 +130,7 @@
                                 </span>
                                 <div>
                                     <span class="mb-2 fw-medium text-secondary-light text-sm">Property Units Taxed</span>
-                                    <h6 class="fw-semibold">{{ number_format(1520) }}</h6>
+                                    <h6 class="fw-semibold">{{ number_format($quarterlyStats['unitsTaxed']) }}</h6>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center">
@@ -139,7 +142,7 @@
                         </div>
                         <p class="text-sm mb-0">
                             <span class="text-muted">Active properties:</span>
-                            <span class="fw-medium">{{ number_format(1380) }}</span>
+                            <span class="fw-medium">{{ number_format(Property::where('status', 'active')->count()) }}</span>
                         </p>
                     </div>
                 </div>
@@ -157,7 +160,7 @@
                                 </span>
                                 <div>
                                     <span class="mb-2 fw-medium text-secondary-light text-sm">Payment Status</span>
-                                    <h6 class="fw-semibold">${{ number_format(985000, 2) }}</h6>
+                                    <h6 class="fw-semibold">${{ number_format($quarterlyStats['totalPaid'], 2) }}</h6>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center">
@@ -169,7 +172,7 @@
                         </div>
                         <p class="text-sm mb-0">
                             <span class="text-muted">Paid invoices:</span>
-                            <span class="fw-medium">{{ number_format(1380) }}</span>
+                            <span class="fw-medium">{{ number_format($quarterlyStats['paidInvoices']) }}</span>
                         </p>
                     </div>
                 </div>
@@ -187,7 +190,8 @@
                                 </span>
                                 <div>
                                     <span class="mb-2 fw-medium text-secondary-light text-sm">Active Properties</span>
-                                    <h6 class="fw-semibold">{{ number_format(1380) }}</h6>
+                                    <h6 class="fw-semibold">
+                                        {{ number_format(Property::where('status', 'active')->count()) }}</h6>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center">
@@ -199,7 +203,8 @@
                         </div>
                         <p class="text-sm mb-0">
                             <span class="text-muted">Monitoring required:</span>
-                            <span class="fw-medium text-danger">{{ number_format(85) }}</span>
+                            <span
+                                class="fw-medium text-danger">{{ number_format(Property::where('monitoring_status', 'Pending')->count()) }}</span>
                         </p>
                     </div>
                 </div>
@@ -220,11 +225,14 @@
                                     <div class="d-flex gap-3">
                                         <div>
                                             <span class="text-xs text-muted">Paid</span>
-                                            <h6 class="fw-semibold mb-0">{{ number_format(1380) }}</h6>
+                                            <h6 class="fw-semibold mb-0">
+                                                {{ number_format($quarterlyStats['paidInvoices']) }}</h6>
                                         </div>
                                         <div>
                                             <span class="text-xs text-muted">Pending</span>
-                                            <h6 class="fw-semibold mb-0">{{ number_format(240) }}</h6>
+                                            <h6 class="fw-semibold mb-0">
+                                                {{ number_format(Invoice::whereYear('invoice_date', date('Y'))->where('frequency', $currentQuarter)->where('payment_status', 'unpaid')->count()) }}
+                                            </h6>
                                         </div>
                                     </div>
                                 </div>
@@ -238,7 +246,8 @@
                         </div>
                         <p class="text-sm mb-0">
                             <span class="text-muted">Eligible properties:</span>
-                            <span class="fw-medium">{{ number_format(1250) }}</span>
+                            <span
+                                class="fw-medium">{{ number_format(Property::where('monitoring_status', 'Approved')->count()) }}</span>
                         </p>
                     </div>
                 </div>
@@ -267,9 +276,15 @@
                                     <div class="card shadow-sm border-0">
                                         <div class="card-body">
                                             <h6 class="mb-2">{{ $summary['label'] ?? 'Q1 2024' }}</h6>
-                                            <p class="mb-1 text-muted">Tax Billed: <strong class="text-primary">${{ number_format($summary['billed']) }}</strong></p>
-                                            <p class="mb-1 text-muted">Tax Collected: <strong class="text-success">${{ number_format($summary['collected']) }}</strong></p>
-                                            <p class="mb-0 text-muted">Outstanding: <strong class="text-warning">${{ number_format($summary['outstanding']) }}</strong></p>
+                                            <p class="mb-1 text-muted">Tax Billed: <strong
+                                                    class="text-primary">${{ number_format($summary['billed']) }}</strong>
+                                            </p>
+                                            <p class="mb-1 text-muted">Tax Collected: <strong
+                                                    class="text-success">${{ number_format($summary['collected']) }}</strong>
+                                            </p>
+                                            <p class="mb-0 text-muted">Outstanding: <strong
+                                                    class="text-warning">${{ number_format($summary['outstanding']) }}</strong>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -360,7 +375,7 @@
                             <small class="text-muted">Target: &lt; 15%</small>
                         </div>
 
-                  
+
                     </div>
                 </div>
             </div>
@@ -464,7 +479,8 @@
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="bg-light rounded-circle p-2 me-3">
-                                                        <iconify-icon icon="mdi:map-marker" class="fs-5 text-primary"></iconify-icon>
+                                                        <iconify-icon icon="mdi:map-marker"
+                                                            class="fs-5 text-primary"></iconify-icon>
                                                     </div>
                                                     <div>
                                                         <h6 class="mb-0">{{ $district->name }}</h6>
@@ -533,52 +549,54 @@
                             </thead>
                             <tbody>
 
-                                <tbody>
-                                    @forelse ($payments as $index => $payment)
-                                        <tr>
-                                            <td><span class="text-secondary-light">{{ $index + 1 }}</span></td>
+                            <tbody>
+                                @forelse ($payments as $index => $payment)
+                                    <tr>
+                                        <td><span class="text-secondary-light">{{ $index + 1 }}</span></td>
 
-                                            {{-- Payment Date --}}
-                                            <td>
-                                                <span class="text-secondary-light">
-                                                    {{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}
-                                                </span>
-                                            </td>
+                                        {{-- Payment Date --}}
+                                        <td>
+                                            <span class="text-secondary-light">
+                                                {{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}
+                                            </span>
+                                        </td>
 
-                                            {{-- Payment Method --}}
-                                            <td>
-                                                <span class="text-secondary-light">{{ ucfirst($payment->invoice->invoice_number ?? 'N/A') }}</span>
-                                            </td>
+                                        {{-- Payment Method --}}
+                                        <td>
+                                            <span
+                                                class="text-secondary-light">{{ ucfirst($payment->invoice->invoice_number ?? 'N/A') }}</span>
+                                        </td>
 
-                                            {{-- Paid Amount --}}
-                                            <td>
-                                                <span class="text-secondary-light">${{ number_format($payment->amount, 2) }}</span>
-                                            </td>
+                                        {{-- Paid Amount --}}
+                                        <td>
+                                            <span
+                                                class="text-secondary-light">${{ number_format($payment->amount, 2) }}</span>
+                                        </td>
 
-                                            {{-- Due Amount --}}
-                                            <td>
-                                                <span class="text-secondary-light">
-                                                    @if($payment->invoice)
-                                                        ${{ number_format($payment->invoice->amount - $payment->invoice->payments()->where('status', 'success')->sum('amount'), 2) }}
-                                                    @else
-                                                        $0.00
-                                                    @endif
-                                                </span>
-                                            </td>
+                                        {{-- Due Amount --}}
+                                        <td>
+                                            <span class="text-secondary-light">
+                                                @if ($payment->invoice)
+                                                    ${{ number_format($payment->invoice->amount - $payment->invoice->payments()->where('status', 'success')->sum('amount'), 2) }}
+                                                @else
+                                                    $0.00
+                                                @endif
+                                            </span>
+                                        </td>
 
-                                            {{-- Total Payable --}}
-                                            <td>
-                                                <span class="text-secondary-light">
-                                                    ${{ number_format($payment->invoice->amount ?? 0, 2) }}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="6" class="text-center text-muted">No payments found.</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
+                                        {{-- Total Payable --}}
+                                        <td>
+                                            <span class="text-secondary-light">
+                                                ${{ number_format($payment->invoice->amount ?? 0, 2) }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">No payments found.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
 
                             </tbody>
                         </table>
@@ -587,5 +605,4 @@
             </div>
         </div>
     </div>
-
 @endsection

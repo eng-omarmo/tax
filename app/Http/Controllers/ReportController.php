@@ -344,4 +344,156 @@ class ReportController extends Controller
 
         return $recommendations;
     }
+
+    /**
+ * Get district data for reports and exports
+ * This extracts the district data logic from incomeByDistrictReport
+ * so it can be reused by the export functionality
+ */
+public function getDistrictData(Request $request)
+{
+    // Get time period (default to current quarter)
+    $timeService = new TimeService();
+    $currentQuarter = $request->input('quarter', $timeService->currentQuarter());
+    $currentYear = $request->input('year', $timeService->currentYear());
+
+    // Get quarter date range
+    $quarterNumber = (int) substr($currentQuarter, 1, 1);
+    $startMonth = ($quarterNumber - 1) * 3 + 1;
+    $endMonth = $quarterNumber * 3;
+    $startDate = Carbon::createFromDate($currentYear, $startMonth, 1)->startOfDay();
+    $endDate = Carbon::createFromDate($currentYear, $endMonth, 1)->endOfMonth()->endOfDay();
+
+    $districts = District::all();
+    $districtData = [];
+    $totalSystemRevenue = 0;
+    $totalSystemPaid = 0;
+    $totalSystemOutstanding = 0;
+
+    // Performance metrics
+    $bestCollectionRate = ['district' => null, 'rate' => 0];
+    $worstCollectionRate = ['district' => null, 'rate' => 100];
+    $highestRevenue = ['district' => null, 'amount' => 0];
+
+    // Monthly trends data
+    $monthlyTrends = [];
+    for ($i = 0; $i < 3; $i++) {
+        $month = $startMonth + $i;
+        if ($month <= 12) {
+            $monthName = Carbon::createFromDate($currentYear, $month, 1)->format('F');
+            $monthlyTrends[$monthName] = [];
+        }
+    }
+
+    foreach ($districts as $district) {
+        // Get properties in this district
+        $properties = Property::where('district_id', $district->id)->pluck('id');
+
+        // Skip if no properties in this district
+        if ($properties->isEmpty()) {
+            continue;
+        }
+
+        // Get units in these properties
+        $units = Unit::whereIn('property_id', $properties)->pluck('id');
+
+        // Get invoices for these units in the selected quarter
+        $invoices = Invoice::whereIn('unit_id', $units)
+            ->whereBetween('invoice_date', [$startDate, $endDate])
+            ->get();
+
+        // Calculate district metrics
+        $totalRevenue = $invoices->sum('amount');
+        $totalPaid = $invoices->where('payment_status', 'Paid')->sum('amount');
+        $totalOutstanding = $invoices->where('payment_status', '!=', 'Paid')->sum('amount');
+        $collectionRate = $totalRevenue > 0 ? ($totalPaid / $totalRevenue) * 100 : 0;
+        $propertyCount = count($properties);
+        $unitCount = count($units);
+        $invoiceCount = count($invoices);
+        $paidInvoiceCount = $invoices->where('payment_status', 'Paid')->count();
+
+        // Calculate growth compared to previous quarter
+        $prevQuarterNumber = $quarterNumber - 1;
+        $prevYear = $currentYear;
+        if ($prevQuarterNumber < 1) {
+            $prevQuarterNumber = 4;
+            $prevYear--;
+        }
+        $prevStartMonth = ($prevQuarterNumber - 1) * 3 + 1;
+        $prevEndMonth = $prevQuarterNumber * 3;
+        $prevStartDate = Carbon::createFromDate($prevYear, $prevStartMonth, 1)->startOfDay();
+        $prevEndDate = Carbon::createFromDate($prevYear, $prevEndMonth, 1)->endOfMonth()->endOfDay();
+
+        $prevInvoices = Invoice::whereIn('unit_id', $units)
+            ->whereBetween('invoice_date', [$prevStartDate, $prevEndDate])
+            ->get();
+
+        $prevTotalPaid = $prevInvoices->where('payment_status', 'Paid')->sum('amount');
+        $revenueGrowth = $prevTotalPaid > 0 ? (($totalPaid - $prevTotalPaid) / $prevTotalPaid) * 100 : 0;
+
+        // Get monthly breakdown for this district
+        foreach ($monthlyTrends as $month => $data) {
+            $monthNumber = Carbon::parse("1 $month $currentYear")->month;
+            $monthStart = Carbon::createFromDate($currentYear, $monthNumber, 1)->startOfDay();
+            $monthEnd = Carbon::createFromDate($currentYear, $monthNumber, 1)->endOfMonth()->endOfDay();
+
+            $monthInvoices = Invoice::whereIn('unit_id', $units)
+                ->whereBetween('invoice_date', [$monthStart, $monthEnd])
+                ->get();
+
+            $monthlyTrends[$month][$district->name] = $monthInvoices->where('payment_status', 'Paid')->sum('amount');
+        }
+
+        // Store district data
+        $districtData[] = [
+            'district_id' => $district->id,
+            'district_name' => $district->name,
+            'totalRevenue' => $totalRevenue,
+            'totalPaid' => $totalPaid,
+            'totalOutstanding' => $totalOutstanding,
+            'collectionRate' => $collectionRate,
+            'propertyCount' => $propertyCount,
+            'unitCount' => $unitCount,
+            'invoiceCount' => $invoiceCount,
+            'paidInvoiceCount' => $paidInvoiceCount,
+            'revenueGrowth' => $revenueGrowth
+        ];
+
+        // Update system totals
+        $totalSystemRevenue += $totalRevenue;
+        $totalSystemPaid += $totalPaid;
+        $totalSystemOutstanding += $totalOutstanding;
+
+        // Update performance metrics
+        if ($collectionRate > $bestCollectionRate['rate'] && $totalRevenue > 0) {
+            $bestCollectionRate['district'] = $district->name;
+            $bestCollectionRate['rate'] = $collectionRate;
+        }
+
+        if ($collectionRate < $worstCollectionRate['rate'] && $totalRevenue > 0) {
+            $worstCollectionRate['district'] = $district->name;
+            $worstCollectionRate['rate'] = $collectionRate;
+        }
+
+        if ($totalPaid > $highestRevenue['amount']) {
+            $highestRevenue['district'] = $district->name;
+            $highestRevenue['amount'] = $totalPaid;
+        }
+    }
+
+    // Sort districts by collection rate (descending)
+    usort($districtData, function ($a, $b) {
+        return $b['collectionRate'] <=> $a['collectionRate'];
+    });
+
+    // Calculate system-wide collection rate
+    $systemCollectionRate = $totalSystemRevenue > 0 ? ($totalSystemPaid / $totalSystemRevenue) * 100 : 0;
+
+    // Generate recommendations for each district
+    foreach ($districtData as &$district) {
+        $district['recommendations'] = $this->generateDistrictRecommendations($district, $systemCollectionRate);
+    }
+
+    return $districtData;
+}
 }
