@@ -231,7 +231,7 @@
                                         <div>
                                             <span class="text-xs text-muted">Pending</span>
                                             <h6 class="fw-semibold mb-0">
-                                                {{ number_format(Invoice::whereYear('invoice_date', date('Y'))->where('frequency', $currentQuarter)->where('payment_status', 'unpaid')->count()) }}
+                                                {{ number_format(Invoice::whereYear('invoice_date', date('Y'))->where('frequency', $currentQuarter)->where('payment_status', 'Pending')->count()) }}
                                             </h6>
                                         </div>
                                     </div>
