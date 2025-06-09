@@ -183,7 +183,6 @@ Route::prefix('dashboard')->middleware(['auth.admin'])->group(function () {
     Route::controller(DashboardController::class)->group(function () {
         Route::get('/index', 'index')->name('index');
         Route::get('/income', [ReportController::class, 'incomeReport'])->name('reports.income');
-
         Route::get('/export-quarterly-report', 'exportQuarterlyReport')
             ->name('dashboard.export-quarterly-report');
     });
@@ -210,7 +209,7 @@ Route::prefix('invoice')->middleware(['auth.admin'])->group(function () {
 });
 
 // receipt
-Route::prefix('receipt')->group(function () {
+Route::prefix('receipt')->middleware(['auth.admin'])->group(function () {
     Route::controller(receiptController::class)->group(function () {
         Route::get('tax/receipt/{id}', 'taxReceipt')->name('receipt.tax');
         Route::get('tax/rent/{id}', 'rentReceipt')->name('receipt.rent');

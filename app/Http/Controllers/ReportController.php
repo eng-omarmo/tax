@@ -328,18 +328,18 @@ class ReportController extends Controller
 
         // Property density recommendations
         if ($district['propertyCount'] > 0 && $district['unitCount'] / $district['propertyCount'] < 5) {
-            $recommendations[] = "Dib u eeegis ku samee albaabada ku koobanyahay ama availabity guryahaas.";
+            $recommendations[] = "Dib u eeegis ku samee albaabada ku koobanyahay guryahaas.";
         }
 
         // Outstanding amount recommendations
         if ($district['totalOutstanding'] > $district['totalPaid']) {
             $recommendations[] = "Mudnaanta sii ururinta lacagaha weli lagu leeyahay degmadan";
-            $recommendations[] = "Hirgeli qorshayaal lacag-bixin ah oo loogu talagalay deynta baaxadda leh ee aan weli la bixin.";
+            $recommendations[] = "Hirgeli qorshayaal lacag aruurin si loo soo xareeyo daqliga canshuurta kumaqan degmadan.";
         }
 
         // If performing well
         if ($district['collectionRate'] > $systemAvgRate && $district['revenueGrowth'] > 0) {
-            $recommendations[] = "Sii wad heerka waxqabadka hadda jira, kana fiirso in hab-raaca degmadan loo adeegsado tusaale ahaan degaano kale";
+            $recommendations[] = "Sii wad heerka waxqabadka hadda jira, kana fiirso in hab-raaca degmadan loo adeegsado tusaale ahaan degmooyin kale";
         }
 
         return $recommendations;

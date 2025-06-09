@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use App\Models\Unit;
-use App\Models\Tenant;
 use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\Property;
+use App\Models\Tenant;
 use App\Models\Transaction;
-use Illuminate\Http\Request;
+use App\Models\Unit;
 use App\Services\TimeService;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class DashboardController extends Controller
 {
@@ -31,19 +30,15 @@ class DashboardController extends Controller
             'totalBilled' => Invoice::whereYear('invoice_date', $currentYear)
                 ->whereRaw('frequency = ?', [$currentQuarter])
                 ->sum('amount'),
-
             'totalPaid' => Invoice::whereYear('invoice_date', $currentYear)
                 ->whereRaw('frequency = ?', [$currentQuarter])
                 ->where('payment_status', 'paid')
                 ->sum('amount'),
-
             'totalOutstanding' => Invoice::whereYear('invoice_date', $currentYear)
                 ->whereRaw('frequency = ?', [$currentQuarter])
                 ->where('payment_status', 'unpaid')
                 ->sum('amount'),
-
             'unitsTaxed' => Unit::where('is_available', false)->count(),
-
             'paidInvoices' => Invoice::whereYear('invoice_date', $currentYear)
                 ->whereRaw('frequency = ?', [$currentQuarter])
                 ->where('payment_status', 'paid')
@@ -59,7 +54,6 @@ class DashboardController extends Controller
                 ->whereNotNull('paid_at')
                 ->selectRaw('AVG(DATEDIFF(paid_at, invoice_date)) as avg_days')
                 ->value('avg_days'),
-
             // Early payment rate
             'earlyPaymentRate' => (function () use ($currentYear, $currentQuarter) {
                 $totalPaid = Invoice::whereYear('invoice_date', $currentYear)
@@ -79,7 +73,6 @@ class DashboardController extends Controller
 
                 return round(($earlyPaid / $totalPaid) * 100, 2);
             })(),
-
             // Overdue tax rate
             'overdueTaxRate' => (function () use ($currentYear, $currentQuarter) {
                 $total = Invoice::whereYear('invoice_date', $currentYear)
@@ -150,20 +143,23 @@ class DashboardController extends Controller
         }])
             ->withSum(['units' => function ($query) use ($currentYear, $currentQuarter) {
                 $query->whereHas('invoices', function ($q) use ($currentYear, $currentQuarter) {
-                    $q->whereYear('invoice_date', $currentYear)
+                    $q
+                        ->whereYear('invoice_date', $currentYear)
                         ->whereRaw('frequency = ?', [$currentQuarter]);
                 });
             }], 'unit_price')
             ->withCount(['units as paid_units_count' => function ($query) use ($currentYear, $currentQuarter) {
                 $query->whereHas('invoices', function ($q) use ($currentYear, $currentQuarter) {
-                    $q->whereYear('invoice_date', $currentYear)
+                    $q
+                        ->whereYear('invoice_date', $currentYear)
                         ->whereRaw('frequency = ?', [$currentQuarter])
                         ->where('payment_status', 'paid');
                 });
             }])
             ->withCount(['units as total_invoiced_units' => function ($query) use ($currentYear, $currentQuarter) {
                 $query->whereHas('invoices', function ($q) use ($currentYear, $currentQuarter) {
-                    $q->whereYear('invoice_date', $currentYear)
+                    $q
+                        ->whereYear('invoice_date', $currentYear)
                         ->whereRaw('frequency = ?', [$currentQuarter]);
                 });
             }])
@@ -180,7 +176,8 @@ class DashboardController extends Controller
         // Unpaid units by property
         $unpaidUnits = Property::withCount(['units' => function ($query) use ($currentYear, $currentQuarter) {
             $query->whereHas('invoices', function ($q) use ($currentYear, $currentQuarter) {
-                $q->whereYear('invoice_date', $currentYear)
+                $q
+                    ->whereYear('invoice_date', $currentYear)
                     ->whereRaw('frequency = ?', [$currentQuarter])
                     ->where('payment_status', 'unpaid');
             });
@@ -209,7 +206,7 @@ class DashboardController extends Controller
             ],
             [
                 'label' => 'Average Collection',
-                'value' => $quarterlyStats['totalBilled'] / 3, // Monthly average
+                'value' => $quarterlyStats['totalBilled'] / 3,  // Monthly average
                 'description' => 'Average monthly collection'
             ]
         ];
@@ -218,34 +215,40 @@ class DashboardController extends Controller
             ->sort()
             ->values();
 
-        $quarterSummaries = [
-            [
-                'label' => 'Q1 2025',
-                'billed' => 20000,
-                'collected' => 15000,
-                'outstanding' => 5000,
-            ],
-            [
-                'label' => 'Q2 2025',
-                'billed' => 18000,
-                'collected' => 16000,
-                'outstanding' => 2000,
-            ],
+        // quater sumaries
+        $year = now()->year;
 
-            [
-                'label' => 'Q3 2025',
-                'billed' => 18000,
-                'collected' => 16000,
-                'outstanding' => 2000,
-            ],
-            [
-                'label' => 'Q4 2025',
-                'billed' => 18000,
-                'collected' => 16000,
-                'outstanding' => 2000,
-            ],
+        $rawData = Invoice::selectRaw("
+            LOWER(frequency) as frequency,
+            SUM(amount) as billed,
+            SUM(CASE WHEN payment_status = 'Paid' THEN amount ELSE 0 END) as collected,
+            SUM(CASE WHEN payment_status != 'Paid' THEN amount ELSE 0 END) as outstanding
+        ")
+            ->whereYear('invoice_date', $year)
+            ->groupBy('frequency')
+            ->get()
+            ->keyBy('frequency');
 
-        ];
+        $quarters = ['q1', 'q2', 'q3', 'q4'];
+        $quarterSummaries = [];
+
+        foreach ($quarters as $q) {
+            if (isset($rawData[$q])) {
+                $quarterSummaries[] = [
+                    'label' => strtoupper($q) . ' ' . $year,
+                    'billed' => $rawData[$q]->billed,
+                    'collected' => $rawData[$q]->collected,
+                    'outstanding' => $rawData[$q]->outstanding,
+                ];
+            } else {
+                $quarterSummaries[] = [
+                    'label' => strtoupper($q) . ' ' . $year,
+                    'billed' => 0,
+                    'collected' => 0,
+                    'outstanding' => 0,
+                ];
+            }
+        }
         // Top Performing Districts
 
         $topDistricts = Invoice::select(
@@ -266,9 +269,7 @@ class DashboardController extends Controller
                 return $district;
             });
 
-            $payments = Payment::with('invoice')->latest('payment_date')->take(10)->get();
-
-
+        $payments = Payment::with('invoice')->latest('payment_date')->take(10)->get();
 
         return view('dashboard.index', compact(
             'quarterlyStats',
@@ -281,7 +282,6 @@ class DashboardController extends Controller
             'topDistricts',
             'quarterSummaries',
             'payments'
-
         ));
     }
 
@@ -300,7 +300,8 @@ class DashboardController extends Controller
         $sheet = $spreadsheet->getActiveSheet();
 
         // Set document properties
-        $spreadsheet->getProperties()
+        $spreadsheet
+            ->getProperties()
             ->setCreator('Tax Management System')
             ->setLastModifiedBy('Tax Management System')
             ->setTitle('Quarterly Income Report')
@@ -415,12 +416,10 @@ class DashboardController extends Controller
             'totalBilled' => Invoice::whereYear('invoice_date', $currentYear)
                 ->whereRaw('frequency = ?', [$currentQuarter])
                 ->sum('amount'),
-
             'totalPaid' => Invoice::whereYear('invoice_date', $currentYear)
                 ->whereRaw('frequency = ?', [$currentQuarter])
                 ->where('payment_status', 'paid')
                 ->sum('amount'),
-
             'totalOutstanding' => Invoice::whereYear('invoice_date', $currentYear)
                 ->whereRaw('frequency = ?', [$currentQuarter])
                 ->where('payment_status', 'unpaid')
@@ -436,7 +435,6 @@ class DashboardController extends Controller
                 ->whereNotNull('paid_at')
                 ->selectRaw('AVG(DATEDIFF(paid_at, invoice_date)) as avg_days')
                 ->value('avg_days') ?? 0,
-
             // Early payment rate
             'earlyPaymentRate' => (function () use ($currentYear, $currentQuarter) {
                 $totalPaid = Invoice::whereYear('invoice_date', $currentYear)
@@ -479,20 +477,23 @@ class DashboardController extends Controller
         }])
             ->withSum(['units' => function ($query) use ($currentYear, $currentQuarter) {
                 $query->whereHas('invoices', function ($q) use ($currentYear, $currentQuarter) {
-                    $q->whereYear('invoice_date', $currentYear)
+                    $q
+                        ->whereYear('invoice_date', $currentYear)
                         ->whereRaw('frequency = ?', [$currentQuarter]);
                 });
             }], 'unit_price')
             ->withCount(['units as paid_units_count' => function ($query) use ($currentYear, $currentQuarter) {
                 $query->whereHas('invoices', function ($q) use ($currentYear, $currentQuarter) {
-                    $q->whereYear('invoice_date', $currentYear)
+                    $q
+                        ->whereYear('invoice_date', $currentYear)
                         ->whereRaw('frequency = ?', [$currentQuarter])
                         ->where('payment_status', 'paid');
                 });
             }])
             ->withCount(['units as total_invoiced_units' => function ($query) use ($currentYear, $currentQuarter) {
                 $query->whereHas('invoices', function ($q) use ($currentYear, $currentQuarter) {
-                    $q->whereYear('invoice_date', $currentYear)
+                    $q
+                        ->whereYear('invoice_date', $currentYear)
                         ->whereRaw('frequency = ?', [$currentQuarter]);
                 });
             }])
@@ -514,7 +515,8 @@ class DashboardController extends Controller
     {
         return Property::withCount(['units' => function ($query) use ($currentYear, $currentQuarter) {
             $query->whereHas('invoices', function ($q) use ($currentYear, $currentQuarter) {
-                $q->whereYear('invoice_date', $currentYear)
+                $q
+                    ->whereYear('invoice_date', $currentYear)
                     ->whereRaw('frequency = ?', [$currentQuarter])
                     ->where('payment_status', 'unpaid');
             });
