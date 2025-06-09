@@ -159,7 +159,7 @@
                                     <iconify-icon icon="solar:wallet-money-bold" class="icon"></iconify-icon>
                                 </span>
                                 <div>
-                                    <span class="mb-2 fw-medium text-secondary-light text-sm">Payment Status</span>
+                                    <span class="mb-2 fw-medium text-secondary-light text-sm">Tax Collected</span>
                                     <h6 class="fw-semibold">${{ number_format($quarterlyStats['totalPaid'], 2) }}</h6>
                                 </div>
                             </div>
