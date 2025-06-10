@@ -175,6 +175,21 @@
                                     </div>
 
 
+                                    <!-- Add this before the form buttons -->
+                                    <div class="row mb-20">
+                                        <div class="col-md-6">
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input" id="skip_monitoring" name="skip_monitoring" value="1">
+                                                <label class="form-check-label" for="skip_monitoring">Skip monitoring (set as Approved)</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input" id="continue_to_unit" name="continue_to_unit" value="1" checked>
+                                                <label class="form-check-label" for="continue_to_unit">Continue to unit registration after saving</label>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="d-flex align-items-center justify-content-center gap-3">
                                         <button type="button"
                                             class="border border-danger-600 bg-hover-danger-200 text-danger-600 text-md px-56 py-11 radius-8">

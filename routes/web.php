@@ -33,6 +33,7 @@ Route::controller(changePasswordController::class)->group(function () {
     Route::post('/change-password', 'changePassword')->name('change.password');
 });
 Route::controller(PropertyController::class)->prefix('property')->middleware(['auth.admin'])->group(function () {
+    Route::get('/by-district/{district_id}', 'getPropertiesByDistrict')->name('property.by.district');
     Route::get('/index', 'index')->name('property.index');
     Route::get('/create/{id}', 'create')->name('property.create');
     Route::post('/store', 'store')->name('property.store');

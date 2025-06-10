@@ -129,6 +129,29 @@ class propertyController extends Controller
         }
     }
 
+public function getPropertiesByDistrict($districtId)
+{
+    $district = District::findOrFail($districtId);
+
+    $query = Property::with('transactions', 'landlord')
+        ->where('district_id', $districtId);
+
+    $properties = $query->orderBy('id', 'desc')->paginate(10);
+
+    // Calculate balance for each property
+    foreach ($properties as $property) {
+        $property->balance = $property->transactions->sum(function ($transaction) {
+            return $transaction->debit - $transaction->credit;
+        });
+    }
+
+    return view('property.index', [
+        'properties' => $properties,
+        'districtFilter' => $district->name,
+        'statuses' => Property::pluck('status')->unique(),
+        'monitoringStatuses' => Property::pluck('monitoring_status')->unique()
+    ]);
+}
 
 
     public function create($id)
@@ -136,7 +159,7 @@ class propertyController extends Controller
         $data['districts'] = District::select('id', 'name')->get();
         $data['branches'] = Branch::select('id', 'name')->get();
         $data['landlord'] = Landlord::findorFail($id);
-    
+
         return view('property.create', $data);
     }
 
@@ -187,9 +210,11 @@ class propertyController extends Controller
 
             $request->merge(['house_code' => $code]);
 
+            // Change default monitoring status based on configuration or request
+            $monitoringStatus = $request->has('skip_monitoring') && $request->skip_monitoring == 1 ? 'Approved' : 'Pending';
+            $status = $monitoringStatus == 'Approved' ? 'Active' : 'InActive';
 
-
-            Property::create([
+            $property = Property::create([
                 'property_name' => $request->property_name,
                 'property_phone' => $request->property_phone,
                 'house_code' => $request->house_code,
@@ -199,17 +224,21 @@ class propertyController extends Controller
                 'house_rent' => $request->house_rent,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
-                'monitoring_status' => $request->monitoring_status,
-                'status' => $request->status,
+                'monitoring_status' => $monitoringStatus,
+                'status' => $status,
                 'district_id' => $request->district_id,
                 'landlord_id' => $request->lanlord_id,
-                'monitoring_status' => 'Pending',
-                'status' => 'InActive',
                 'document'  => $documentPath,
                 'image' => $path
             ]);
 
             DB::commit();
+
+            // Check if the user wants to continue to unit registration
+            if ($request->has('continue_to_unit') && $request->continue_to_unit == 1) {
+                return redirect()->route('unit.create', $property->id)
+                    ->with('success', 'Property registered successfully. Now register units.');
+            }
 
             return redirect()->route('property.index')->with('success', 'Property registered successfully.');
         } catch (\Throwable $th) {

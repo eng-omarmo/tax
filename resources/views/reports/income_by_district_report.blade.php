@@ -286,7 +286,7 @@
                                                                     Total Units
                                                                     <span class="badge bg-primary rounded-pill">{{ $district['unitCount'] }}</span>
                                                                 </li>
-                                                           
+
                                                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                                                     Total Invoices
                                                                     <span class="badge bg-secondary rounded-pill">{{ $district['invoiceCount'] }}</span>
@@ -312,7 +312,7 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                    <a href="#" class="btn btn-primary">View Properties</a>
+                                                    <a href="{{ route('property.by.district', $district['district_id']) }}" class="btn btn-primary">View Properties</a>
                                                 </div>
                                             </div>
                                         </div>

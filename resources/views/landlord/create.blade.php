@@ -82,6 +82,13 @@
                                     <input type="file" class="form-control radius-8" id="image" name="image">
                                 </div>
 
+
+                                <div class="mb-20">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="continue_to_property" name="continue_to_property" value="1" checked>
+                                        <label class="form-check-label" for="continue_to_property">Continue to property registration after saving</label>
+                                    </div>
+                                </div>
                                 <div class="d-flex align-items-center justify-content-center gap-3">
                                     <a href="{{ route('lanlord.index') }}"
                                         class="border border-danger-600 bg-hover-danger-200 text-danger-600 text-md px-56 py-11 radius-8">Cancel</a>
