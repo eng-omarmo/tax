@@ -6,6 +6,7 @@ use App\Models\Unit;
 use App\Models\Property;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class unitController extends Controller
 {
@@ -50,33 +51,76 @@ class unitController extends Controller
         return view('unit.create', $data);
     }
 
+
     public function store(Request $request)
     {
-
         try {
-            $request->validate([
+            // Validate common fields
+            $validator = Validator::make($request->all(), [
                 'property_id' => 'required|exists:properties,id',
-                'unit_name' => 'required',
-                'unit_price' => 'required',
-                'is_owner' => 'required',
+                'is_owner' => 'required|in:yes,no',
                 'is_available' => 'required|boolean'
             ]);
-            $unitNumber = 'U' . rand(1000, 9999) . rand(1000, 9999);
 
+            if ($validator->fails()) {
+                return back()
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('current_step', $request->input('current_step', 1));
+            }
 
-            unit::create([
-                'property_id' => $request->property_id,
-                'unit_number' => $unitNumber,
-                'unit_name' => $request->unit_name,
-                'unit_type' => $request->unit_type,
-                'unit_price' => $request->unit_price,
-                'is_owner' => $request->is_owner,
-                'is_available' => $request->is_available
-            ]);
-            return redirect()->route('unit.index')->with('success', 'Unit created successfully.');
+            // Validate each unit's data
+            if (!$request->has('units') || !is_array($request->units)) {
+                return back()
+                    ->withErrors(['units' => 'No units provided'])
+                    ->withInput()
+                    ->with('current_step', $request->input('current_step', 1));
+            }
+
+            foreach ($request->units as $index => $unitData) {
+                $unitValidator = Validator::make($unitData, [
+                    'unit_name' => 'required|string|max:255',
+                    'unit_type' => 'required|in:Flat,Section,Office,Shop,Other',
+                    'unit_price' => 'required|numeric|min:0',
+                ], [
+                    'unit_name.required' => 'Unit name is required for unit #' . ($index + 1),
+                    'unit_type.required' => 'Unit type is required for unit #' . ($index + 1),
+                    'unit_price.required' => 'Monthly rent is required for unit #' . ($index + 1),
+                ]);
+
+                if ($unitValidator->fails()) {
+                    return back()
+                        ->withErrors($unitValidator)
+                        ->withInput()
+                        ->with('current_step', $request->input('current_step', 1));
+                }
+            }
+
+            // Create each unit
+            foreach ($request->units as $unitData) {
+                // Generate a unique unit number
+                $unitNumber = 'U' . rand(1000, 9999) . rand(1000, 9999);
+
+                // Create the unit
+                Unit::create([
+                    'property_id' => $request->property_id,
+                    'unit_number' => $unitNumber,
+                    'unit_name' => $unitData['unit_name'],
+                    'unit_type' => $unitData['unit_type'],
+                    'unit_price' => $unitData['unit_price'],
+                    'is_owner' => $request->is_owner,
+                    'is_available' => $request->is_available
+                ]);
+            }
+
+            return redirect()->route('unit.index')
+                ->with('success', count($request->units) . ' units created successfully.');
         } catch (\Throwable $th) {
             Log::error($th);
-            return back()->with('error', 'Failed to create unit.' . $th->getMessage());
+            return back()
+                ->with('error', 'Failed to create units: ' . $th->getMessage())
+                ->withInput()
+                ->with('current_step', $request->input('current_step', 1));
         }
     }
 
