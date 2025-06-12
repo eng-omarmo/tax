@@ -182,6 +182,14 @@
                     </li>
 
                     <li>
+                        <a href="{{ route('reports.quaterly.income') }}">
+                            <iconify-icon icon="mdi:home-city" class="inline-icon"></iconify-icon>
+                              Quater Income
+                        </a>
+
+                    </li>
+
+                    <li>
                         <a href="{{ route('reports.today_report') }}">
                             <iconify-icon icon="mdi:home-city" class="inline-icon"></iconify-icon> Today’s Activities
                         </a>
@@ -192,7 +200,7 @@
                             <iconify-icon icon="mdi:map-marker-radius-outline" class="inline-icon"></iconify-icon>
                             District Income
                         </a>
-                        
+
                     </li>
 
                 </ul>

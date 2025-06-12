@@ -184,6 +184,7 @@ Route::prefix('dashboard')->middleware(['auth.admin'])->group(function () {
     Route::controller(DashboardController::class)->group(function () {
         Route::get('/index', 'index')->name('index');
         Route::get('/income', [ReportController::class, 'incomeReport'])->name('reports.income');
+
         Route::get('/export-quarterly-report', 'exportQuarterlyReport')
             ->name('dashboard.export-quarterly-report');
     });
@@ -252,5 +253,7 @@ Route::middleware(['auth.admin'])->prefix('reports')->name('reports.')->group(fu
     Route::get('/landlords', [ReportController::class, 'landlords'])->name('landlords');
     Route::get('/income-quarter', [ReportController::class, 'incomeQuarter'])->name('income_quarter');
     Route::get('/today-report', [ReportController::class, 'todayReport'])->name('today_report');
+    Route::get('/quaterly', [ReportController::class, 'quaterly'])->name('quaterly.income');
+
     Route::get('/income/district', [ReportController::class, 'incomeByDistrictReport'])->name('district.income');
 });

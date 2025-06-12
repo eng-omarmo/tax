@@ -137,6 +137,7 @@
             @endif
 
             <!-- Progress Bar -->
+
             <div class="mb-24">
                 <div class="progress radius-8" style="height: 8px;">
                     <div class="progress-bar bg-primary" role="progressbar" style="width: 20%;" id="step-progress-bar"
@@ -145,12 +146,10 @@
                 <div class="d-flex justify-content-between mt-8">
                     <span class="text-sm step-indicator active" data-step="1">Property</span>
                     <span class="text-sm step-indicator" data-step="2">Units</span>
-                    <span class="text-sm step-indicator" data-step="3">Details</span>
-                    <span class="text-sm step-indicator" data-step="4">Status</span>
-                    <span class="text-sm step-indicator" data-step="5">Review</span>
+                    <span class="text-sm step-indicator" data-step="3">Review</span>
+                    <span class="text-sm step-indicator" data-step="4">Submit</span>
                 </div>
             </div>
-
             <!-- Multi-step Form -->
             <form id="unit-registration-form" action="{{ route('unit.store') }}" method="POST">
                 @csrf
@@ -171,7 +170,6 @@
                 <div class="step-content d-none" id="step-2">
                     <h4 class="mb-24">Units Configuration</h4>
                     <p class="text-muted mb-16">Add one or more units to this property.</p>
-
                     <div id="units-container">
                         <!-- Unit 1 (default) -->
                         <div class="unit-container" id="unit-1">
@@ -225,8 +223,72 @@
                                 </div>
                                 <div class="invalid-feedback" id="unit_price_error_1"></div>
                             </div>
+
+                            <!-- Common Status Settings for All Units -->
+                            <div class="card bg-light-50 border-light-100 radius-8 mb-24">
+                                <div class="card-body p-16">
+
+                                    <div class="row">
+                                        <!-- Availability -->
+                                        <div class="col-md-6 mb-16">
+                                            <label class="form-label text-primary-light text-sm mb-8">
+                                                Availability <span class="text-danger-600">*</span>
+                                            </label>
+                                            <div class="d-flex flex-column gap-8">
+                                                <div class="form-check radio-card align-items-center p-12 radius-8">
+                                                    <input class="form-check-input" type="radio" name="is_available"
+                                                        id="available_yes" value="0"
+                                                        {{ old('is_available', 0) == 0 ? 'checked' : '' }}>
+                                                    <label class="form-check-label text-sm ms-8" for="available_yes">
+                                                        Available
+                                                    </label>
+                                                </div>
+                                                <div class="form-check radio-card align-items-center p-12 radius-8">
+                                                    <input class="form-check-input" type="radio" name="is_available"
+                                                        id="available_no" value="1"
+                                                        {{ old('is_available') == 1 ? 'checked' : '' }}>
+                                                    <label class="form-check-label text-sm ms-8" for="available_no">
+                                                        Occupied
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="invalid-feedback" id="is_available_error"></div>
+                                        </div>
+
+                                        <!-- Occupied By -->
+                                        <div class="col-md-6 mb-16">
+                                            <label class="form-label text-primary-light text-sm mb-8">
+                                                Occupied By <span class="text-danger-600">*</span>
+                                            </label>
+                                            <div class="d-flex flex-column gap-8">
+                                                <div class="form-check radio-card align-items-center p-12 radius-8">
+                                                    <input class="form-check-input" type="radio" name="is_owner"
+                                                        id="occupant_owner" value="yes"
+                                                        {{ old('is_owner') == 'yes' ? 'checked' : '' }}>
+                                                    <label class="form-check-label text-sm ms-8" for="occupant_owner">
+                                                        Property Owner
+                                                    </label>
+                                                </div>
+                                                <div class="form-check radio-card align-items-center p-12 radius-8">
+                                                    <input class="form-check-input" type="radio" name="is_owner"
+                                                        id="occupant_tenant" value="no"
+                                                        {{ old('is_owner') == 'no' ? 'checked' : '' }}>
+                                                    <label class="form-check-label text-sm ms-8" for="occupant_tenant">
+                                                        Tenant
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="invalid-feedback" id="is_owner_error"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <div id="units-container">
+
+                    </div>
+
 
                     <!-- Add Unit Button -->
                     <div class="add-unit-btn" id="add-unit-btn">
@@ -235,103 +297,49 @@
                     </div>
                 </div>
 
-                <!-- Step 3: Unit Status (Common for all units) -->
-                <div class="step-content d-none" id="step-3">
-                    <h4 class="mb-24">Unit Status</h4>
-                    <p class="text-muted mb-16">Set the default status for all units. You can change individual unit
-                        statuses later.</p>
-
-                    <!-- Availability -->
-                    <div class="mb-24">
-                        <label class="form-label text-primary-light text-sm mb-8">
-                            Availability <span class="text-danger-600">*</span>
-                        </label>
-                        <div class="d-flex flex-column gap-8">
-                            <div class="form-check radio-card align-items-center p-12 radius-8">
-                                <input class="form-check-input" type="radio" name="is_available" id="available_yes"
-                                    value="0" {{ old('is_available', 0) == 0 ? 'checked' : '' }}>
-                                <label class="form-check-label text-sm ms-8" for="available_yes">
-                                    Available
-                                </label>
-                            </div>
-                            <div class="form-check radio-card align-items-center p-12 radius-8">
-                                <input class="form-check-input" type="radio" name="is_available" id="available_no"
-                                    value="1" {{ old('is_available') == 1 ? 'checked' : '' }}>
-                                <label class="form-check-label text-sm ms-8" for="available_no">
-                                    Occupied
-                                </label>
-                            </div>
-                        </div>
-                        <div class="invalid-feedback" id="is_available_error"></div>
-                    </div>
-
-                    <!-- Occupied By -->
-                    <div class="mb-16">
-                        <label class="form-label text-primary-light text-sm mb-8">
-                            Occupied By <span class="text-danger-600">*</span>
-                        </label>
-                        <div class="d-flex flex-column gap-8">
-                            <div class="form-check radio-card align-items-center p-12 radius-8">
-                                <input class="form-check-input" type="radio" name="is_owner" id="occupant_owner"
-                                    value="yes" {{ old('is_owner') == 'yes' ? 'checked' : '' }}>
-                                <label class="form-check-label text-sm ms-8" for="occupant_owner">
-                                    Property Owner
-                                </label>
-                            </div>
-                            <div class="form-check radio-card align-items-center p-12 radius-8">
-                                <input class="form-check-input" type="radio" name="is_owner" id="occupant_tenant"
-                                    value="no" {{ old('is_owner') == 'no' ? 'checked' : '' }}>
-                                <label class="form-check-label text-sm ms-8" for="occupant_tenant">
-                                    Tenant
-                                </label>
-                            </div>
-                        </div>
-                        <div class="invalid-feedback" id="is_owner_error"></div>
-                    </div>
-                </div>
-
-                <!-- Step 4: Review & Submit -->
-                <div class="step-content d-none" id="step-4">
-                    <h4 class="mb-24">Review Unit Details</h4>
-                    <p class="text-muted mb-16">Review the units you're about to create.</p>
-
-                    <div id="review-units-container">
-                        <!-- Will be populated dynamically -->
-                    </div>
-
-                    <div class="alert bg-info-50 border-info-100 radius-8 mt-24">
-                        <div class="d-flex align-items-center">
-                            <iconify-icon icon="ic:baseline-info" class="text-info me-8"></iconify-icon>
-                            <div class="text-sm">Please review the information above before submitting. Once submitted, you
-                                can still edit the unit details later.</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Navigation Buttons -->
-                <div class="d-flex align-items-center justify-content-between mt-24">
-                    <button type="button" id="prev-step"
-                        class="btn btn-outline-primary btn-medium px-32 py-12 radius-8 d-none">
-                        Previous
-                    </button>
-
-                    <div class="ms-auto">
-                        <a href="{{ route('unit.index') }}"
-                            class="btn btn-outline-danger-600 text-danger-600 btn-medium px-32 py-12 radius-8 me-16">
-                            Cancel
-                        </a>
-                        <button type="button" id="next-step" class="btn btn-primary btn-medium px-32 py-12 radius-8">
-                            Next
-                        </button>
-                        <button type="submit" id="submit-form"
-                            class="btn btn-success btn-medium px-32 py-12 radius-8 d-none">
-                            Submit
-                        </button>
-                    </div>
-                </div>
-            </form>
         </div>
+
+
+        <!-- Step 4: Review & Submit -->
+        <div class="step-content d-none" id="step-4">
+            <h4 class="mb-24">Review Unit Details</h4>
+            <p class="text-muted mb-16">Review the units you're about to create.</p>
+
+            <div id="review-units-container">
+                <!-- Will be populated dynamically -->
+            </div>
+
+            <div class="alert bg-info-50 border-info-100 radius-8 mt-24">
+                <div class="d-flex align-items-center">
+                    <iconify-icon icon="ic:baseline-info" class="text-info me-8"></iconify-icon>
+                    <div class="text-sm">Please review the information above before submitting. Once submitted, you
+                        can still edit the unit details later.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="d-flex align-items-center justify-content-between mt-24">
+            <button type="button" id="prev-step" class="btn btn-outline-primary btn-medium px-32 py-12 radius-8 d-none">
+                Previous
+            </button>
+
+            <div class="ms-auto">
+                <a href="{{ route('unit.index') }}"
+                    class="btn btn-outline-danger-600 text-danger-600 btn-medium px-32 py-12 radius-8 me-16">
+                    Cancel
+                </a>
+                <button type="button" id="next-step" class="btn btn-primary btn-medium px-32 py-12 radius-8">
+                    Next
+                </button>
+                <button type="submit" id="submit-form" class="btn btn-success btn-medium px-32 py-12 radius-8 d-none">
+                    Submit
+                </button>
+            </div>
+        </div>
+        </form>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('unit-registration-form');
@@ -423,6 +431,8 @@
             }
 
             // Function to validate the current step
+
+            // Function to validate the current step
             function validateCurrentStep() {
                 let isValid = true;
 
@@ -432,7 +442,7 @@
 
                 // Validate based on current step
                 switch (currentStep) {
-                    case 2: // Units
+                    case 2: // Units and Status (combined)
                         // Validate each unit's fields
                         const unitContainers = document.querySelectorAll('.unit-container');
                         unitContainers.forEach((container, index) => {
@@ -460,9 +470,8 @@
                                 isValid = false;
                             }
                         });
-                        break;
 
-                    case 3: // Status
+                        // Validate status fields
                         const isAvailable = document.querySelector('input[name="is_available"]:checked');
                         const isOwner = document.querySelector('input[name="is_owner"]:checked');
 
@@ -481,6 +490,7 @@
 
                 return isValid;
             }
+
 
             // Function to add a new unit
             function addNewUnit() {
@@ -535,6 +545,65 @@
                             <div class="invalid-feedback" id="unit_price_error_${unitCount}"></div>
                         </div>
                     </div>
+                        <!-- Common Status Settings for All Units -->
+                            <div class="card bg-light-50 border-light-100 radius-8 mb-24">
+                                <div class="card-body p-16">
+
+                                    <div class="row">
+                                        <!-- Availability -->
+                                        <div class="col-md-6 mb-16">
+                                            <label class="form-label text-primary-light text-sm mb-8">
+                                                Availability <span class="text-danger-600">*</span>
+                                            </label>
+                                            <div class="d-flex flex-column gap-8">
+                                                <div class="form-check radio-card align-items-center p-12 radius-8">
+                                                    <input class="form-check-input" type="radio" name="is_available"
+                                                        id="available_yes" value="0"
+                                                        {{ old('is_available', 0) == 0 ? 'checked' : '' }}>
+                                                    <label class="form-check-label text-sm ms-8" for="available_yes">
+                                                        Available
+                                                    </label>
+                                                </div>
+                                                <div class="form-check radio-card align-items-center p-12 radius-8">
+                                                    <input class="form-check-input" type="radio" name="is_available"
+                                                        id="available_no" value="1"
+                                                        {{ old('is_available') == 1 ? 'checked' : '' }}>
+                                                    <label class="form-check-label text-sm ms-8" for="available_no">
+                                                        Occupied
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="invalid-feedback" id="is_available_error"></div>
+                                        </div>
+
+                                        <!-- Occupied By -->
+                                        <div class="col-md-6 mb-16">
+                                            <label class="form-label text-primary-light text-sm mb-8">
+                                                Occupied By <span class="text-danger-600">*</span>
+                                            </label>
+                                            <div class="d-flex flex-column gap-8">
+                                                <div class="form-check radio-card align-items-center p-12 radius-8">
+                                                    <input class="form-check-input" type="radio" name="is_owner"
+                                                        id="occupant_owner" value="yes"
+                                                        {{ old('is_owner') == 'yes' ? 'checked' : '' }}>
+                                                    <label class="form-check-label text-sm ms-8" for="occupant_owner">
+                                                        Property Owner
+                                                    </label>
+                                                </div>
+                                                <div class="form-check radio-card align-items-center p-12 radius-8">
+                                                    <input class="form-check-input" type="radio" name="is_owner"
+                                                        id="occupant_tenant" value="no"
+                                                        {{ old('is_owner') == 'no' ? 'checked' : '' }}>
+                                                    <label class="form-check-label text-sm ms-8" for="occupant_tenant">
+                                                        Tenant
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="invalid-feedback" id="is_owner_error"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                 `;
 
                 unitsContainer.insertAdjacentHTML('beforeend', unitTemplate);
@@ -610,7 +679,7 @@
                         .selectedIndex].text : 'Not specified';
 
                     const unitName = document.getElementById(`unit_name_${unitId}`).value ||
-                    'Not specified';
+                        'Not specified';
                     const unitPrice = document.getElementById(`unit_price_${unitId}`).value ||
                         'Not specified';
 

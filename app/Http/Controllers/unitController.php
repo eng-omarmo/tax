@@ -54,6 +54,7 @@ class unitController extends Controller
 
     public function store(Request $request)
     {
+        dd($request->all());
         try {
             // Validate common fields
             $validator = Validator::make($request->all(), [
