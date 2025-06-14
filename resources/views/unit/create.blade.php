@@ -5,68 +5,54 @@
     $subTitle = 'Manage Unit';
 @endphp
 <style>
-    /* Multi-step form styles */
-    .step-indicator {
-        color: #6c757d;
-        position: relative;
-        z-index: 1;
-    }
-
-    .step-indicator.active {
-        color: #0d6efd;
-        font-weight: 600;
-    }
-
-    .step-indicator.completed {
-        color: #198754;
-    }
-
-    .step-indicator.completed::after {
-        content: '✓';
-        display: inline-block;
-        margin-left: 4px;
-        font-size: 12px;
-    }
-
-    .radio-card {
-        border: 1px solid #dee2e6;
-        transition: all 0.2s ease;
-    }
-
-    .radio-card:hover {
-        border-color: #0d6efd;
-        background-color: #f8f9fa;
-    }
-
-    input[type="radio"]:checked+.form-check-label+.radio-card,
-    input[type="radio"]:checked~.radio-card {
-        border-color: #0d6efd;
-        background-color: #f0f7ff;
-    }
-
-    .invalid-feedback {
-        display: block;
-    }
-
-    /* Styles for multiple units */
+    /* Simplified styles */
     .unit-container {
         border: 1px solid #e9ecef;
         border-radius: 8px;
         padding: 16px;
         margin-bottom: 16px;
         position: relative;
+        transition: all 0.2s ease;
     }
 
     .unit-container:hover {
         border-color: #adb5bd;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .unit-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .unit-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .unit-action-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+    }
+
+    .unit-action-btn:hover {
+        background-color: #f8f9fa;
     }
 
     .remove-unit {
-        position: absolute;
-        top: 8px;
-        right: 8px;
-        cursor: pointer;
         color: #dc3545;
+    }
+
+    .duplicate-unit {
+        color: #0d6efd;
     }
 
     .add-unit-btn {
@@ -83,6 +69,33 @@
     .add-unit-btn:hover {
         background-color: #e9ecef;
         border-color: #6c757d;
+    }
+
+    .quick-add-container {
+        background-color: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 24px;
+    }
+
+    .status-toggle {
+        display: flex;
+        gap: 8px;
+    }
+
+    .status-toggle .form-check {
+        margin: 0;
+        padding: 0;
+    }
+
+    .status-toggle .form-check-input {
+        margin-top: 0;
+        margin-right: 4px;
+    }
+
+    .invalid-feedback {
+        display: block;
     }
 </style>
 
@@ -136,60 +149,49 @@
                 </div>
             @endif
 
-            <!-- Progress Bar -->
 
-            <div class="mb-24">
-                <div class="progress radius-8" style="height: 8px;">
-                    <div class="progress-bar bg-primary" role="progressbar" style="width: 20%;" id="step-progress-bar"
-                        aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <div class="d-flex justify-content-between mt-8">
-                    <span class="text-sm step-indicator active" data-step="1">Property</span>
-                    <span class="text-sm step-indicator" data-step="2">Units</span>
-                    <span class="text-sm step-indicator" data-step="3">Review</span>
-                    <span class="text-sm step-indicator" data-step="4">Submit</span>
-                </div>
-            </div>
-            <!-- Multi-step Form -->
+
+            <!-- Form -->
             <form id="unit-registration-form" action="{{ route('unit.store') }}" method="POST">
                 @csrf
                 <input type="hidden" name="property_id" value="{{ $property->id }}">
-                <input type="hidden" name="current_step" id="current_step" value="1">
                 <input type="hidden" name="unit_count" id="unit_count" value="1">
 
-                <!-- Step 1: Property Information (Read-only, already displayed above) -->
-                <div class="step-content" id="step-1">
-                    <div class="text-center py-24">
-                        <h4 class="mb-16">Property Information</h4>
-                        <p class="text-muted">The property details are shown above. Click Next to continue with unit
-                            registration.</p>
+                <div class="d-flex justify-content-between align-items-center mb-16">
+                    <h4 class="mb-0">Units <span class="badge bg-primary" id="units-counter">1</span></h4>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-sm btn-outline-danger" id="clear-all-btn">
+                            <iconify-icon icon="ic:baseline-clear-all" class="me-1"></iconify-icon>
+                            Clear All
+                        </button>
                     </div>
                 </div>
 
-                <!-- Step 2: Units Configuration -->
-                <div class="step-content d-none" id="step-2">
-                    <h4 class="mb-24">Units Configuration</h4>
-                    <p class="text-muted mb-16">Add one or more units to this property.</p>
-                    <div id="units-container">
-                        <!-- Unit 1 (default) -->
-                        <div class="unit-container" id="unit-1">
-                            <div class="d-flex justify-content-between align-items-center mb-16">
-                                <h5 class="mb-0">Unit #<span class="unit-number">1</span></h5>
-                                <iconify-icon icon="ic:baseline-delete" class="remove-unit d-none"
-                                    data-unit="1"></iconify-icon>
+                <!-- Units Container -->
+                <div id="units-container" class="mb-24">
+                    <!-- Unit 1 (default) -->
+                    <div class="unit-container" id="unit-1" data-unit-id="1">
+                        <div class="unit-header">
+                            <h5 class="mb-0">Unit #<span class="unit-number">1</span></h5>
+                            <div class="unit-actions">
+                                <button type="button" class="unit-action-btn duplicate-unit" data-unit-id="1" title="Duplicate Unit">
+                                    <iconify-icon icon="ic:baseline-content-copy" width="18"></iconify-icon>
+                                </button>
+                                <button type="button" class="unit-action-btn remove-unit d-none" data-unit-id="1" title="Remove Unit">
+                                    <iconify-icon icon="ic:baseline-delete" width="18"></iconify-icon>
+                                </button>
                             </div>
+                        </div>
 
-                            <!-- Unit Type -->
-                            <div class="mb-16">
+                        <div class="row">
+                            <div class="col-md-6 mb-16">
                                 <label class="form-label text-primary-light text-sm mb-8">
                                     Unit Type <span class="text-danger-600">*</span>
                                 </label>
-                                <select class="form-control radius-8 system-select" id="unit_type_1"
-                                    name="units[0][unit_type]" required>
+                                <select class="form-control radius-8 system-select" id="unit_type_1" name="units[0][unit_type]" required>
                                     <option value="">Select Unit Type</option>
                                     @foreach (['Flat', 'Section', 'Office', 'Shop', 'Other'] as $type)
-                                        <option value="{{ $type }}"
-                                            {{ old('units.0.unit_type') == $type ? 'selected' : '' }}>
+                                        <option value="{{ $type }}" {{ old('units.0.unit_type') == $type ? 'selected' : '' }}>
                                             {{ $type }}
                                         </option>
                                     @endforeach
@@ -197,8 +199,7 @@
                                 <div class="invalid-feedback" id="unit_type_error_1"></div>
                             </div>
 
-                            <!-- Unit Name -->
-                            <div class="mb-16">
+                            <div class="col-md-6 mb-16">
                                 <label class="form-label text-primary-light text-sm mb-8">
                                     Unit Name <span class="text-danger-600">*</span>
                                 </label>
@@ -209,511 +210,367 @@
                                 </div>
                                 <div class="invalid-feedback" id="unit_name_error_1"></div>
                             </div>
+                        </div>
 
-                            <!-- Monthly Rent -->
-                            <div class="mb-16">
+                        <div class="row">
+                            <div class="col-md-6 mb-16">
                                 <label class="form-label text-primary-light text-sm mb-8">
                                     Monthly Rent <span class="text-danger-600">*</span>
                                 </label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-primary-50 border-primary-100">RM</span>
                                     <input type="number" class="form-control radius-8 system-input" id="unit_price_1"
-                                        name="units[0][unit_price]" min="0" step="0.01"
-                                        value="{{ old('units.0.unit_price') }}" required>
+                                        name="units[0][unit_price]" min="0" step="0.01" value="{{ old('units.0.unit_price') }}" required>
                                 </div>
                                 <div class="invalid-feedback" id="unit_price_error_1"></div>
                             </div>
 
-                            <!-- Common Status Settings for All Units -->
-                            <div class="card bg-light-50 border-light-100 radius-8 mb-24">
-                                <div class="card-body p-16">
-
-                                    <div class="row">
-                                        <!-- Availability -->
-                                        <div class="col-md-6 mb-16">
-                                            <label class="form-label text-primary-light text-sm mb-8">
-                                                Availability <span class="text-danger-600">*</span>
-                                            </label>
-                                            <div class="d-flex flex-column gap-8">
-                                                <div class="form-check radio-card align-items-center p-12 radius-8">
-                                                    <input class="form-check-input" type="radio" name="is_available"
-                                                        id="available_yes" value="0"
-                                                        {{ old('is_available', 0) == 0 ? 'checked' : '' }}>
-                                                    <label class="form-check-label text-sm ms-8" for="available_yes">
-                                                        Available
-                                                    </label>
-                                                </div>
-                                                <div class="form-check radio-card align-items-center p-12 radius-8">
-                                                    <input class="form-check-input" type="radio" name="is_available"
-                                                        id="available_no" value="1"
-                                                        {{ old('is_available') == 1 ? 'checked' : '' }}>
-                                                    <label class="form-check-label text-sm ms-8" for="available_no">
-                                                        Occupied
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="invalid-feedback" id="is_available_error"></div>
+                            <div class="col-md-6 mb-16">
+                                <label class="form-label text-primary-light text-sm mb-8">
+                                    Status <span class="text-danger-600">*</span>
+                                </label>
+                                <div class="d-flex flex-column gap-2">
+                                    <div class="status-toggle">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="units[0][status]"
+                                                id="status_available_1" value="available" checked>
+                                            <label class="form-check-label" for="status_available_1">Available</label>
                                         </div>
-
-                                        <!-- Occupied By -->
-                                        <div class="col-md-6 mb-16">
-                                            <label class="form-label text-primary-light text-sm mb-8">
-                                                Occupied By <span class="text-danger-600">*</span>
-                                            </label>
-                                            <div class="d-flex flex-column gap-8">
-                                                <div class="form-check radio-card align-items-center p-12 radius-8">
-                                                    <input class="form-check-input" type="radio" name="is_owner"
-                                                        id="occupant_owner" value="yes"
-                                                        {{ old('is_owner') == 'yes' ? 'checked' : '' }}>
-                                                    <label class="form-check-label text-sm ms-8" for="occupant_owner">
-                                                        Property Owner
-                                                    </label>
-                                                </div>
-                                                <div class="form-check radio-card align-items-center p-12 radius-8">
-                                                    <input class="form-check-input" type="radio" name="is_owner"
-                                                        id="occupant_tenant" value="no"
-                                                        {{ old('is_owner') == 'no' ? 'checked' : '' }}>
-                                                    <label class="form-check-label text-sm ms-8" for="occupant_tenant">
-                                                        Tenant
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="invalid-feedback" id="is_owner_error"></div>
+                                    </div>
+                                    <div class="status-toggle">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="units[0][status]"
+                                                id="status_owner_1" value="owner">
+                                            <label class="form-check-label" for="status_owner_1">Occupied by Owner</label>
+                                        </div>
+                                    </div>
+                                    <div class="status-toggle">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="units[0][status]"
+                                                id="status_tenant_1" value="tenant">
+                                            <label class="form-check-label" for="status_tenant_1">Occupied by Tenant</label>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="invalid-feedback" id="status_error_1"></div>
                             </div>
                         </div>
                     </div>
-                    <div id="units-container">
-
-                    </div>
-
-
-                    <!-- Add Unit Button -->
-                    <div class="add-unit-btn" id="add-unit-btn">
-                        <iconify-icon icon="ic:baseline-add-circle" class="text-primary me-8"></iconify-icon>
-                        <span>Add Another Unit</span>
-                    </div>
                 </div>
 
-        </div>
-
-
-        <!-- Step 4: Review & Submit -->
-        <div class="step-content d-none" id="step-4">
-            <h4 class="mb-24">Review Unit Details</h4>
-            <p class="text-muted mb-16">Review the units you're about to create.</p>
-
-            <div id="review-units-container">
-                <!-- Will be populated dynamically -->
-            </div>
-
-            <div class="alert bg-info-50 border-info-100 radius-8 mt-24">
-                <div class="d-flex align-items-center">
-                    <iconify-icon icon="ic:baseline-info" class="text-info me-8"></iconify-icon>
-                    <div class="text-sm">Please review the information above before submitting. Once submitted, you
-                        can still edit the unit details later.</div>
+                <!-- Add Unit Button -->
+                <div class="add-unit-btn" id="add-unit-btn">
+                    <iconify-icon icon="ic:baseline-add-circle" class="text-primary me-8"></iconify-icon>
+                    <span>Add Another Unit</span>
                 </div>
-            </div>
-        </div>
 
-        <!-- Navigation Buttons -->
-        <div class="d-flex align-items-center justify-content-between mt-24">
-            <button type="button" id="prev-step" class="btn btn-outline-primary btn-medium px-32 py-12 radius-8 d-none">
-                Previous
-            </button>
-
-            <div class="ms-auto">
-                <a href="{{ route('unit.index') }}"
-                    class="btn btn-outline-danger-600 text-danger-600 btn-medium px-32 py-12 radius-8 me-16">
-                    Cancel
-                </a>
-                <button type="button" id="next-step" class="btn btn-primary btn-medium px-32 py-12 radius-8">
-                    Next
-                </button>
-                <button type="submit" id="submit-form" class="btn btn-success btn-medium px-32 py-12 radius-8 d-none">
-                    Submit
-                </button>
-            </div>
+                <!-- Submit Button -->
+                <div class="d-flex justify-content-end mt-24">
+                    <a href="{{ route('unit.index') }}" class="btn btn-outline-danger-600 text-danger-600 btn-medium px-32 py-12 radius-8 me-16">
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn btn-success btn-medium px-32 py-12 radius-8">
+                        <iconify-icon icon="ic:baseline-check" class="me-1"></iconify-icon>
+                        Save Units
+                    </button>
+                </div>
+            </form>
         </div>
-        </form>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('unit-registration-form');
-            const stepContents = document.querySelectorAll('.step-content');
-            const stepIndicators = document.querySelectorAll('.step-indicator');
-            const progressBar = document.getElementById('step-progress-bar');
-            const currentStepInput = document.getElementById('current_step');
-            const unitCountInput = document.getElementById('unit_count');
-            const prevStepBtn = document.getElementById('prev-step');
-            const nextStepBtn = document.getElementById('next-step');
-            const submitFormBtn = document.getElementById('submit-form');
-            const addUnitBtn = document.getElementById('add-unit-btn');
-            const unitsContainer = document.getElementById('units-container');
-            const reviewUnitsContainer = document.getElementById('review-units-container');
-
-            let currentStep = 1;
-            const totalSteps = stepContents.length;
+            // Variables
             let unitCount = 1;
+            const unitsContainer = document.getElementById('units-container');
+            const addUnitBtn = document.getElementById('add-unit-btn');
+            const unitCountInput = document.getElementById('unit_count');
+            const unitsCounter = document.getElementById('units-counter');
 
-            // Initialize the form
-            updateFormState();
+            const clearAllBtn = document.getElementById('clear-all-btn');
 
-            // Event listeners for navigation buttons
-            prevStepBtn.addEventListener('click', goToPreviousStep);
-            nextStepBtn.addEventListener('click', goToNextStep);
+            // Initialize
+            updateUnitsCounter();
 
-            // Event listener for adding a new unit
+            // Add new unit
             addUnitBtn.addEventListener('click', addNewUnit);
 
-            // Event delegation for removing units
-            unitsContainer.addEventListener('click', function(e) {
-                if (e.target.classList.contains('remove-unit') || e.target.closest('.remove-unit')) {
-                    const unitElement = e.target.closest('.unit-container');
-                    if (unitElement) {
-                        removeUnit(unitElement);
+
+            // Clear all units
+            clearAllBtn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to clear all units?')) {
+                    // Keep the first unit but clear its values
+                    const firstUnit = document.getElementById('unit-1');
+                    if (firstUnit) {
+                        document.getElementById('unit_type_1').value = '';
+                        document.getElementById('unit_name_1').value = '';
+                        document.getElementById('unit_price_1').value = '';
+                        document.getElementById('status_available_1').checked = true;
                     }
+
+                    // Remove all other units
+                    const units = document.querySelectorAll('.unit-container:not(#unit-1)');
+                    units.forEach(unit => unit.remove());
+
+                    unitCount = 1;
+                    unitCountInput.value = unitCount;
+                    updateUnitsCounter();
                 }
             });
 
-            // Function to update the form state based on the current step
-            function updateFormState() {
-                // Update progress
-                const progressPercentage = (currentStep / totalSteps) * 100;
-                progressBar.style.width = `${progressPercentage}%`;
-
-                // Update step indicators
-                stepIndicators.forEach((indicator, index) => {
-                    indicator.classList.toggle('active', index + 1 === currentStep);
-                    indicator.classList.toggle('completed', index + 1 < currentStep);
-                });
-
-                // Show current step, hide others
-                stepContents.forEach((step, index) => {
-                    if (index + 1 === currentStep) {
-                        step.classList.remove('d-none');
-                    } else {
-                        step.classList.add('d-none');
-                    }
-                });
-
-                // Update navigation buttons
-                prevStepBtn.classList.toggle('d-none', currentStep === 1);
-                nextStepBtn.classList.toggle('d-none', currentStep === totalSteps);
-                submitFormBtn.classList.toggle('d-none', currentStep !== totalSteps);
-
-                // Update review section if on last step
-                if (currentStep === 4) {
-                    updateReviewSection();
+            // Remove unit delegation
+            unitsContainer.addEventListener('click', function(e) {
+                // Handle remove unit
+                if (e.target.closest('.remove-unit')) {
+                    const button = e.target.closest('.remove-unit');
+                    const unitId = button.getAttribute('data-unit-id');
+                    removeUnit(unitId);
                 }
 
-                // Update current step in hidden input
-                currentStepInput.value = currentStep;
-            }
-
-            // Function to go to the previous step
-            function goToPreviousStep() {
-                if (currentStep > 1) {
-                    currentStep--;
-                    updateFormState();
+                // Handle duplicate unit
+                if (e.target.closest('.duplicate-unit')) {
+                    const button = e.target.closest('.duplicate-unit');
+                    const unitId = button.getAttribute('data-unit-id');
+                    duplicateUnit(unitId);
                 }
-            }
+            });
 
-            // Function to go to the next step
-            function goToNextStep() {
-                if (validateCurrentStep() && currentStep < totalSteps) {
-                    currentStep++;
-                    updateFormState();
+            // Form validation
+            document.getElementById('unit-registration-form').addEventListener('submit', function(e) {
+                if (!validateForm()) {
+                    e.preventDefault();
                 }
-            }
+            });
 
-            // Function to validate the current step
-
-            // Function to validate the current step
-            function validateCurrentStep() {
-                let isValid = true;
-
-                // Clear previous validation errors
-                const errorElements = document.querySelectorAll('.invalid-feedback');
-                errorElements.forEach(el => el.textContent = '');
-
-                // Validate based on current step
-                switch (currentStep) {
-                    case 2: // Units and Status (combined)
-                        // Validate each unit's fields
-                        const unitContainers = document.querySelectorAll('.unit-container');
-                        unitContainers.forEach((container, index) => {
-                            const unitId = container.id.split('-')[1];
-
-                            const unitType = document.getElementById(`unit_type_${unitId}`);
-                            const unitName = document.getElementById(`unit_name_${unitId}`);
-                            const unitPrice = document.getElementById(`unit_price_${unitId}`);
-
-                            if (!unitType.value) {
-                                document.getElementById(`unit_type_error_${unitId}`).textContent =
-                                    'Please select a unit type';
-                                isValid = false;
-                            }
-
-                            if (!unitName.value.trim()) {
-                                document.getElementById(`unit_name_error_${unitId}`).textContent =
-                                    'Please enter a unit name';
-                                isValid = false;
-                            }
-
-                            if (!unitPrice.value || parseFloat(unitPrice.value) <= 0) {
-                                document.getElementById(`unit_price_error_${unitId}`).textContent =
-                                    'Please enter a valid monthly rent amount';
-                                isValid = false;
-                            }
-                        });
-
-                        // Validate status fields
-                        const isAvailable = document.querySelector('input[name="is_available"]:checked');
-                        const isOwner = document.querySelector('input[name="is_owner"]:checked');
-
-                        if (!isAvailable) {
-                            document.getElementById('is_available_error').textContent =
-                                'Please select availability status';
-                            isValid = false;
-                        }
-
-                        if (!isOwner) {
-                            document.getElementById('is_owner_error').textContent = 'Please select occupant type';
-                            isValid = false;
-                        }
-                        break;
-                }
-
-                return isValid;
-            }
-
-
-            // Function to add a new unit
+            // Functions
             function addNewUnit() {
                 unitCount++;
-                const newIndex = unitCount - 1; // For array indexing in form submission
+                const newUnit = createUnitHtml(unitCount);
+                unitsContainer.appendChild(newUnit);
+                unitCountInput.value = unitCount;
+                updateUnitsCounter();
+            }
 
-                const unitTemplate = `
-                    <div class="unit-container" id="unit-${unitCount}">
-                        <div class="d-flex justify-content-between align-items-center mb-16">
-                            <h5 class="mb-0">Unit #<span class="unit-number">${unitCount}</span></h5>
-                            <iconify-icon icon="ic:baseline-delete" class="remove-unit" data-unit="${unitCount}"></iconify-icon>
+            function removeUnit(unitId) {
+                const unitDiv = document.getElementById(`unit-${unitId}`);
+                if (unitDiv) {
+                    unitDiv.remove();
+                    renumberUnits();
+                    updateUnitsCounter();
+                }
+            }
+
+            function duplicateUnit(unitId) {
+                const sourceUnit = document.getElementById(`unit-${unitId}`);
+                if (sourceUnit) {
+                    unitCount++;
+                    const newUnit = createUnitHtml(unitCount);
+                    unitsContainer.appendChild(newUnit);
+
+                    // Copy values from source unit
+                    const sourceUnitType = document.getElementById(`unit_type_${unitId}`).value;
+                    const sourceUnitName = document.getElementById(`unit_name_${unitId}`).value;
+                    const sourceUnitPrice = document.getElementById(`unit_price_${unitId}`).value;
+                    const sourceStatus = getUnitStatus(unitId);
+
+                    document.getElementById(`unit_type_${unitCount}`).value = sourceUnitType;
+                    document.getElementById(`unit_name_${unitCount}`).value = sourceUnitName + ' (Copy)';
+                    document.getElementById(`unit_price_${unitCount}`).value = sourceUnitPrice;
+
+                    // Set status
+                    document.getElementById(`status_available_${unitCount}`).checked = (sourceStatus === 'available');
+                    document.getElementById(`status_owner_${unitCount}`).checked = (sourceStatus === 'owner');
+                    document.getElementById(`status_tenant_${unitCount}`).checked = (sourceStatus === 'tenant');
+
+                    unitCountInput.value = unitCount;
+                    updateUnitsCounter();
+                }
+            }
+
+            function getUnitStatus(unitId) {
+                if (document.getElementById(`status_available_${unitId}`).checked) return 'available';
+                if (document.getElementById(`status_owner_${unitId}`).checked) return 'owner';
+                if (document.getElementById(`status_tenant_${unitId}`).checked) return 'tenant';
+                return 'available'; // Default
+            }
+
+            function createUnitHtml(count) {
+                const unitHtml = `
+                <div class="unit-container" id="unit-${count}" data-unit-id="${count}">
+                    <div class="unit-header">
+                        <h5 class="mb-0">Unit #<span class="unit-number">${count}</span></h5>
+                        <div class="unit-actions">
+                            <button type="button" class="unit-action-btn duplicate-unit" data-unit-id="${count}" title="Duplicate Unit">
+                                <iconify-icon icon="ic:baseline-content-copy" width="18"></iconify-icon>
+                            </button>
+                            <button type="button" class="unit-action-btn remove-unit" data-unit-id="${count}" title="Remove Unit">
+                                <iconify-icon icon="ic:baseline-delete" width="18"></iconify-icon>
+                            </button>
                         </div>
+                    </div>
 
-                        <!-- Unit Type -->
-                        <div class="mb-16">
+                    <div class="row">
+                        <div class="col-md-6 mb-16">
                             <label class="form-label text-primary-light text-sm mb-8">
                                 Unit Type <span class="text-danger-600">*</span>
                             </label>
-                            <select class="form-control radius-8 system-select" id="unit_type_${unitCount}" name="units[${newIndex}][unit_type]" required>
+                            <select class="form-control radius-8 system-select" id="unit_type_${count}"
+                                name="units[${count-1}][unit_type]" required>
                                 <option value="">Select Unit Type</option>
-                                @foreach (['Flat', 'Section', 'Office', 'Shop', 'Other'] as $type)
-                                    <option value="{{ $type }}">
-                                        {{ $type }}
-                                    </option>
-                                @endforeach
+                                ${['Flat', 'Section', 'Office', 'Shop', 'Other'].map(type =>
+                                    `<option value="${type}">${type}</option>`).join('')}
                             </select>
-                            <div class="invalid-feedback" id="unit_type_error_${unitCount}"></div>
+                            <div class="invalid-feedback" id="unit_type_error_${count}"></div>
                         </div>
 
-                        <!-- Unit Name -->
-                        <div class="mb-16">
+                        <div class="col-md-6 mb-16">
                             <label class="form-label text-primary-light text-sm mb-8">
                                 Unit Name <span class="text-danger-600">*</span>
                             </label>
                             <div class="input-group">
                                 <span class="input-group-text bg-primary-50 border-primary-100">UN</span>
-                                <input type="text" class="form-control radius-8 system-input" id="unit_name_${unitCount}" name="units[${newIndex}][unit_name]" required>
+                                <input type="text" class="form-control radius-8 system-input" id="unit_name_${count}"
+                                    name="units[${count-1}][unit_name]" required>
                             </div>
-                            <div class="invalid-feedback" id="unit_name_error_${unitCount}"></div>
+                            <div class="invalid-feedback" id="unit_name_error_${count}"></div>
                         </div>
+                    </div>
 
-                        <!-- Monthly Rent -->
-                        <div class="mb-16">
+                    <div class="row">
+                        <div class="col-md-6 mb-16">
                             <label class="form-label text-primary-light text-sm mb-8">
                                 Monthly Rent <span class="text-danger-600">*</span>
                             </label>
                             <div class="input-group">
                                 <span class="input-group-text bg-primary-50 border-primary-100">RM</span>
-                                <input type="number" class="form-control radius-8 system-input" id="unit_price_${unitCount}"
-                                    name="units[${newIndex}][unit_price]" min="0" step="0.01" required>
+                                <input type="number" class="form-control radius-8 system-input" id="unit_price_${count}"
+                                    name="units[${count-1}][unit_price]" min="0" step="0.01" required>
                             </div>
-                            <div class="invalid-feedback" id="unit_price_error_${unitCount}"></div>
+                            <div class="invalid-feedback" id="unit_price_error_${count}"></div>
                         </div>
-                    </div>
-                        <!-- Common Status Settings for All Units -->
-                            <div class="card bg-light-50 border-light-100 radius-8 mb-24">
-                                <div class="card-body p-16">
 
-                                    <div class="row">
-                                        <!-- Availability -->
-                                        <div class="col-md-6 mb-16">
-                                            <label class="form-label text-primary-light text-sm mb-8">
-                                                Availability <span class="text-danger-600">*</span>
-                                            </label>
-                                            <div class="d-flex flex-column gap-8">
-                                                <div class="form-check radio-card align-items-center p-12 radius-8">
-                                                    <input class="form-check-input" type="radio" name="is_available"
-                                                        id="available_yes" value="0"
-                                                        {{ old('is_available', 0) == 0 ? 'checked' : '' }}>
-                                                    <label class="form-check-label text-sm ms-8" for="available_yes">
-                                                        Available
-                                                    </label>
-                                                </div>
-                                                <div class="form-check radio-card align-items-center p-12 radius-8">
-                                                    <input class="form-check-input" type="radio" name="is_available"
-                                                        id="available_no" value="1"
-                                                        {{ old('is_available') == 1 ? 'checked' : '' }}>
-                                                    <label class="form-check-label text-sm ms-8" for="available_no">
-                                                        Occupied
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="invalid-feedback" id="is_available_error"></div>
-                                        </div>
-
-                                        <!-- Occupied By -->
-                                        <div class="col-md-6 mb-16">
-                                            <label class="form-label text-primary-light text-sm mb-8">
-                                                Occupied By <span class="text-danger-600">*</span>
-                                            </label>
-                                            <div class="d-flex flex-column gap-8">
-                                                <div class="form-check radio-card align-items-center p-12 radius-8">
-                                                    <input class="form-check-input" type="radio" name="is_owner"
-                                                        id="occupant_owner" value="yes"
-                                                        {{ old('is_owner') == 'yes' ? 'checked' : '' }}>
-                                                    <label class="form-check-label text-sm ms-8" for="occupant_owner">
-                                                        Property Owner
-                                                    </label>
-                                                </div>
-                                                <div class="form-check radio-card align-items-center p-12 radius-8">
-                                                    <input class="form-check-input" type="radio" name="is_owner"
-                                                        id="occupant_tenant" value="no"
-                                                        {{ old('is_owner') == 'no' ? 'checked' : '' }}>
-                                                    <label class="form-check-label text-sm ms-8" for="occupant_tenant">
-                                                        Tenant
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="invalid-feedback" id="is_owner_error"></div>
-                                        </div>
+                        <div class="col-md-6 mb-16">
+                            <label class="form-label text-primary-light text-sm mb-8">
+                                Status <span class="text-danger-600">*</span>
+                            </label>
+                            <div class="d-flex flex-column gap-2">
+                                <div class="status-toggle">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="units[${count-1}][status]"
+                                            id="status_available_${count}" value="available" checked>
+                                        <label class="form-check-label" for="status_available_${count}">Available</label>
+                                    </div>
+                                </div>
+                                <div class="status-toggle">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="units[${count-1}][status]"
+                                            id="status_owner_${count}" value="owner">
+                                        <label class="form-check-label" for="status_owner_${count}">Occupied by Owner</label>
+                                    </div>
+                                </div>
+                                <div class="status-toggle">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="units[${count-1}][status]"
+                                            id="status_tenant_${count}" value="tenant">
+                                        <label class="form-check-label" for="status_tenant_${count}">Occupied by Tenant</label>
                                     </div>
                                 </div>
                             </div>
+                            <div class="invalid-feedback" id="status_error_${count}"></div>
+                        </div>
+                    </div>
+                </div>
                 `;
 
-                unitsContainer.insertAdjacentHTML('beforeend', unitTemplate);
-
-                // Show remove button for the first unit if there are now multiple units
-                if (unitCount === 2) {
-                    const firstUnitRemoveBtn = document.querySelector('#unit-1 .remove-unit');
-                    if (firstUnitRemoveBtn) {
-                        firstUnitRemoveBtn.classList.remove('d-none');
-                    }
-                }
-
-                // Update unit count in hidden input
-                unitCountInput.value = unitCount;
+                const template = document.createElement('template');
+                template.innerHTML = unitHtml.trim();
+                return template.content.firstChild;
             }
 
-            // Function to remove a unit
-            function removeUnit(unitElement) {
-                // Don't allow removing if there's only one unit left
-                if (document.querySelectorAll('.unit-container').length <= 1) {
-                    return;
+            function renumberUnits() {
+                const units = document.querySelectorAll('.unit-container');
+                units.forEach((unit, index) => {
+                    const unitId = index + 1;
+                    unit.id = `unit-${unitId}`;
+                    unit.setAttribute('data-unit-id', unitId);
+                    unit.querySelector('.unit-number').textContent = unitId;
+                    unit.querySelector('.remove-unit').setAttribute('data-unit-id', unitId);
+                    unit.querySelector('.duplicate-unit').setAttribute('data-unit-id', unitId);
+
+                    // Update all input names and IDs
+                    const inputs = unit.querySelectorAll('input, select');
+                    inputs.forEach(input => {
+                        if (input.name) {
+                            input.name = input.name.replace(/units\[\d+\]/, `units[${index}]`);
+                        }
+                        if (input.id) {
+                            input.id = input.id.replace(/_\d+$/, `_${unitId}`);
+                        }
+                    });
+
+                    // Update labels
+                    const labels = unit.querySelectorAll('label[for]');
+                    labels.forEach(label => {
+                        if (label.htmlFor) {
+                            label.htmlFor = label.htmlFor.replace(/_\d+$/, `_${unitId}`);
+                        }
+                    });
+
+                    const feedbacks = unit.querySelectorAll('.invalid-feedback');
+                    feedbacks.forEach(fb => {
+                        fb.id = fb.id.replace(/_\d+$/, `_${unitId}`);
+                    });
+                });
+
+                unitCount = units.length;
+                unitCountInput.value = unitCount;
+                updateUnitsCounter();
+            }
+
+            function updateUnitsCounter() {
+                const units = document.querySelectorAll('.unit-container');
+                unitsCounter.textContent = units.length;
+
+                // Hide remove button on the first unit if it's the only one
+                const firstUnitRemoveBtn = document.querySelector('#unit-1 .remove-unit');
+                if (firstUnitRemoveBtn) {
+                    firstUnitRemoveBtn.classList.toggle('d-none', units.length === 1);
                 }
+            }
 
-                unitElement.remove();
+            function validateForm() {
+                let isValid = true;
 
-                // Reindex the remaining units for display purposes
-                const unitContainers = document.querySelectorAll('.unit-container');
-                unitContainers.forEach((container, index) => {
-                    const unitNumberElement = container.querySelector('.unit-number');
-                    if (unitNumberElement) {
-                        unitNumberElement.textContent = index + 1;
+                // Clear previous validation errors
+                document.querySelectorAll('.invalid-feedback').forEach(el => {
+                    el.textContent = '';
+                });
+
+                // Validate each unit
+                const units = document.querySelectorAll('.unit-container');
+                units.forEach(unit => {
+                    const unitId = unit.getAttribute('data-unit-id');
+                    const unitType = document.getElementById(`unit_type_${unitId}`);
+                    const unitName = document.getElementById(`unit_name_${unitId}`);
+                    const unitPrice = document.getElementById(`unit_price_${unitId}`);
+
+                    if (!unitType.value) {
+                        document.getElementById(`unit_type_error_${unitId}`).textContent = 'Unit type is required';
+                        isValid = false;
+                    }
+
+                    if (!unitName.value) {
+                        document.getElementById(`unit_name_error_${unitId}`).textContent = 'Unit name is required';
+                        isValid = false;
+                    }
+
+                    if (!unitPrice.value || parseFloat(unitPrice.value) < 0) {
+                        document.getElementById(`unit_price_error_${unitId}`).textContent = 'Valid monthly rent is required';
+                        isValid = false;
                     }
                 });
 
-                // Hide remove button for the first unit if there's only one unit left
-                if (unitContainers.length === 1) {
-                    const firstUnitRemoveBtn = document.querySelector('#unit-1 .remove-unit');
-                    if (firstUnitRemoveBtn) {
-                        firstUnitRemoveBtn.classList.add('d-none');
-                    }
-                }
-
-                // Update unit count
-                unitCount = unitContainers.length;
-                unitCountInput.value = unitCount;
-            }
-
-            // Function to update the review section
-            function updateReviewSection() {
-                // Clear previous content
-                reviewUnitsContainer.innerHTML = '';
-
-                // Get all unit containers
-                const unitContainers = document.querySelectorAll('.unit-container');
-
-                // Get common status values
-                const isAvailableRadio = document.querySelector('input[name="is_available"]:checked');
-                const isOwnerRadio = document.querySelector('input[name="is_owner"]:checked');
-
-                const availabilityStatus = isAvailableRadio ?
-                    (isAvailableRadio.value == '0' ? 'Available' : 'Occupied') : 'Not specified';
-
-                const occupantType = isOwnerRadio ?
-                    (isOwnerRadio.value === 'yes' ? 'Property Owner' : 'Tenant') : 'Not specified';
-
-                // Create review cards for each unit
-                unitContainers.forEach((container, index) => {
-                    const unitId = container.id.split('-')[1];
-
-                    // Get unit values
-                    const unitTypeSelect = document.getElementById(`unit_type_${unitId}`);
-                    const unitTypeText = unitTypeSelect ? unitTypeSelect.options[unitTypeSelect
-                        .selectedIndex].text : 'Not specified';
-
-                    const unitName = document.getElementById(`unit_name_${unitId}`).value ||
-                        'Not specified';
-                    const unitPrice = document.getElementById(`unit_price_${unitId}`).value ||
-                        'Not specified';
-
-                    // Create review card
-                    const reviewCard = `
-                        <div class="card bg-light-50 border-light-100 radius-8 mb-16">
-                            <div class="card-body p-16">
-                                <h5 class="mb-16">Unit #${index + 1}</h5>
-                                <div class="row mb-2">
-                                    <div class="col-md-4 fw-semibold">Unit Type:</div>
-                                    <div class="col-md-8">${unitTypeText}</div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-md-4 fw-semibold">Unit Name:</div>
-                                    <div class="col-md-8">${unitName}</div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-md-4 fw-semibold">Monthly Rent:</div>
-                                    <div class="col-md-8">${unitPrice ? `USD ${parseFloat(unitPrice).toFixed(2)}` : 'Not specified'}</div>
-                                </div>
-                                <div class="row mb-2">
-                                    <div class="col-md-4 fw-semibold">Availability:</div>
-                                    <div class="col-md-8">${availabilityStatus}</div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4 fw-semibold">Occupied By:</div>
-                                    <div class="col-md-8">${occupantType}</div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-
-                    reviewUnitsContainer.insertAdjacentHTML('beforeend', reviewCard);
-                });
+                return isValid;
             }
         });
     </script>

@@ -54,7 +54,8 @@ class unitController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
+        // Remove the dd() statement
+        // dd($request->all());
         try {
             // Validate common fields
             $validator = Validator::make($request->all(), [
@@ -102,6 +103,10 @@ class unitController extends Controller
                 // Generate a unique unit number
                 $unitNumber = 'U' . rand(1000, 9999) . rand(1000, 9999);
 
+                // Determine availability and owner status from the unit's status
+                $isAvailable = ($unitData['status'] === 'available') ? 0 : 1; // 0 = available, 1 = occupied
+                $isOwner = ($unitData['status'] === 'owner') ? 'yes' : 'no';
+
                 // Create the unit
                 Unit::create([
                     'property_id' => $request->property_id,
@@ -109,8 +114,8 @@ class unitController extends Controller
                     'unit_name' => $unitData['unit_name'],
                     'unit_type' => $unitData['unit_type'],
                     'unit_price' => $unitData['unit_price'],
-                    'is_owner' => $request->is_owner,
-                    'is_available' => $request->is_available
+                    'is_owner' => $isOwner,
+                    'is_available' => $isAvailable
                 ]);
             }
 

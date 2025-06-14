@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
 use App\Mail\PropertyInvoiceSummaryMail;
-use App\Services\SMSService;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
