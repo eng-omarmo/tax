@@ -497,12 +497,12 @@ class ReportController extends Controller
         return $districtData;
     }
 
-    public function quaterly()
+    public function quaterly(Request $request)
     {
+        // Get the requested year or default to current year
+        $year = $request->input('year', now()->year);
 
-//clean this code get the function in dashboard controller then use that as reusable instead rewrittign the whole things againm 
-        // quater sumaries
-        $year = now()->year;
+        // Get quarterly data
         $rawData = Invoice::selectRaw("
          LOWER(frequency) as frequency,
          SUM(amount) as billed,
@@ -513,6 +513,7 @@ class ReportController extends Controller
             ->groupBy('frequency')
             ->get()
             ->keyBy('frequency');
+
         $quarters = ['q1', 'q2', 'q3', 'q4'];
         $quarterSummaries = [];
 
@@ -534,6 +535,6 @@ class ReportController extends Controller
             }
         }
 
-        return view('reports.quater', compact('quarterSummaries'));
+        return view('reports.quater', compact('quarterSummaries', 'year'));
     }
 }

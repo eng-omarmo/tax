@@ -165,9 +165,6 @@
                 </li>
             @endif
             <li class="sidebar-menu-group-title"> Reports</li>
-
-
-
             <li class="dropdown">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="mdi:file-chart" class="menu-icon text-blue-500"></iconify-icon>
@@ -205,10 +202,7 @@
 
                 </ul>
             </li>
-
         </ul>
-
-
     </div>
 
     </div>
