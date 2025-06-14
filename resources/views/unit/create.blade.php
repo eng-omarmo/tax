@@ -270,8 +270,8 @@
                         Cancel
                     </a>
                     <button type="submit" class="btn btn-success btn-medium px-32 py-12 radius-8">
-                        <iconify-icon icon="ic:baseline-check" class="me-1"></iconify-icon>
-                        Save Units
+            
+                        Save
                     </button>
                 </div>
             </form>

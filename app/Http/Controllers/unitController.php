@@ -60,8 +60,7 @@ class unitController extends Controller
             // Validate common fields
             $validator = Validator::make($request->all(), [
                 'property_id' => 'required|exists:properties,id',
-                'is_owner' => 'required|in:yes,no',
-                'is_available' => 'required|boolean'
+               
             ]);
 
             if ($validator->fails()) {
