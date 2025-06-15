@@ -48,7 +48,7 @@ trait ApiResponseTrait
         return $this->response($errors, $statusCode, $message, false);
     }
 
-    // === Shortcuts ===
+
 
     protected function okResponse(mixed $data = null, string $message = ''): JsonResponse
     {
@@ -59,6 +59,8 @@ trait ApiResponseTrait
     {
         return $this->successResponse($data, Response::HTTP_CREATED, $message);
     }
+
+
 
     protected function badRequestResponse(mixed $data = null, string $message = ''): JsonResponse
     {

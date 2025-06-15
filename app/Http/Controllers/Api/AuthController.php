@@ -48,8 +48,6 @@ class AuthController extends Controller
             if ($user->tokens()->exists()) {
                 $user->tokens()->delete();
             }
-
-
             $deviceName = $request->device_name ?? $request->ip();
             $token = $user->createToken($deviceName)->plainTextToken;
 
@@ -71,7 +69,6 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         try {
-
             $request->user()->tokens()->delete();
             return $this->successResponse(null, 200, 'Successfully logged out');
         } catch (\Exception $e) {
