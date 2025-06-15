@@ -27,6 +27,7 @@ class User extends Authenticatable
     ];
 
 
+
     public function landlords()
     {
         return $this->hasMany(Landlord::class);

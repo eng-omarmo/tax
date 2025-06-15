@@ -32,34 +32,33 @@ class AuthController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return $this->errorResponse($validator->errors()->first(), 422);
+                return $this->okResponse($validator->errors()->first(), 422);
             }
 
-            // Find the user by email
             $user = User::where('email', $request->email)->first();
 
-            // Check if user exists and password is correct
             if (!$user || !Hash::check($request->password, $user->password)) {
-                return $this->errorResponse('The provided credentials are incorrect.', 401);
+                return $this->okResponse(null, 'The provided credentials are incorrect.');
             }
 
-            // Check if user is active
             if ($user->status !== 'active') {
-                return $this->errorResponse('Your account is not active. Please contact administrator.', 403);
+                return $this->okResponse(null, 'Your account is not active. Please contact administrator.');
             }
 
-            // Create token
+            if ($user->tokens()->exists()) {
+                $user->tokens()->delete();
+            }
+
+
             $deviceName = $request->device_name ?? $request->ip();
             $token = $user->createToken($deviceName)->plainTextToken;
 
-            // Return user data and token
-            return $this->successResponse([
-                $user,
-                'token' => $token,
-                'token_type' => 'Bearer',
-            ], 200, 'Login successful');
+            return $this->successResponse(array_merge(
+                $user->toArray(),
+                ['token' => $token]
+            ));
         } catch (\Exception $e) {
-            return $this->errorResponse('An error occurred during login: ' . $e->getMessage(), 500);
+            return $this->unprocessableResponse(null, 'An error occurred during login: ' . $e->getMessage());
         }
     }
 
@@ -73,7 +72,6 @@ class AuthController extends Controller
     {
         try {
 
-            // Revoke all tokens...
             $request->user()->tokens()->delete();
             return $this->successResponse(null, 200, 'Successfully logged out');
         } catch (\Exception $e) {
@@ -90,9 +88,7 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         try {
-            return $this->successResponse([
-                'user' => $request->user(),
-            ], 200, 'User retrieved successfully');
+            return $this->okResponse($request->user(), 'User retrieved successfully');
         } catch (\Exception $e) {
             return $this->errorResponse('An error occurred: ' . $e->getMessage(), 500);
         }
