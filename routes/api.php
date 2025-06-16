@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\landlordController;
+use App\Http\Controllers\unitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,14 +18,25 @@ use App\Http\Controllers\Api\landlordController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum' )->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::prefix('landlord')->controller(LandlordController::class)->middleware('auth:sanctum')->group(function () {
+    Route::prefix('landlord')->controller(LandlordController::class)->group(function () {
         Route::get('/{id}', 'show');
         Route::post('/', 'store');
         Route::put('/{id}', 'update');
         Route::delete('/{id}', 'destroy');
     });
-
+    Route::prefix('property')->controller(PropertyController::class)->group(function () {
+        Route::get('/{id}', 'show');
+        Route::post('/', 'store');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+    });
+    Route::prefix('unit')->controller(UnitController::class)->group(function () {
+        Route::get('/{id}', 'show');
+        Route::post('/', 'store');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+    });
 });

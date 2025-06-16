@@ -21,6 +21,7 @@ class LandlordController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
@@ -71,13 +72,14 @@ class LandlordController extends Controller
     /**
      * Display the landlord profile
      */
-    public function show(Request $request): JsonResponse
+    public function show(Request $request, $id): JsonResponse
     {
         try {
-            $landlord = Landlord::where('user_id', $request->user()->id)->first();
+
+            $landlord = Landlord::find($id);
 
             if (!$landlord) {
-                return $this->notFoundResponse('Landlord profile not found.');
+                return $this->notFoundResponse(null, 'Landlord  not found.');
             }
 
             return $this->okResponse($landlord, 'Landlord retrieved successfully.');
@@ -89,16 +91,15 @@ class LandlordController extends Controller
     /**
      * Update the landlord profile
      */
-    public function update(Request $request): JsonResponse
+    public function update(Request $request, $id): JsonResponse
     {
         try {
-            $landlord = Landlord::where('user_id', $request->user()->id)->first();
+
+            $landlord = Landlord::find($id);
 
             if (!$landlord) {
-                return $this->notFoundResponse('Landlord profile not found.');
+                return $this->notFoundResponse(null, 'Landlord not found.');
             }
-
-
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
                 'address' => 'required|string|max:255',
@@ -166,13 +167,12 @@ class LandlordController extends Controller
             if (!$landlord) {
                 return $this->notFoundResponse('Landlord profile not found.');
             }
-
             $landlord->delete();
-
-
-            return $this->okResponse(null, 'Landlord deleted and user logged out successfully.');
+            return $this->okResponse(null, 'Landlord deleted.');
         } catch (\Exception $e) {
             return $this->unprocessableResponse($e->getMessage());
         }
     }
+
+
 }

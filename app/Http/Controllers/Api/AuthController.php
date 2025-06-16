@@ -68,10 +68,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         try {
-            if ($request->user()) {
-                $request->user()->tokens()->delete();
-                return $this->successResponse(null, 200, 'Successfully logged out');
-            }
+         
             return $this->unauthorizedResponse(null, 'user is not authenticated');
         } catch (\Exception $e) {
             return $this->unprocessableResponse('An error occurred during logout: ' . $e->getMessage());
@@ -87,11 +84,6 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         try {
-
-            if (!$request->user()) {
-                return $this->unauthorizedResponse(null, 'user is not authenticated');
-            }
-
             return $this->okResponse($request->user(), 'User retrieved successfully');
         } catch (\Exception $e) {
             return $this->unprocessableResponse('An error occurred: ' . $e->getMessage());
