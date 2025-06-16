@@ -14,14 +14,11 @@ class LandlordController extends Controller
 {
     use ApiResponseTrait;
 
-
-
     /**
      * Store a newly created landlord
      */
     public function store(Request $request): JsonResponse
     {
-
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
@@ -75,13 +72,10 @@ class LandlordController extends Controller
     public function show($id): JsonResponse
     {
         try {
-
             $landlord = Landlord::find($id);
-
             if (!$landlord) {
                 return $this->notFoundResponse(null, 'Landlord  not found.');
             }
-
             return $this->okResponse($landlord, 'Landlord retrieved successfully.');
         } catch (\Exception $e) {
             return $this->unprocessableResponse($e->getMessage());
@@ -94,9 +88,7 @@ class LandlordController extends Controller
     public function update(Request $request, $id): JsonResponse
     {
         try {
-
             $landlord = Landlord::find($id);
-
             if (!$landlord) {
                 return $this->notFoundResponse(null, 'Landlord not found.');
             }
@@ -138,18 +130,15 @@ class LandlordController extends Controller
             ];
 
             $validator = Validator::make($request->all(), $updateRules);
-
             if ($validator->fails()) {
                 return $this->badRequestResponse($validator->errors()->first());
             }
-
             $landlord->update([
                 'name' => $request->name,
                 'address' => $request->address,
                 'phone_number' => $request->phone,
                 'email' => $request->email,
             ]);
-
             return $this->okResponse($landlord, 'Landlord updated successfully.');
         } catch (\Exception $e) {
             return $this->unprocessableResponse($e->getMessage());
@@ -163,7 +152,6 @@ class LandlordController extends Controller
     {
         try {
             $landlord = Landlord::where('user_id', $request->user()->id)->first();
-
             if (!$landlord) {
                 return $this->notFoundResponse('Landlord profile not found.');
             }
@@ -173,6 +161,4 @@ class LandlordController extends Controller
             return $this->unprocessableResponse($e->getMessage());
         }
     }
-
-
 }
