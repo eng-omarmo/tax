@@ -58,13 +58,13 @@ class landlordController extends Controller
         $landlord->update([
             'user_id' => $user->id
         ]);
-        
+
         // Check if the user wants to continue to property registration
         if ($request->has('continue_to_property') && $request->continue_to_property == 1) {
             return redirect()->route('property.create', $landlord->id)
                 ->with('success', 'Landlord registered successfully. Now register a property.');
         }
-        
+
         return redirect()->route('lanlord.index')->with('success', 'Landlord registered successfully.');
     }
 

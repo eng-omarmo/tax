@@ -24,7 +24,6 @@ class AuthController extends Controller
     {
         try {
 
-            // Validate the request
             $validator = Validator::make($request->all(), [
                 'email' => 'required|email',
                 'password' => 'required|string',
@@ -69,10 +68,13 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         try {
-            $request->user()->tokens()->delete();
-            return $this->successResponse(null, 200, 'Successfully logged out');
+            if ($request->user()) {
+                $request->user()->tokens()->delete();
+                return $this->successResponse(null, 200, 'Successfully logged out');
+            }
+            return $this->unauthorizedResponse(null,'user is not authenticated');
         } catch (\Exception $e) {
-            return $this->errorResponse('An error occurred during logout: ' . $e->getMessage(), 500);
+            return $this->unprocessableResponse('An error occurred during logout: ' . $e->getMessage());
         }
     }
 
@@ -85,9 +87,10 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         try {
+
             return $this->okResponse($request->user(), 'User retrieved successfully');
         } catch (\Exception $e) {
-            return $this->errorResponse('An error occurred: ' . $e->getMessage(), 500);
+            return $this->unprocessableResponse('An error occurred: ' . $e->getMessage());
         }
     }
 }
