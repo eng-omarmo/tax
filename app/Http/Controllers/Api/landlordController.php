@@ -72,7 +72,7 @@ class LandlordController extends Controller
     /**
      * Display the landlord profile
      */
-    public function show(Request $request, $id): JsonResponse
+    public function show($id): JsonResponse
     {
         try {
 
