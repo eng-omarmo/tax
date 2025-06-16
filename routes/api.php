@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\UnitController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\landlordController;
-use App\Http\Controllers\unitController;
+use App\Http\Controllers\Api\PropertyController;
 
 /*
 |--------------------------------------------------------------------------
