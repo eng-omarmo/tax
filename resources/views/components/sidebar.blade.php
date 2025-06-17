@@ -24,7 +24,7 @@
             </li>
 
             {{-- Admin Section --}}
-            @if (Auth::user()->role === 'Admin')
+            @can('view users')
                 <li class="sidebar-menu-group-title">Administration</li>
 
                 <li class="dropdown">
@@ -35,14 +35,19 @@
                     <ul class="sidebar-submenu">
                         <li><a href="{{ route('user.index') }}"><iconify-icon icon="heroicons:users"
                                     class="inline-icon"></iconify-icon>List</a></li>
+                        @can('create users')
                         <li><a href="{{ route('user.create') }}"><iconify-icon icon="heroicons:user-plus"
                                     class="inline-icon"></iconify-icon>Create</a></li>
+                        @endcan
+                        @can('view login activities')
                         <li><a href="{{ route('login.activities.index') }}"><iconify-icon icon="heroicons:user-plus"
                                     class="inline-icon"></iconify-icon>Activities</a></li>
-
+                        @endcan
                     </ul>
                 </li>
+            @endcan
 
+            @can('view landlords')
                 <li class="dropdown">
                     <a href="javascript:void(0)">
                         <iconify-icon icon="mdi:account-tie" class="menu-icon text-secondary"></iconify-icon>
@@ -51,11 +56,15 @@
                     <ul class="sidebar-submenu">
                         <li><a href="{{ route('lanlord.index') }}"><iconify-icon icon="mdi:account-group"
                                     class="inline-icon"></iconify-icon>List</a></li>
+                        @can('create landlords')
                         <li><a href="{{ route('lanlord.create') }}"><iconify-icon icon="mdi:account-plus"
                                     class="inline-icon"></iconify-icon>Create</a></li>
+                        @endcan
                     </ul>
                 </li>
+            @endcan
 
+            @can('view locations')
                 <li class="dropdown">
                     <a href="javascript:void(0)">
                         <iconify-icon icon="mdi:map-marker-radius" class="menu-icon text-secondary"></iconify-icon>
@@ -68,27 +77,35 @@
                                     class="inline-icon"></iconify-icon>Branch</a></li>
                     </ul>
                 </li>
-            @endif
+            @endcan
+
+            @canany(['view roles', 'view permissions', 'assign roles'])
             <li class="dropdown">
                 <a href="javascript:void(0)">
                     <iconify-icon icon="mdi:shield-account" class="menu-icon text-warning"></iconify-icon>
                     <span>Role Management</span>
                 </a>
                 <ul class="sidebar-submenu">
-
+                    @can('view roles')
                         <li><a href="{{ route('roles.index') }}"><iconify-icon icon="mdi:shield-key"
                                     class="inline-icon"></iconify-icon>Roles</a></li>
+                    @endcan
 
+                    @can('view permissions')
                         <li><a href="{{ route('permissions.index') }}"><iconify-icon icon="mdi:key"
                                     class="inline-icon"></iconify-icon>Permissions</a></li>
+                    @endcan
 
+                    @can('assign roles')
                         <li><a href="{{ route('roles.assign') }}"><iconify-icon icon="mdi:account-key"
                                     class="inline-icon"></iconify-icon>Assign Roles</a></li>
-
+                    @endcan
                 </ul>
             </li>
+            @endcanany
 
             {{-- Property Section --}}
+            @canany(['view properties', 'create properties'])
             <li class="sidebar-menu-group-title">Property Management</li>
 
             <li class="dropdown">
@@ -97,23 +114,17 @@
                     <span>Properties</span>
                 </a>
                 <ul class="sidebar-submenu">
-
-
-                    @if (Auth::user()->role === 'Admin')
+                    @can('view properties')
                         <li><a href="{{ route('property.index') }}"><iconify-icon icon="mdi:view-list"
                                     class="inline-icon"></iconify-icon>List</a></li>
                         <li><a href="{{ route('property.report') }}"><iconify-icon icon="mdi:file-chart"
                                     class="inline-icon"></iconify-icon>Report</a></li>
-                    @endif
-
-                    @if (Auth::user()->role === 'lanlord')
-                        <li><a href="{{ route('property.create.landlord') }}"><iconify-icon icon="mdi:building-plus"
-                                    class="inline-icon"></iconify-icon>Add Property</a></li>
-                    @endif
+                    @endcan
                 </ul>
             </li>
+            @endcanany
 
-            @if (Auth::user()->role === 'Admin')
+            @can('view units')
                 <li class="dropdown">
                     <a href="javascript:void(0)">
                         <iconify-icon icon="mdi:door" class="menu-icon text-info-main"></iconify-icon>
@@ -122,13 +133,12 @@
                     <ul class="sidebar-submenu">
                         <li><a href="{{ route('unit.index') }}"><iconify-icon icon="mdi:view-list"
                                     class="inline-icon"></iconify-icon>List</a></li>
-
                     </ul>
                 </li>
-            @endif
+            @endcan
 
             {{-- Rent Management --}}
-            @if (Auth::user()->role === 'Admin')
+            @can('view rents')
                 <li class="dropdown">
                     <a href="javascript:void(0)">
                         <iconify-icon icon="mdi:cash-register" class="menu-icon text-info-main"></iconify-icon>
@@ -137,31 +147,30 @@
                     <ul class="sidebar-submenu">
                         <li><a href="{{ route('rent.index') }}"><iconify-icon icon="mdi:view-list"
                                     class="inline-icon"></iconify-icon>List</a></li>
-
                     </ul>
                 </li>
-            @endif
+            @endcan
 
             {{-- Finance Section --}}
+            @can('view finances')
             <li class="sidebar-menu-group-title">Finance</li>
 
+            <li class="dropdown">
+                <a href="javascript:void(0)">
+                    <iconify-icon icon="mdi:chart-areaspline" class="menu-icon text-blue-500"></iconify-icon>
+                    <span>Tax Payment</span>
+                </a>
+                <ul class="sidebar-submenu">
+                    <li><a href="{{ route('payment.index.tax') }}"><iconify-icon icon="mdi:receipt-text"
+                                class="inline-icon"></iconify-icon>List</a></li>
+                </ul>
+            </li>
+            @endcan
 
-            @if (Auth::user()->role === 'Admin')
-                <li class="dropdown">
-                    <a href="javascript:void(0)">
-                        <iconify-icon icon="mdi:chart-areaspline" class="menu-icon text-blue-500"></iconify-icon>
-                        <span>Tax Payment</span>
-                    </a>
-                    <ul class="sidebar-submenu">
-                        <li><a href="{{ route('payment.index.tax') }}"><iconify-icon icon="mdi:receipt-text"
-                                    class="inline-icon"></iconify-icon>List</a></li>
-                    </ul>
-                </li>
-            @endif
-
+            @canany(['view monitoring', 'view invoices', 'view notifications'])
             <li class="sidebar-menu-group-title"> Analytics</li>
 
-            @if (Auth::user()->role === 'Admin' || Auth::user()->role === 'Tax officer')
+            @can('view monitoring')
                 <li class="dropdown">
                     <a href="javascript:void(0)">
                         <iconify-icon icon="mdi:chart-areaspline" class="menu-icon text-blue-500"></iconify-icon>
@@ -172,7 +181,9 @@
                                     class="inline-icon"></iconify-icon>Properties</a></li>
                     </ul>
                 </li>
+            @endcan
 
+            @can('view invoices')
                 <li class="dropdown">
                     <a href="javascript:void(0)">
                         <iconify-icon icon="mdi:file-document-multiple"
@@ -186,7 +197,9 @@
                                     class="inline-icon"></iconify-icon>Pending</a></li>
                     </ul>
                 </li>
+            @endcan
 
+            @can('view notifications')
                 <li class="dropdown">
                     <a href="javascript:void(0)">
                         <iconify-icon icon="mdi:bell-badge" class="menu-icon text-red-500"></iconify-icon>
@@ -201,7 +214,10 @@
                         </li>
                     </ul>
                 </li>
-            @endif
+            @endcan
+            @endcanany
+
+            @can('view reports')
             <li class="sidebar-menu-group-title"> Reports</li>
             <li class="dropdown">
                 <a href="javascript:void(0)">
@@ -209,7 +225,6 @@
                     <span>Reports</span>
                 </a>
                 <ul class="sidebar-submenu">
-
                     <li>
                         <a href="{{ route('reports.income') }}">
                             <iconify-icon icon="mdi:account-tie" class="inline-icon"></iconify-icon> Income Report
@@ -221,12 +236,11 @@
                             <iconify-icon icon="mdi:home-city" class="inline-icon"></iconify-icon>
                             Quater Income
                         </a>
-
                     </li>
 
                     <li>
                         <a href="{{ route('reports.today_report') }}">
-                            <iconify-icon icon="mdi:home-city" class="inline-icon"></iconify-icon> Today’s Activities
+                            <iconify-icon icon="mdi:home-city" class="inline-icon"></iconify-icon> Today's Activities
                         </a>
                     </li>
 
@@ -235,11 +249,10 @@
                             <iconify-icon icon="mdi:map-marker-radius-outline" class="inline-icon"></iconify-icon>
                             District Income
                         </a>
-
                     </li>
-
                 </ul>
             </li>
+            @endcan
         </ul>
     </div>
 

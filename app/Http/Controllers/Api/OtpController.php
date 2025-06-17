@@ -20,12 +20,12 @@ class OtpController extends Controller
     public function send(Request $request)
     {
         $validator = validator($request->all(), [
-            'recepient' => 'required',
+            'recipient' => 'required',
         ]);
         if ($validator->fails()) {
             return $this->badRequestResponse(null, $validator->errors()->first());
         }
-        $user = User::where(['phone' => $request->recepient])->first();
+        $user = User::where(['phone' => $request->recipient])->first();
 
         if (!$user) {
             return $this->okResponse(null, 'User not found');
@@ -41,12 +41,12 @@ class OtpController extends Controller
     {
         $validator = validator($request->all(), [
             'otp' => 'required',
-            'recepient' => 'required',
+            'recipient' => 'required',
         ]);
         if ($validator->fails()) {
             return $this->badRequestResponse(null, $validator->errors()->first());
         }
-        $user = User::where(['phone' => $request->recepient])->first();
+        $user = User::where(['phone' => $request->recipient])->first();
         if (!$user) {
             return $this->okResponse(null, 'User not found');
         }

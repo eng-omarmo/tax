@@ -21,6 +21,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'create users',
             'edit users',
             'delete users',
+            'view login activities',
 
             // Property management
             'view properties',
@@ -34,6 +35,18 @@ class RolesAndPermissionsSeeder extends Seeder
             'edit landlords',
             'delete landlords',
 
+            // Location management
+            'view locations',
+            'create locations',
+            'edit locations',
+            'delete locations',
+
+            // Unit management
+            'view units',
+            'create units',
+            'edit units',
+            'delete units',
+
             // Rent management
             'view rents',
             'create rents',
@@ -45,6 +58,16 @@ class RolesAndPermissionsSeeder extends Seeder
             'create taxes',
             'edit taxes',
             'delete taxes',
+
+            // Finance management
+            'view finances',
+            'manage finances',
+
+            // Analytics
+            'view monitoring',
+            'view invoices',
+            'view notifications',
+            'manage notifications',
 
             // Reports
             'view reports',
@@ -61,14 +84,14 @@ class RolesAndPermissionsSeeder extends Seeder
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::firstOrCreate(['name' => $permission]);
         }
 
         // Create roles and assign permissions
-        $adminRole = Role::create(['name' => 'Admin']);
+        $adminRole = Role::firstOrCreate(['name' => 'Admin']);
         $adminRole->givePermissionTo(Permission::all());
 
-        $landlordRole = Role::create(['name' => 'Landlord']);
+        $landlordRole = Role::firstOrCreate(['name' => 'Landlord']);
         $landlordRole->givePermissionTo([
             'view properties',
             'create properties',
@@ -76,7 +99,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'view rents',
         ]);
 
-        $taxOfficerRole = Role::create(['name' => 'Tax officer']);
+        $taxOfficerRole = Role::firstOrCreate(['name' => 'Tax officer']);
         $taxOfficerRole->givePermissionTo([
             'view properties',
             'view landlords',
@@ -84,6 +107,9 @@ class RolesAndPermissionsSeeder extends Seeder
             'view taxes',
             'create taxes',
             'edit taxes',
+            'view monitoring',
+            'view invoices',
+            'view notifications',
             'view reports',
             'generate reports',
         ]);
