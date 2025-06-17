@@ -33,8 +33,13 @@
                         <span>Users</span>
                     </a>
                     <ul class="sidebar-submenu">
-                        <li><a href="{{ route('user.index') }}"><iconify-icon icon="heroicons:users" class="inline-icon"></iconify-icon>List</a></li>
-                        <li><a href="{{ route('user.create') }}"><iconify-icon icon="heroicons:user-plus" class="inline-icon"></iconify-icon>Create</a></li>
+                        <li><a href="{{ route('user.index') }}"><iconify-icon icon="heroicons:users"
+                                    class="inline-icon"></iconify-icon>List</a></li>
+                        <li><a href="{{ route('user.create') }}"><iconify-icon icon="heroicons:user-plus"
+                                    class="inline-icon"></iconify-icon>Create</a></li>
+                        <li><a href="{{ route('login.activities.index') }}"><iconify-icon icon="heroicons:user-plus"
+                                    class="inline-icon"></iconify-icon>Activities</a></li>
+
                     </ul>
                 </li>
 
@@ -44,8 +49,10 @@
                         <span>Landlords</span>
                     </a>
                     <ul class="sidebar-submenu">
-                        <li><a href="{{ route('lanlord.index') }}"><iconify-icon icon="mdi:account-group" class="inline-icon"></iconify-icon>List</a></li>
-                        <li><a href="{{ route('lanlord.create') }}"><iconify-icon icon="mdi:account-plus" class="inline-icon"></iconify-icon>Create</a></li>
+                        <li><a href="{{ route('lanlord.index') }}"><iconify-icon icon="mdi:account-group"
+                                    class="inline-icon"></iconify-icon>List</a></li>
+                        <li><a href="{{ route('lanlord.create') }}"><iconify-icon icon="mdi:account-plus"
+                                    class="inline-icon"></iconify-icon>Create</a></li>
                     </ul>
                 </li>
 
@@ -55,8 +62,10 @@
                         <span>Location</span>
                     </a>
                     <ul class="sidebar-submenu">
-                        <li><a href="{{ route('district.index') }}"><iconify-icon icon="mdi:map" class="inline-icon"></iconify-icon>District</a></li>
-                        <li><a href="{{ route('branch.index') }}"><iconify-icon icon="mdi:office-building" class="inline-icon"></iconify-icon>Branch</a></li>
+                        <li><a href="{{ route('district.index') }}"><iconify-icon icon="mdi:map"
+                                    class="inline-icon"></iconify-icon>District</a></li>
+                        <li><a href="{{ route('branch.index') }}"><iconify-icon icon="mdi:office-building"
+                                    class="inline-icon"></iconify-icon>Branch</a></li>
                     </ul>
                 </li>
             @endif
@@ -73,12 +82,15 @@
 
 
                     @if (Auth::user()->role === 'Admin')
-                    <li><a href="{{ route('property.index') }}"><iconify-icon icon="mdi:view-list" class="inline-icon"></iconify-icon>List</a></li>
-                        <li><a href="{{ route('property.report') }}"><iconify-icon icon="mdi:file-chart" class="inline-icon"></iconify-icon>Report</a></li>
+                        <li><a href="{{ route('property.index') }}"><iconify-icon icon="mdi:view-list"
+                                    class="inline-icon"></iconify-icon>List</a></li>
+                        <li><a href="{{ route('property.report') }}"><iconify-icon icon="mdi:file-chart"
+                                    class="inline-icon"></iconify-icon>Report</a></li>
                     @endif
 
                     @if (Auth::user()->role === 'lanlord')
-                        <li><a href="{{ route('property.create.landlord') }}"><iconify-icon icon="mdi:building-plus" class="inline-icon"></iconify-icon>Add Property</a></li>
+                        <li><a href="{{ route('property.create.landlord') }}"><iconify-icon icon="mdi:building-plus"
+                                    class="inline-icon"></iconify-icon>Add Property</a></li>
                     @endif
                 </ul>
             </li>
@@ -90,7 +102,8 @@
                         <span>Units</span>
                     </a>
                     <ul class="sidebar-submenu">
-                        <li><a href="{{ route('unit.index') }}"><iconify-icon icon="mdi:view-list" class="inline-icon"></iconify-icon>List</a></li>
+                        <li><a href="{{ route('unit.index') }}"><iconify-icon icon="mdi:view-list"
+                                    class="inline-icon"></iconify-icon>List</a></li>
 
                     </ul>
                 </li>
@@ -104,7 +117,8 @@
                         <span>Rent</span>
                     </a>
                     <ul class="sidebar-submenu">
-                        <li><a href="{{ route('rent.index') }}"><iconify-icon icon="mdi:view-list" class="inline-icon"></iconify-icon>List</a></li>
+                        <li><a href="{{ route('rent.index') }}"><iconify-icon icon="mdi:view-list"
+                                    class="inline-icon"></iconify-icon>List</a></li>
 
                     </ul>
                 </li>
@@ -121,7 +135,8 @@
                         <span>Tax Payment</span>
                     </a>
                     <ul class="sidebar-submenu">
-                        <li><a href="{{ route('payment.index.tax') }}"><iconify-icon icon="mdi:receipt-text" class="inline-icon"></iconify-icon>List</a></li>
+                        <li><a href="{{ route('payment.index.tax') }}"><iconify-icon icon="mdi:receipt-text"
+                                    class="inline-icon"></iconify-icon>List</a></li>
                     </ul>
                 </li>
             @endif
@@ -135,18 +150,22 @@
                         <span>Monitoring</span>
                     </a>
                     <ul class="sidebar-submenu">
-                        <li><a href="{{ route('monitor.index') }}"><iconify-icon icon="mdi:home-analytics" class="inline-icon"></iconify-icon>Properties</a></li>
+                        <li><a href="{{ route('monitor.index') }}"><iconify-icon icon="mdi:home-analytics"
+                                    class="inline-icon"></iconify-icon>Properties</a></li>
                     </ul>
                 </li>
 
                 <li class="dropdown">
                     <a href="javascript:void(0)">
-                        <iconify-icon icon="mdi:file-document-multiple" class="menu-icon text-yellow-500"></iconify-icon>
+                        <iconify-icon icon="mdi:file-document-multiple"
+                            class="menu-icon text-yellow-500"></iconify-icon>
                         <span>Invoices</span>
                     </a>
                     <ul class="sidebar-submenu">
-                        <li><a href="{{ route('invoice.paid') }}"><iconify-icon icon="mdi:file-check" class="inline-icon"></iconify-icon>Paid</a></li>
-                        <li><a href="{{ route('invoiceList') }}"><iconify-icon icon="mdi:file-clock" class="inline-icon"></iconify-icon>Pending</a></li>
+                        <li><a href="{{ route('invoice.paid') }}"><iconify-icon icon="mdi:file-check"
+                                    class="inline-icon"></iconify-icon>Paid</a></li>
+                        <li><a href="{{ route('invoiceList') }}"><iconify-icon icon="mdi:file-clock"
+                                    class="inline-icon"></iconify-icon>Pending</a></li>
                     </ul>
                 </li>
 
@@ -158,7 +177,8 @@
                     <ul class="sidebar-submenu">
                         <li class="menu-item {{ request()->routeIs('notifications.*') ? 'active' : '' }}">
                             <a href="{{ route('notifications.index') }}">
-                                <iconify-icon icon="mdi:bell-alert" class="inline-icon text-primary"></iconify-icon>Notified Properties
+                                <iconify-icon icon="mdi:bell-alert"
+                                    class="inline-icon text-primary"></iconify-icon>Notified Properties
                             </a>
                         </li>
                     </ul>
@@ -181,7 +201,7 @@
                     <li>
                         <a href="{{ route('reports.quaterly.income') }}">
                             <iconify-icon icon="mdi:home-city" class="inline-icon"></iconify-icon>
-                              Quater Income
+                            Quater Income
                         </a>
 
                     </li>
