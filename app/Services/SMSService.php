@@ -11,7 +11,7 @@ class SmsService
     private const HORMUUD_TOKEN_URL = 'https://smsapi.hormuud.com/token';
     private const HORMUUD_SEND_SMS_URL = 'https://smsapi.hormuud.com/api/SendSMS';
     private const TOKEN_CACHE_KEY = 'hormuud_sms_token';
-    private const TOKEN_CACHE_TTL = 3500; // Just under 1 hour (typical token expiry)
+    private const TOKEN_CACHE_TTL = 3500; 
 
     /**
      * Send SMS via specified gateway

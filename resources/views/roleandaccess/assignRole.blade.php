@@ -1,27 +1,13 @@
 @extends('layout.layout')
 @php
     $title='Role & Access';
-    $subTitle = 'Role & Access';
+    $subTitle = 'Assign Roles to Users';
 @endphp
 
 @section('content')
-
     <div class="card h-100 p-0 radius-12">
         <div class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center flex-wrap gap-3 justify-content-between">
             <div class="d-flex align-items-center flex-wrap gap-3">
-                <span class="text-md fw-medium text-secondary-light mb-0">Show</span>
-                <select class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                    <option>6</option>
-                    <option>7</option>
-                    <option>8</option>
-                    <option>9</option>
-                    <option>10</option>
-                </select>
                 <form class="navbar-search">
                     <input type="text" class="bg-base h-40-px w-auto" name="search" placeholder="Search">
                     <iconify-icon icon="ion:search-outline" class="icon"></iconify-icon>
@@ -35,379 +21,100 @@
         </div>
 
         <div class="card-body p-24">
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <div class="table-responsive scroll-sm">
                 <table class="table bordered-table sm-table mb-0">
                     <thead>
                         <tr>
-                            <th scope="col">
-                                <div class="d-flex align-items-center gap-10">
-                                    <div class="form-check style-check d-flex align-items-center">
-                                        <input class="form-check-input radius-4 border input-form-dark" type="checkbox" name="checkbox" id="selectAll">
-                                    </div>
-                                    S.L
-                                </div>
-                            </th>
+                            <th scope="col">S.L</th>
                             <th scope="col">Username</th>
-                            <th scope="col" class="text-center">Role Permission</th>
-                            <th scope="col" class="text-center">Action</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Current Roles</th>
+                            <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-10">
-                                    <div class="form-check style-check d-flex align-items-center">
-                                        <input class="form-check-input radius-4 border border-neutral-400" type="checkbox" name="checkbox">
+                        @foreach($users as $index => $user)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        @if($user->profile_image)
+                                            <img src="{{ asset('storage/' . $user->profile_image) }}" alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
+                                        @else
+                                            <img src="{{ asset('assets/images/user-list/user-list2.png') }}" alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
+                                        @endif
+                                        <div class="flex-grow-1">
+                                            <span class="text-md mb-0 fw-normal text-secondary-light">{{ $user->name }}</span>
+                                        </div>
                                     </div>
-                                    01
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="{{ asset('assets/images/user-list/user-list1.png') }}" alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
-                                    <div class="flex-grow-1">
-                                        <span class="text-md mb-0 fw-normal text-secondary-light">Kathryn Murphy</span>
+                                </td>
+                                <td>{{ $user->email }}</td>
+                                <td>
+                                    <span class="badge {{ $user->status == 'Active' ? 'bg-success' : 'bg-danger' }} radius-4 py-4 px-12">
+                                        {{ $user->status }}
+                                    </span>
+                                </td>
+                                <td>
+                                    @foreach($user->roles as $role)
+                                        <span class="badge bg-primary radius-4 py-4 px-12 me-1">{{ $role->name }}</span>
+                                    @endforeach
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#assignRoleModal{{ $user->id }}">
+                                        Assign Roles
+                                    </button>
+
+                                    <!-- Modal for assigning roles -->
+                                    <div class="modal fade" id="assignRoleModal{{ $user->id }}" tabindex="-1" aria-labelledby="assignRoleModalLabel{{ $user->id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="assignRoleModalLabel{{ $user->id }}">Assign Roles to {{ $user->name }}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form action="{{ route('roles.assign.update') }}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="user_id" value="{{ $user->id }}">
+                                                    <div class="modal-body">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Select Roles</label>
+                                                            @foreach($roles as $role)
+                                                                <div class="form-check mb-2">
+                                                                    <input class="form-check-input" type="checkbox" name="roles[]" value="{{ $role->id }}" id="role{{ $role->id }}_user{{ $user->id }}" {{ $user->hasRole($role->name) ? 'checked' : '' }}>
+                                                                    <label class="form-check-label" for="role{{ $role->id }}_user{{ $user->id }}">
+                                                                        {{ $role->name }}
+                                                                    </label>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                            <td class="text-center">Waiter</td>
-                            <td class="text-center">
-                                <div class="dropdown">
-                                    <button class="btn btn-outline-primary-600 not-active px-18 py-11 dropdown-toggle toggle-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">Assign Role</button>
-                                    <ul class="dropdown-menu" style="">
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Waiter</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Manager</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Project Manager</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Game Developer</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Head</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Management</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-10">
-                                    <div class="form-check style-check d-flex align-items-center">
-                                        <input class="form-check-input radius-4 border border-neutral-400" type="checkbox" name="checkbox">
-                                    </div>
-                                    01
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="{{ asset('assets/images/user-list/user-list2.png') }}" alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
-                                    <div class="flex-grow-1">
-                                        <span class="text-md mb-0 fw-normal text-secondary-light">Annette Black</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-center">manager</td>
-                            <td class="text-center">
-                                <div class="dropdown">
-                                    <button class="btn btn-outline-primary-600 not-active px-18 py-11 dropdown-toggle toggle-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">Assign Role</button>
-                                    <ul class="dropdown-menu" style="">
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Waiter</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Manager</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Project Manager</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Game Developer</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Head</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Management</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-10">
-                                    <div class="form-check style-check d-flex align-items-center">
-                                        <input class="form-check-input radius-4 border border-neutral-400" type="checkbox" name="checkbox">
-                                    </div>
-                                    01
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="{{ asset('assets/images/user-list/user-list3.png') }}" alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
-                                    <div class="flex-grow-1">
-                                        <span class="text-md mb-0 fw-normal text-secondary-light">Ronald Richards</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-center">Project Manager</td>
-                            <td class="text-center">
-                                <div class="dropdown">
-                                    <button class="btn btn-outline-primary-600 not-active px-18 py-11 dropdown-toggle toggle-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">Assign Role</button>
-                                    <ul class="dropdown-menu" style="">
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Waiter</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Manager</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Project Manager</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Game Developer</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Head</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Management</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-10">
-                                    <div class="form-check style-check d-flex align-items-center">
-                                        <input class="form-check-input radius-4 border border-neutral-400" type="checkbox" name="checkbox">
-                                    </div>
-                                    01
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="{{ asset('assets/images/user-list/user-list4.png') }}" alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
-                                    <div class="flex-grow-1">
-                                        <span class="text-md mb-0 fw-normal text-secondary-light">Eleanor Pena</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-center">Game Developer</td>
-                            <td class="text-center">
-                                <div class="dropdown">
-                                    <button class="btn btn-outline-primary-600 not-active px-18 py-11 dropdown-toggle toggle-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">Assign Role</button>
-                                    <ul class="dropdown-menu" style="">
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Waiter</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Manager</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Project Manager</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Game Developer</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Head</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Management</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-10">
-                                    <div class="form-check style-check d-flex align-items-center">
-                                        <input class="form-check-input radius-4 border border-neutral-400" type="checkbox" name="checkbox">
-                                    </div>
-                                    01
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="{{ asset('assets/images/user-list/user-list5.png') }}" alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
-                                    <div class="flex-grow-1">
-                                        <span class="text-md mb-0 fw-normal text-secondary-light">Leslie Alexander</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-center">Head</td>
-                            <td class="text-center">
-                                <div class="dropdown">
-                                    <button class="btn btn-outline-primary-600 not-active px-18 py-11 dropdown-toggle toggle-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">Assign Role</button>
-                                    <ul class="dropdown-menu" style="">
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Waiter</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Manager</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Project Manager</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Game Developer</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Head</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Management</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-10">
-                                    <div class="form-check style-check d-flex align-items-center">
-                                        <input class="form-check-input radius-4 border border-neutral-400" type="checkbox" name="checkbox">
-                                    </div>
-                                    01
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="{{ asset('assets/images/user-list/user-list6.png') }}" alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
-                                    <div class="flex-grow-1">
-                                        <span class="text-md mb-0 fw-normal text-secondary-light">Albert Flores</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-center">Management</td>
-                            <td class="text-center">
-                                <div class="dropdown">
-                                    <button class="btn btn-outline-primary-600 not-active px-18 py-11 dropdown-toggle toggle-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">Assign Role</button>
-                                    <ul class="dropdown-menu" style="">
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Waiter</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Manager</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Project Manager</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Game Developer</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Head</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Management</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-10">
-                                    <div class="form-check style-check d-flex align-items-center">
-                                        <input class="form-check-input radius-4 border border-neutral-400" type="checkbox" name="checkbox">
-                                    </div>
-                                    01
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="{{ asset('assets/images/user-list/user-list7.png') }}" alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
-                                    <div class="flex-grow-1">
-                                        <span class="text-md mb-0 fw-normal text-secondary-light">Jacob Jones</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-center">Waiter</td>
-                            <td class="text-center">
-                                <div class="dropdown">
-                                    <button class="btn btn-outline-primary-600 not-active px-18 py-11 dropdown-toggle toggle-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">Assign Role</button>
-                                    <ul class="dropdown-menu" style="">
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Waiter</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Manager</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Project Manager</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Game Developer</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Head</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Management</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-10">
-                                    <div class="form-check style-check d-flex align-items-center">
-                                        <input class="form-check-input radius-4 border border-neutral-400" type="checkbox" name="checkbox">
-                                    </div>
-                                    01
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="{{ asset('assets/images/user-list/user-list8.png') }}" alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
-                                    <div class="flex-grow-1">
-                                        <span class="text-md mb-0 fw-normal text-secondary-light">Jerome Bell</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-center">Waiter</td>
-                            <td class="text-center">
-                                <div class="dropdown">
-                                    <button class="btn btn-outline-primary-600 not-active px-18 py-11 dropdown-toggle toggle-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">Assign Role</button>
-                                    <ul class="dropdown-menu" style="">
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Waiter</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Manager</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Project Manager</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Game Developer</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Head</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Management</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-10">
-                                    <div class="form-check style-check d-flex align-items-center">
-                                        <input class="form-check-input radius-4 border border-neutral-400" type="checkbox" name="checkbox">
-                                    </div>
-                                    01
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="{{ asset('assets/images/user-list/user-list2.png') }}" alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
-                                    <div class="flex-grow-1">
-                                        <span class="text-md mb-0 fw-normal text-secondary-light">Marvin McKinney</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-center">Waiter</td>
-                            <td class="text-center">
-                                <div class="dropdown">
-                                    <button class="btn btn-outline-primary-600 not-active px-18 py-11 dropdown-toggle toggle-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">Assign Role</button>
-                                    <ul class="dropdown-menu" style="">
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Waiter</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Manager</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Project Manager</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Game Developer</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Head</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Management</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-10">
-                                    <div class="form-check style-check d-flex align-items-center">
-                                        <input class="form-check-input radius-4 border border-neutral-400" type="checkbox" name="checkbox">
-                                    </div>
-                                    01
-                                </div>
-                            </td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <img src="{{ asset('assets/images/user-list/user-list10.png') }}" alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
-                                    <div class="flex-grow-1">
-                                        <span class="text-md mb-0 fw-normal text-secondary-light">Cameron Williamson</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-center">Admin</td>
-                            <td class="text-center">
-                                <div class="dropdown">
-                                    <button class="btn btn-outline-primary-600 not-active px-18 py-11 dropdown-toggle toggle-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">Assign Role</button>
-                                    <ul class="dropdown-menu" style="">
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Waiter</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Manager</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Project Manager</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Game Developer</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Head</a></li>
-                                        <li><a class="dropdown-item px-16 py-8 rounded text-secondary-light bg-hover-neutral-200 text-hover-neutral-900"  href="javascript:void(0)">Management</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
-
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">
-                <span>Showing 1 to 10 of 12 entries</span>
-                <ul class="pagination d-flex flex-wrap align-items-center gap-2 justify-content-center">
-                    <li class="page-item">
-                        <a class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md"  href="javascript:void(0)">
-                            <iconify-icon icon="ep:d-arrow-left" class=""></iconify-icon>
-                        </a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md bg-primary-600 text-white"  href="javascript:void(0)">1</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px"  href="javascript:void(0)">2</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md"  href="javascript:void(0)">3</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md"  href="javascript:void(0)">4</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md"  href="javascript:void(0)">5</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md"  href="javascript:void(0)">
-                            <iconify-icon icon="ep:d-arrow-right" class=""></iconify-icon>
-                        </a>
-                    </li>
-                </ul>
-            </div>
         </div>
     </div>
-
 @endsection

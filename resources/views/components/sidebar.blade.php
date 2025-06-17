@@ -69,6 +69,24 @@
                     </ul>
                 </li>
             @endif
+            <li class="dropdown">
+                <a href="javascript:void(0)">
+                    <iconify-icon icon="mdi:shield-account" class="menu-icon text-warning"></iconify-icon>
+                    <span>Role Management</span>
+                </a>
+                <ul class="sidebar-submenu">
+
+                        <li><a href="{{ route('roles.index') }}"><iconify-icon icon="mdi:shield-key"
+                                    class="inline-icon"></iconify-icon>Roles</a></li>
+
+                        <li><a href="{{ route('permissions.index') }}"><iconify-icon icon="mdi:key"
+                                    class="inline-icon"></iconify-icon>Permissions</a></li>
+
+                        <li><a href="{{ route('roles.assign') }}"><iconify-icon icon="mdi:account-key"
+                                    class="inline-icon"></iconify-icon>Assign Roles</a></li>
+
+                </ul>
+            </li>
 
             {{-- Property Section --}}
             <li class="sidebar-menu-group-title">Property Management</li>
@@ -226,4 +244,5 @@
     </div>
 
     </div>
+
 </aside>

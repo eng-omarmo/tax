@@ -1,7 +1,7 @@
 @extends('layout.layout')
 @php
-    $title='Role & Access';
-    $subTitle = 'Role Management';
+    $title='Permissions Management';
+    $subTitle = 'Permissions List';
 @endphp
 
 @section('content')
@@ -12,17 +12,12 @@
                     <input type="text" class="bg-base h-40-px w-auto" name="search" placeholder="Search">
                     <iconify-icon icon="ion:search-outline" class="icon"></iconify-icon>
                 </form>
-                <select class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px">
-                    <option>Status</option>
-                    <option>Active</option>
-                    <option>Inactive</option>
-                </select>
             </div>
             <div>
-                @can('create roles')
-                <a href="{{ route('roles.create') }}" class="btn btn-primary radius-8 py-8 px-20">
+                @can('assign permissions')
+                <a href="{{ route('permissions.create') }}" class="btn btn-primary radius-8 py-8 px-20">
                     <iconify-icon icon="mdi:plus" class="text-lg me-6"></iconify-icon>
-                    Add New Role
+                    Add New Permission
                 </a>
                 @endcan
             </div>
@@ -46,42 +41,32 @@
                     <thead>
                         <tr>
                             <th scope="col">S.L</th>
-                            <th scope="col">Create Date</th>
-                            <th scope="col">Role</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">Status</th>
+                            <th scope="col">Permission Name</th>
+                            <th scope="col">Created At</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($roles as $index => $role)
+                        @foreach($permissions as $index => $permission)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td>{{ $role->created_at->format('d M Y') }}</td>
-                                <td>{{ $role->name }}</td>
-                                <td>{{ $role->description ?? 'N/A' }}</td>
-                                <td>
-                                    <span class="badge {{ $role->status == 'Active' ? 'bg-success' : 'bg-danger' }} radius-4 py-4 px-12">
-                                        {{ $role->status }}
-                                    </span>
-                                </td>
+                                <td>{{ $permission->name }}</td>
+                                <td>{{ $permission->created_at->format('d M Y') }}</td>
                                 <td>
                                     <div class="d-flex align-items-center gap-2">
-                                        @can('edit roles')
-                                        <a href="{{ route('roles.edit', $role) }}" class="btn btn-sm btn-outline-primary radius-4 py-4 px-12">
+                                        @can('assign permissions')
+                                        <a href="{{ route('permissions.edit', $permission) }}" class="btn btn-sm btn-outline-primary radius-4 py-4 px-12">
                                             <iconify-icon icon="mdi:pencil" class="text-lg"></iconify-icon>
                                         </a>
-                                        @endcan
 
-                                        @if($role->name !== 'Admin' && auth()->user()->can('delete roles'))
-                                        <form action="{{ route('roles.destroy', $role) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this role?')">
+                                        <form action="{{ route('permissions.destroy', $permission) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this permission?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-outline-danger radius-4 py-4 px-12">
                                                 <iconify-icon icon="mdi:delete" class="text-lg"></iconify-icon>
                                             </button>
                                         </form>
-                                        @endif
+                                        @endcan
                                     </div>
                                 </td>
                             </tr>

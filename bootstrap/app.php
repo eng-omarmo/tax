@@ -5,8 +5,6 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Auth\AuthenticationException;
 
-
-
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__ . '/../routes/web.php',
@@ -18,6 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'auth.admin' => App\Http\Middleware\AuthMiddleware::class,
             'auth' => \App\Http\Middleware\Authenticate::class,
+            'permission' => \App\Http\Middleware\PermissionMiddleware::class,
+            'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

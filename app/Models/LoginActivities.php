@@ -13,6 +13,8 @@ class LoginActivities extends Model
         'ip_address',
         'user_agent',
         'device',
+        'device_id',
+        'fcm_token',
         'logged_in_at',
     ];
 

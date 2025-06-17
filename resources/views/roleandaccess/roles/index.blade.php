@@ -1,7 +1,7 @@
 @extends('layout.layout')
 @php
-    $title='Role & Access';
-    $subTitle = 'Role Management';
+    $title='Roles Management';
+    $subTitle = 'Roles List';
 @endphp
 
 @section('content')
@@ -12,10 +12,10 @@
                     <input type="text" class="bg-base h-40-px w-auto" name="search" placeholder="Search">
                     <iconify-icon icon="ion:search-outline" class="icon"></iconify-icon>
                 </form>
-                <select class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px">
-                    <option>Status</option>
-                    <option>Active</option>
-                    <option>Inactive</option>
+                <select class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px" name="status">
+                    <option value="">All Status</option>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
                 </select>
             </div>
             <div>

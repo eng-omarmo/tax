@@ -262,3 +262,33 @@ Route::middleware(['auth.admin'])->prefix('reports')->name('reports.')->group(fu
 
     Route::get('/income/district', [ReportController::class, 'incomeByDistrictReport'])->name('district.income');
 });
+
+// Add these routes with your other route imports
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RoleandaccessController;
+
+// Add these routes with your other route groups
+Route::prefix('roles')->middleware(['auth.admin', 'permission:view roles'])->group(function () {
+    Route::get('/', [RoleController::class, 'index'])->name('roles.index');
+    Route::get('/create', [RoleController::class, 'create'])->middleware('permission:create roles')->name('roles.create');
+    Route::post('/', [RoleController::class, 'store'])->middleware('permission:create roles')->name('roles.store');
+    Route::get('/{role}/edit', [RoleController::class, 'edit'])->middleware('permission:edit roles')->name('roles.edit');
+    Route::put('/{role}', [RoleController::class, 'update'])->middleware('permission:edit roles')->name('roles.update');
+    Route::delete('/{role}', [RoleController::class, 'destroy'])->middleware('permission:delete roles')->name('roles.destroy');
+});
+
+Route::prefix('permissions')->middleware(['auth.admin', 'permission:view permissions'])->group(function () {
+    Route::get('/', [PermissionController::class, 'index'])->name('permissions.index');
+    Route::get('/create', [PermissionController::class, 'create'])->middleware('permission:assign permissions')->name('permissions.create');
+    Route::post('/', [PermissionController::class, 'store'])->middleware('permission:assign permissions')->name('permissions.store');
+    Route::get('/{permission}/edit', [PermissionController::class, 'edit'])->middleware('permission:assign permissions')->name('permissions.edit');
+    Route::put('/{permission}', [PermissionController::class, 'update'])->middleware('permission:assign permissions')->name('permissions.update');
+    Route::delete('/{permission}', [PermissionController::class, 'destroy'])->middleware('permission:assign permissions')->name('permissions.destroy');
+});
+
+Route::prefix('role-access')->middleware(['auth.admin', 'permission:assign roles'])->group(function () {
+    Route::get('/assign', [RoleandaccessController::class, 'assignRole'])->name('roles.assign');
+    Route::post('/assign', [RoleandaccessController::class, 'updateUserRoles'])->name('roles.assign.update');
+    Route::get('/manage', [RoleandaccessController::class, 'roleAaccess'])->name('roles.manage');
+});

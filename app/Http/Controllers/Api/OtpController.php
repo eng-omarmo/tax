@@ -19,7 +19,6 @@ class OtpController extends Controller
 
     public function send(Request $request)
     {
-
         $validator = validator($request->all(), [
             'recepient' => 'required',
         ]);

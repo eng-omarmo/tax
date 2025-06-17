@@ -27,12 +27,14 @@ class AuthController extends Controller
             $validator = Validator::make($request->all(), [
                 'email' => 'required|email',
                 'password' => 'required|string',
-                'device_name' => 'nullable|string',
+                'device_id' => 'nullable|string',
+                'fcm_token' => 'nullable|string',
             ]);
 
             if ($validator->fails()) {
                 return $this->okResponse(null, $validator->errors()->first());
             }
+
 
             $user = User::where('email', $request->email)->first();
 
@@ -48,6 +50,7 @@ class AuthController extends Controller
                 $user->tokens()->delete();
             }
             $deviceName = $request->device_name ?? $request->ip();
+
             $token = $user->createToken($deviceName)->plainTextToken;
             $this->trackLoginActivity($user, $request);
             return $this->successResponse(array_merge(
@@ -107,8 +110,11 @@ class AuthController extends Controller
             'device' => $device,
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
-            'device' => "$platform - $browser",
+            'device_id' => $request->device_id,
+            'fcm_token' => $request->fcm_token,
+            'device_id' => $request->device_id,
             'logged_in_at' => now(),
         ]);
     }
+
 }

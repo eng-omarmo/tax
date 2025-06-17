@@ -2,6 +2,22 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Seeder;
+
+class DatabaseSeeder extends Seeder
+{
+    /**
+     * Seed the application's database.
+     */
+    public function run(): void
+    {
+        $this->call([
+            RolesAndPermissionsSeeder::class,
+            // Other seeders...
+        ]);
+    }
+}
+
 use App\Models\User;
 use App\Models\District;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;

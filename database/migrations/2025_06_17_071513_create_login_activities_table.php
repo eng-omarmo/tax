@@ -12,7 +12,9 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('ip_address')->nullable();
             $table->string('user_agent')->nullable();
-            $table->string('device')->nullable(); 
+            $table->string('device')->nullable();
+            $table->string('device_id')->nullable();
+            $table->string('fcm_token')->nullable();
             $table->timestamp('logged_in_at')->nullable();
             $table->timestamps();
         });
@@ -22,4 +24,4 @@ return new class extends Migration {
     {
         Schema::dropIfExists('login_activities');
     }
-};
+}; 
