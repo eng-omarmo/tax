@@ -27,8 +27,13 @@ Route::controller(AuthenticationController::class)->group(function () {
     Route::post('/', 'login')->name('signin.handler');
     Route::post('/logout', 'logout')->name('logout');
 });
-// ... existing routes ...
+// Add this with your other route imports
+use App\Http\Controllers\LoginActivitiesController;
 
+// Add this with your other route groups
+Route::controller(LoginActivitiesController::class)->prefix('login-activities')->middleware(['auth.admin'])->group(function () {
+    Route::get('/', 'index')->name('login.activities.index');
+});
 Route::controller(changePasswordController::class)->group(function () {
     Route::post('/change-password', 'changePassword')->name('change.password');
 });

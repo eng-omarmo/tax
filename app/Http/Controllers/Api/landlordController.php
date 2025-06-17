@@ -41,14 +41,14 @@ class LandlordController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->badRequestResponse($validator->errors()->first());
+            return $this->badRequestResponse(null, $validator->errors()->first());
         }
 
         if (Landlord::where('email', $request->email)
             ->orWhere('phone_number', $request->phone)
             ->exists()
         ) {
-            return $this->conflictResponse('Landlord already exists.');
+            return $this->conflictResponse(null, 'Landlord already exists.');
         }
 
         try {
@@ -131,7 +131,7 @@ class LandlordController extends Controller
 
             $validator = Validator::make($request->all(), $updateRules);
             if ($validator->fails()) {
-                return $this->badRequestResponse($validator->errors()->first());
+                return $this->badRequestResponse(null, $validator->errors()->first());
             }
             $landlord->update([
                 'name' => $request->name,

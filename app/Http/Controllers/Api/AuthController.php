@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-
+use Jenssegers\Agent\Agent;
 
 class AuthController extends Controller
 {
@@ -31,7 +31,7 @@ class AuthController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return $this->okResponse($validator->errors()->first(), 422);
+                return $this->okResponse(null, $validator->errors()->first());
             }
 
             $user = User::where('email', $request->email)->first();
@@ -49,7 +49,7 @@ class AuthController extends Controller
             }
             $deviceName = $request->device_name ?? $request->ip();
             $token = $user->createToken($deviceName)->plainTextToken;
-
+            $this->trackLoginActivity($user, $request);
             return $this->successResponse(array_merge(
                 $user->toArray(),
                 ['token' => $token]
@@ -68,7 +68,10 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         try {
-         
+            $user = $request->user();
+            $user->loginActivities()->update([
+                'logged_out_at' => now(),
+            ]);
             return $this->unauthorizedResponse(null, 'user is not authenticated');
         } catch (\Exception $e) {
             return $this->unprocessableResponse('An error occurred during logout: ' . $e->getMessage());
@@ -88,5 +91,24 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return $this->unprocessableResponse('An error occurred: ' . $e->getMessage());
         }
+    }
+
+
+
+    public function trackLoginActivity(User $user, Request $request)
+    {
+        $agent = new Agent();
+
+        $device = $agent->device();
+        $platform = $agent->platform();
+        $browser = $agent->browser();
+        $user->loginActivities()->create([
+            'user_id' => $user->id,
+            'device' => $device,
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'device' => "$platform - $browser",
+            'logged_in_at' => now(),
+        ]);
     }
 }

@@ -33,6 +33,10 @@ class User extends Authenticatable
         return $this->hasMany(Landlord::class);
     }
 
+    public function loginActivities()
+    {
+        return $this->hasMany(LoginActivities::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.

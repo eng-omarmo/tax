@@ -8,6 +8,7 @@
             "php": "^8.2",
             "backpack/basset": "*",
             "barryvdh/laravel-dompdf": "^3.0",
+            "jenssegers/agent": "^2.6",
             "laravel/framework": "^11.0",
             "laravel/sanctum": "^4.1",
             "laravel/tinker": "^2.9",

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UnitController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\landlordController;
+use App\Http\Controllers\api\OtpController;
 use App\Http\Controllers\Api\PropertyController;
 
 /*
@@ -18,8 +19,12 @@ use App\Http\Controllers\Api\PropertyController;
 */
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::prefix('otp')->controller(OtpController::class)->group(function () {
+    Route::post('/send', 'send');
+    Route::post('/verify', 'verify');
+});
 
-Route::middleware('auth:sanctum' )->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::prefix('landlord')->controller(LandlordController::class)->group(function () {
