@@ -28,13 +28,9 @@ class OtpService
                 'expires_at' => $expiresAt
             ]);
         }
-        //call sms service
-        $smsService = new SmsService();
-        $message = "Lambarkaaga xaqiijinta (OTP) waa: {{ $otp }}.
-Fadlan geli nambarkan si aad u xaqiijiso aqoonsigaaga. Nambarkani wuu dhacayaa kaddib dhowr daqiiqo. Ha la wadaagin cid kale";
-        $response = $smsService->send('hormuud', $user->phone, $message);
-        Log::info($response);
 
+        $smsService = new SmsService();
+        $response = $smsService->sendCustomSms($user->phone, $otp);
         return true;
     }
     public function verifyOtp(User $user, $otp)

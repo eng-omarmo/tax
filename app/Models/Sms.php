@@ -19,7 +19,6 @@ class Sms extends Model
         'otp_template'
     ];
 
-    // Default configuration that can be used if no records exist in the database
     public static $defaultConfig = [
         'gateway' => 'hormuud_sms',
         'mode' => 'live',

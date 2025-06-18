@@ -6,7 +6,7 @@ use App\Models\Sms;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 
-class SmsService
+class SMSService
 {
     private const HORMUUD_TOKEN_URL = 'https://smsapi.hormuud.com/token';
     private const HORMUUD_SEND_SMS_URL = 'https://smsapi.hormuud.com/api/SendSMS';
@@ -18,7 +18,7 @@ class SmsService
      *
      * @param string $gateway
      * @param string $receiver
-     * @param string $message
+     * @param string $message`
      * @return array ['success' => bool, 'message' => string, 'data' => mixed]
      */
     public static function send(string $gateway, string $receiver, string $message): array
@@ -94,6 +94,7 @@ class SmsService
             ['Content-Type: application/x-www-form-urlencoded'],
             true
         );
+
 
         if (!$response['success']) {
             return $response;
