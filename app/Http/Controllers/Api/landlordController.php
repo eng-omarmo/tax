@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class LandlordController extends Controller
@@ -129,8 +130,8 @@ class LandlordController extends Controller
 
             if ($request->hasFile('image')) {
                 // Delete old image if exists
-                if ($imagePath && \Storage::disk('public')->exists($imagePath)) {
-                    \Storage::disk('public')->delete($imagePath);
+                if ($imagePath && Storage::disk('public')->exists($imagePath)) {
+                    Storage::disk('public')->delete($imagePath);
                 }
 
                 $image = $request->file('image');
