@@ -303,7 +303,8 @@ class propertyController extends Controller
 
             $property->update($updateData);
 
-            $redirectRoute = auth()->user()->role == 'Admin' ? 'property.index' : 'monitor.index';
+            $redirectRoute = auth()->user()->hasRole('Admin') ? 'property.index' : 'monitor.index';
+
             return redirect()->route($redirectRoute)->with('success', 'Property updated successfully.');
         } catch (Exception $th) {
             Log::error('Error updating property: ' . $th->getMessage());
@@ -333,7 +334,6 @@ class propertyController extends Controller
 
     public function search(Request $request)
     {
-
         $lanlord = Landlord::where('phone_number', $request->search_lanlord)->first();
         $districts = District::select('id', 'name')->get();
         if (!$lanlord) {
