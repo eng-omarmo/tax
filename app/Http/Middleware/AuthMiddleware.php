@@ -19,12 +19,6 @@ class AuthMiddleware
         if (!Auth::check()) {
             return redirect()->route('signin')->with('error', 'You must log in first.');
         }
-        $user = Auth::user();
-
-        if ($user && ucfirst($user->role) != 'Admin' && ucfirst($user->role)  != 'Landlord' && ucfirst($user->role)  != 'Tax officer' && $user->status != 'Active') {
-
-            return redirect()->route('signin')->with('error', 'Access denied.');
-        }
 
         return $next($request);
     }

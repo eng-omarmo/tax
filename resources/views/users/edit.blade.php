@@ -44,17 +44,7 @@
                                     <input type="text" class="form-control radius-8" id="phone" name="phone"
                                         placeholder="Enter phone number" value="{{ old('phone', $user->phone) }}">
                                 </div>
-                                <div class="mb-20">
-                                    <label for="role"
-                                        class="form-label fw-semibold text-primary-light text-sm mb-8">Role <span
-                                            class="text-danger-600">*</span></label>
-                                    <select class="form-control radius-8 form-select" id="role" name="role">
-                                        <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
-                                        <option value="Tax Officer" {{ $user->role == 'Tax Officer' ? 'selected' : '' }}>Tax Officer</option>
-                                        <option value="Business Owner" {{ $user->role == 'Business Owner' ? 'selected' : '' }}>Business Owner</option>
-                                        <option value="landlord" {{ $user->role == 'landlord' ? 'selected' : '' }}>Landlord</option>
-                                    </select>
-                                </div>
+
                                 <div class="mb-20">
                                     <label for="status"
                                         class="form-label fw-semibold text-primary-light text-sm mb-8">Status <span

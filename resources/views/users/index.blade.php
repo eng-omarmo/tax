@@ -36,14 +36,7 @@
                         <option value="Inactive" {{ request()->status == 'Inactive' ? 'selected' : '' }}>Inactive</option>
                     </select>
 
-                    <select name="role" class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px">
-                        <option value="">Role</option>
-                        @foreach ($roles as $role)
 
-                            <option value="{{ $role }}" {{ request()->role == $role ? 'selected' : '' }}>
-                                {{ $role }}</option>
-                        @endforeach
-                    </select>
                 </div>
 
                 <div class="d-flex align-items-center gap-3 flex-wrap">
@@ -91,7 +84,7 @@
                         <th scope="col">SNO</th>
                         <th scope="col">Name</th>
                         <th scope="col">Email</th>
-                        <th scope="col">Role</th>
+
                         <th scope="col">Phone</th>
                         <th scope="col" class="text-center">Status</th>
                         <th scope="col" class="text-center">Action</th>
@@ -123,7 +116,7 @@
                             </td>
                             <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $user->email }}</span>
                             </td>
-                            <td>{{ $user->role }}</td>
+                    
                             <td>{{ $user->phone }}</td>
                             <td class="text-center">
                                 <span

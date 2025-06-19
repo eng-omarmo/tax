@@ -85,7 +85,7 @@ class UsersController extends Controller
         }
 
         $users = $query->paginate(10);
-        return view('users.index', compact('users', 'roles'));
+        return view('users.index', compact('users'));
     }
         public function viewProfile()
     {
