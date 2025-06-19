@@ -9,6 +9,7 @@ use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Exception;
 use Illuminate\Support\Facades\Validator;
 
 class PropertyController extends Controller
@@ -35,10 +36,7 @@ class PropertyController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => $validator->errors()->first()
-                ], 422);
+                return $this->badRequestResponse(null, $validator->errors()->first());
             }
 
             // Check for duplicate
@@ -89,19 +87,9 @@ class PropertyController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Property created successfully.',
-                'data' => $property
-            ], 201);
-        } catch (\Throwable $th) {
-            DB::rollBack();
-
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Something went wrong.',
-                'error' => $th->getMessage()
-            ], 500);
+            return $this->okResponse($property, 'property created successfully.');
+        } catch (\Exception $e) {
+            return $this->unprocessableResponse($e->getMessage());
         }
     }
 }
