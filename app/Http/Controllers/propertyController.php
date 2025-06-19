@@ -36,8 +36,7 @@ class propertyController extends Controller
 
             $query->where('property_name', 'like', '%' . $request->search . '%')
                 ->orWhere('property_phone', 'like', '%' . $request->search . '%')
-                ->orWhere('house_code', 'like', '%' . $request->search . '%')
-                ->orWhere('nbr', 'like', '%' . $request->search . '%');
+                ->orWhere('house_code', 'like', '%' . $request->search . '%');
         }
         if ($request->filled('status')) {
             $query->where('status', $request->status);
@@ -45,11 +44,7 @@ class propertyController extends Controller
         if ($request->filled('monetering_status')) {
             $query->where('monitoring_status', $request->monetering_status);
         }
-        if (auth()->user()->role === 'Landlord') {
-            $query->whereHas('landlord.user', function ($q) {
-                $q->where('id', auth()->id());
-            });
-        }
+
         $properties = $query->orderby('id', 'desc')->paginate(10);
 
         return view('property.index', compact('properties', 'statuses', 'monitoringStatuses'));
@@ -78,9 +73,6 @@ class propertyController extends Controller
             $query->whereDate('created_at', '<=', Carbon::parse($request->end_date)->format('Y-m-d'));
         }
 
-        if ($request->has('nbr') && $request->nbr) {
-            $query->where('nbr', $request->nbr);
-        }
 
         if ($request->has('status') && $request->status && $request->status !== 'all') {
             $query->where('status', $request->status);
@@ -105,12 +97,7 @@ class propertyController extends Controller
 
         $properties = $query->paginate(10);
 
-        // Calculate balance for each property
-        foreach ($properties as $property) {
-            $property->balance = $property->transactions->sum(function ($transaction) {
-                return $transaction->debit - $transaction->credit;
-            });
-        }
+
 
         return view('property.report', [
             'properties' => $properties,
@@ -129,29 +116,22 @@ class propertyController extends Controller
         }
     }
 
-public function getPropertiesByDistrict($districtId)
-{
-    $district = District::findOrFail($districtId);
+    public function getPropertiesByDistrict($districtId)
+    {
+        $district = District::findOrFail($districtId);
 
-    $query = Property::with('transactions', 'landlord')
-        ->where('district_id', $districtId);
+        $query = Property::with('transactions', 'landlord')
+            ->where('district_id', $districtId);
 
-    $properties = $query->orderBy('id', 'desc')->paginate(10);
+        $properties = $query->orderBy('id', 'desc')->paginate(10);
 
-    // Calculate balance for each property
-    foreach ($properties as $property) {
-        $property->balance = $property->transactions->sum(function ($transaction) {
-            return $transaction->debit - $transaction->credit;
-        });
+        return view('property.index', [
+            'properties' => $properties,
+            'districtFilter' => $district->name,
+            'statuses' => Property::pluck('status')->unique(),
+            'monitoringStatuses' => Property::pluck('monitoring_status')->unique()
+        ]);
     }
-
-    return view('property.index', [
-        'properties' => $properties,
-        'districtFilter' => $district->name,
-        'statuses' => Property::pluck('status')->unique(),
-        'monitoringStatuses' => Property::pluck('monitoring_status')->unique()
-    ]);
-}
 
 
     public function create($id)
@@ -270,7 +250,7 @@ public function getPropertiesByDistrict($districtId)
             $request->validate([
                 'property_name' => 'required|string|max:255',
                 'property_phone' => 'nullable|string|max:25',
-                'nbr' => 'nullable|string|max:100',
+
                 'house_code' => 'nullable|string|max:50',
                 'branch' => 'nullable|string|max:255',
                 'quarterly_tax_fee' => 'nullable|numeric',
@@ -294,7 +274,7 @@ public function getPropertiesByDistrict($districtId)
             $updateData = $request->only([
                 'property_name',
                 'property_phone',
-                'nbr',
+
                 'branch',
                 'zone',
                 'house_type',
@@ -361,5 +341,4 @@ public function getPropertiesByDistrict($districtId)
         }
         return view('property.create', compact('lanlord', 'districts'));
     }
-
 }
