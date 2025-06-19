@@ -96,7 +96,8 @@ class LandlordController extends Controller
             if (!$landlord) {
                 return $this->notFoundResponse(null, 'Landlord not found.');
             }
-            $validator = Validator::make($request->all(), [
+
+            $updateRules = [
                 'name' => 'required|string|max:255',
                 'address' => 'required|string|max:255',
                 'phone' => [
@@ -105,49 +106,52 @@ class LandlordController extends Controller
                     'regex:/^([0-9\s\-\+\(\)]*)$/',
                     'min:10',
                     'max:15',
-                    Rule::unique('landlords', 'phone_number'),
+                    Rule::unique('landlords', 'phone_number')->ignore($landlord->id),
                     Rule::unique('users', 'phone'),
                 ],
                 'email' => [
                     'required',
                     'email',
                     'max:255',
-                    Rule::unique('landlords', 'email'),
+                    Rule::unique('landlords', 'email')->ignore($landlord->id),
                     Rule::unique('users', 'email'),
                 ],
-            ]);
-            $updateRules['email'] = [
-                'required',
-                'email',
-                'max:255',
-                Rule::unique('landlords', 'email')->ignore($landlord->id),
-                Rule::unique('users', 'email')
-            ];
-            $updateRules['phone'] = [
-                'required',
-                'string',
-                'regex:/^([0-9\s\-\+\(\)]*)$/',
-                'min:10',
-                'max:15',
-                Rule::unique('landlords', 'phone_number')->ignore($landlord->id),
-                Rule::unique('users', 'phone')
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
             ];
 
             $validator = Validator::make($request->all(), $updateRules);
             if ($validator->fails()) {
                 return $this->badRequestResponse(null, $validator->errors()->first());
             }
+
+            // Handle new image upload if provided
+            $imagePath = $landlord->profile_image;
+
+            if ($request->hasFile('image')) {
+                // Delete old image if exists
+                if ($imagePath && \Storage::disk('public')->exists($imagePath)) {
+                    \Storage::disk('public')->delete($imagePath);
+                }
+
+                $image = $request->file('image');
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $imagePath = $image->storeAs('uploads', $imageName, 'public');
+            }
+
             $landlord->update([
                 'name' => $request->name,
                 'address' => $request->address,
                 'phone_number' => $request->phone,
                 'email' => $request->email,
+                'profile_image' => $imagePath,
             ]);
+
             return $this->okResponse($landlord, 'Landlord updated successfully.');
         } catch (\Exception $e) {
             return $this->unprocessableResponse($e->getMessage());
         }
     }
+
 
     /**
      * Remove the landlord profile
