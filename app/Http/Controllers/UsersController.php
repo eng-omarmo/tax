@@ -22,7 +22,6 @@ class UsersController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'phone' => 'nullable|string|max:18',
-            'role' => 'required|string',
             'status' => 'required|string',
             // 'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate the image
         ]);
@@ -37,7 +36,7 @@ class UsersController extends Controller
         //     $imagePath = null;
         // }
         //make this upper case
-        $validated['role'] = ucfirst($validated['role']);
+
 
 
         User::create([
@@ -45,7 +44,6 @@ class UsersController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make('password'),
             'phone' => $validated['phone'],
-            'role' =>  $validated['role'],
             'status' => $validated['status'],
             'profile_image' => null
         ]);
@@ -70,22 +68,18 @@ class UsersController extends Controller
     {
         $request->validate([
             'search' => 'nullable|string|max:255',
-            'role' => 'nullable|string|max:255',
             'status' => 'nullable|string|in:Active,Inactive',
         ]);
 
-        $roles = User::select('role')->distinct()->pluck('role');
         $query = User::query();
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%')
                 ->orWhere('email', 'like', '%' . $request->search . '%')
                 ->orWhere('phone', 'like', '%' . $request->search . '%')
-                ->orWhere('role', 'like', '%' . $request->search . '%')
+
                 ->orWhere('status', 'like', '%' . $request->search . '%');
         }
-        if ($request->filled('role')) {
-            $query->where('role', $request->role);
-        }
+
         if ($request->filled('status')) {
             $query->where('status', ucfirst($request->status));
         }
@@ -112,7 +106,6 @@ class UsersController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
-                'role' => ucfirst($request->role),
                 'status' => $request->status
             ]);
             return redirect()->route('user.index')->with('success', 'User Updated successfully!');

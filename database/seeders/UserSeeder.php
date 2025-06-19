@@ -20,24 +20,7 @@ class UserSeeder extends Seeder
                 'status' => 'active',
                 'profile_image' => null,
             ],
-            [
-                'name' => 'Landlord User',
-                'email' => 'landlord@example.com',
-                'password' => Hash::make('password'), // Replace with a secure password
-                'phone' => '987654321',
-                'role' => 'Landlord',
-                'status' => 'active',
-                'profile_image' => null,
-            ],
-            [
-                'name' => 'Business Owner User',
-                'email' => 'businessowner@example.com',
-                'password' => Hash::make('password'), // Replace with a secure password
-                'phone' => '456789123',
-                'role' => 'Business Owner',
-                'status' => 'active',
-                'profile_image' => null,
-            ],
+
             [
                 'name' => 'Tax Officer User',
                 'email' => 'taxofficer@example.com',

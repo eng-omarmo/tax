@@ -14,7 +14,8 @@ class Landlord extends Model
         'address',
         'phone_number',
         'email',
-        'user_id'
+        'user_id',
+        'profile_image'
     ];
 
     public function user()

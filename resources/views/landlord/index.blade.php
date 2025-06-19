@@ -103,7 +103,7 @@
                                     <div class="flex-grow-1">
                                         <span class="text-md mb-0 fw-normal text-secondary-light">
                                             <img
-                                                src="{{ asset('storage/' . ($landlord->user->profile_image ?? 'default-profile.png')) }}" alt="Property Image"
+                                                src="{{ asset('storage/' . ($landlord->profile_image ?? 'default-profile.png')) }}" alt="Property Image"
                                                 class="img-fluid rounded-circle"
                                                 style="width: 40px; height: 40px; object-fit: cover;"
                                                 >

@@ -66,17 +66,15 @@ class InvoiceSmsService
 
         $totalTax = $invoices->sum('amount');
 
-        //encryped property id
 
         $id = Crypt::encrypt($property->id);
         // Create a more concise message
         $message = "Invoice: {$property->property_name}\n";
-        $message .= "Period: {$quarterStart}-{$quarterEnd}\n";
-        $message .= "Units: " . $invoices->count() . "\n";
+        $message .= "xilga: {$quarterStart}-{$quarterEnd}\n";
+        $message .= "Albaaabada: " . $invoices->count() . "\n";
         $message .= "Total Due: $" . number_format($totalTax, 2) . "\n";
         $message .= "Pay: https://tax.somxchange.dev/self-payment/{$id}";
 
-        // Limit to 160 characters (standard SMS length)
         return Str::limit($message, 160);
     }
 }

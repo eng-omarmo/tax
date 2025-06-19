@@ -44,20 +44,11 @@ class landlordController extends Controller
             'name' => $request->name,
             'address' => $request->address,
             'phone_number' => $request->phone,
-            'email' => $request->email
-        ]);
-        $user = User::create([
-            'name' => $request->name,
             'email' => $request->email,
-            'phone' => $request->phone,
-            'password' => bcrypt('password'),
-            'role' => 'Landlord',
-            'status' => 'Active',
-            'profile_image' => $path
+            'profile_image' => $path,
+            'user_id' => auth()->user->id
         ]);
-        $landlord->update([
-            'user_id' => $user->id
-        ]);
+
 
         // Check if the user wants to continue to property registration
         if ($request->has('continue_to_property') && $request->continue_to_property == 1) {
@@ -133,21 +124,12 @@ class landlordController extends Controller
             'name' => $request->name,
             'address' => $request->address,
             'phone_number' => $request->phone_number,
-            'email' => $request->email
+            'email' => $request->email,
+            'profile_image' => $path
+
         ]);
 
-        if ($landlord->user) {
-            $updateData = [
-                'name' => $request->name,
-                'email' => $request->email,
-                'phone' => $request->phone_number,
-            ];
-            if (isset($path)) {
-                $updateData['profile_image'] = $path;
-            }
 
-            $landlord->user->update($updateData);
-        }
 
         return redirect()->route('lanlord.index')->with('success', 'Landlord updated successfully');
     }

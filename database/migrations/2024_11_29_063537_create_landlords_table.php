@@ -20,6 +20,7 @@ class CreateLandlordsTable extends Migration
             $table->string('email')->unique();
             $table->string('phone_number')->nullable();
             $table->text('address')->nullable();
+            $table->string('profile_image')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

@@ -307,8 +307,8 @@
                             <div class="text-end">
                                 <h6 class="mb-2 fw-bold text-lg">${{ number_format($quarterlyStats['totalPaid'], 2) }}
                                 </h6>
-                                <span
-                                    class="bg-success-focus ps-12 pe-12 pt-2 pb-2 rounded-2 fw-medium text-success-main text-sm">{{ round(($quarterlyStats['totalPaid'] / $quarterlyStats['totalBilled']) * 100) }}%</span>
+                                {{-- <span
+                                    class="bg-success-focus ps-12 pe-12 pt-2 pb-2 rounded-2 fw-medium text-success-main text-sm">{{ round(($quarterlyStats['totalPaid'] / $quarterlyStats['totalBilled']) * 100) }}%</span> --}}
                             </div>
                         </div>
                         <div id="revenue-chart" class="mt-28"></div>
