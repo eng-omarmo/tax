@@ -72,9 +72,7 @@ class AuthController extends Controller
     {
         try {
             $user = $request->user();
-            $user->loginActivities()->update([
-                'logged_out_at' => now(),
-            ]);
+
             return $this->unauthorizedResponse(null, 'user is not authenticated');
         } catch (\Exception $e) {
             return $this->unprocessableResponse('An error occurred during logout: ' . $e->getMessage());
@@ -112,7 +110,7 @@ class AuthController extends Controller
             'user_agent' => $request->userAgent(),
             'device_id' => $request->device_id,
             'fcm_token' => $request->fcm_token,
-            'device_id' => $request->device_id,
+            'device' =>  $platform . '' . $agent->platform(),
             'logged_in_at' => now(),
         ]);
     }
