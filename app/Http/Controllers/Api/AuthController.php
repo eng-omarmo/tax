@@ -72,12 +72,13 @@ class AuthController extends Controller
     {
         try {
             $user = $request->user();
-
-            return $this->unauthorizedResponse(null, 'user is not authenticated');
+            $user->currentAccessToken()->delete();
+            return $this->okResponse(null, 'Logged out successfully');
         } catch (\Exception $e) {
             return $this->unprocessableResponse('An error occurred during logout: ' . $e->getMessage());
         }
     }
+
 
     /**
      * Get the authenticated User
