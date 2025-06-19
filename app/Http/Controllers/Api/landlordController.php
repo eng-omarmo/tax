@@ -38,6 +38,7 @@ class LandlordController extends Controller
                 Rule::unique('landlords', 'email'),
                 Rule::unique('users', 'email'),
             ],
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
         if ($validator->fails()) {
@@ -50,7 +51,9 @@ class LandlordController extends Controller
         ) {
             return $this->conflictResponse(null, 'Landlord already exists.');
         }
-
+        $image = $request->file('image');
+        $imageName = time() . '.' . $image->getClientOriginalExtension();
+        $path = $image->storeAs('uploads', $imageName, 'public');
         try {
             $landlord = Landlord::create([
                 'name' => $request->name,
@@ -58,6 +61,7 @@ class LandlordController extends Controller
                 'phone_number' => $request->phone,
                 'email' => $request->email,
                 'user_id' => $request->user()->id,
+                'profile_image' => $path,
             ]);
 
             return $this->createdResponse($landlord, 'Landlord created successfully.');
