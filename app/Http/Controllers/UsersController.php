@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\District;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -12,7 +13,8 @@ class UsersController extends Controller
 {
     public function create()
     {
-        return view('users.create');
+        $districts = District::all();
+        return view('users.create', compact('districts'));
     }
 
     public function store(Request $request)
@@ -22,6 +24,7 @@ class UsersController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'phone' => 'nullable|string|max:18',
+            'district_id' => 'nullable',
             'status' => 'required|string',
             // 'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate the image
         ]);
@@ -45,6 +48,7 @@ class UsersController extends Controller
             'password' => Hash::make('password'),
             'phone' => $validated['phone'],
             'status' => $validated['status'],
+            'district_id' => $validated['district_id'],
             'profile_image' => null
         ]);
 
@@ -106,6 +110,7 @@ class UsersController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
+                'district_id' => $request->district_id,
                 'status' => $request->status
             ]);
             return redirect()->route('user.index')->with('success', 'User Updated successfully!');

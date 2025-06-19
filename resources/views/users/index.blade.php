@@ -84,7 +84,7 @@
                         <th scope="col">SNO</th>
                         <th scope="col">Name</th>
                         <th scope="col">Email</th>
-
+                        <th scope="col">District</th>
                         <th scope="col">Phone</th>
                         <th scope="col" class="text-center">Status</th>
                         <th scope="col" class="text-center">Action</th>
@@ -116,7 +116,7 @@
                             </td>
                             <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $user->email }}</span>
                             </td>
-                    
+                            <td>{{ $user->district->name }}</td>
                             <td>{{ $user->phone }}</td>
                             <td class="text-center">
                                 <span

@@ -80,17 +80,17 @@
                                         placeholder="Enter phone number" value="{{ old('phone') }}">
                                 </div>
                                 <div class="mb-20">
-                                    <label for="role"
-                                        class="form-label fw-semibold text-primary-light text-sm mb-8">Role <span
-                                            class="text-danger-600">*</span></label>
-                                    <select class="form-control radius-8 form-select" id="role" name="role">
-                                        <option value="admin">Admin</option>
-                                        <option value="Tax Officer">Tax Officer</option>
-                                        <option value="Registerer">Registerer</option>
-
-
+                                    <label for="district" class="form-label fw-semibold text-primary-light text-sm mb-8">
+                                        District <span class="text-danger-600">*</span>
+                                    </label>
+                                    <select class="form-control radius-8 form-select" id="district_id" name="district_id">
+                                        <option value="">-- Select District --</option>
+                                        @foreach ($districts as $district)
+                                            <option value="{{ $district->id }}">{{ $district->name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
+
                                 <div class="mb-20">
                                     <label for="status"
                                         class="form-label fw-semibold text-primary-light text-sm mb-8">Status <span

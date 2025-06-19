@@ -1,83 +1,106 @@
 <?php
 
-namespace App\Http\Controllers\Api;
-
-use Dotenv\Validator;
+namespace App\Http\Controllers\api;
 use App\Models\Property;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Traits\ApiResponseTrait;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class PropertyController extends Controller
 {
+    use  ApiResponseTrait;
 
 
-    public function store(Request $request)
-    {
-        try {
-            DB::beginTransaction();
-            $validor = Validator($request->all(),[
-                'property_name' => 'required',
-                'property_phone' => 'required',
-                'house_type' => 'required',
-                'branch_id' => 'required',
-                'district_id' => 'required',
-                'zone' => 'required',
-                'latitude' => 'required',
-                'longitude' => 'required',
-                'lanlord_id' => 'required',
-                'image' => 'image|mimes:jpeg,png,jpg,webp|max:2048', // Validate file type & size
-            ]);
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $document = $request->file('document');
-            $documentName = time() . '.' . $document->getClientOriginalExtension();
+public function store(Request $request): JsonResponse
+{
+    try {
+        DB::beginTransaction();
 
-            $path = $image->storeAs('uploads', $imageName, 'public');
-            $documentPath = $document->storeAs('uploads', $documentName, 'public');
+        $validator = Validator::make($request->all(), [
+            'property_name' => 'required|string|max:255',
+            'property_phone' => 'required|string|max:20',
+            'house_type' => 'required|string|max:50',
+            'branch_id' => 'required|integer',
+            'zone' => 'required|string|max:100',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'lanlord_id' => 'required|integer|exists:landlords,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'document' => 'nullable|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
+        ]);
 
-            $request->merge(['image' => $imageName]);
-            $properties = Property::where('property_name', $request->property_name)
-                ->where('property_phone', $request->property_phone)
-                ->first();
-
-            if ($properties) {
-                return back()->with('error', 'Property name and phone already exists.');
-            }
-            $code = 'HOUSE-' . strtoupper(Str::random(3)) . '-' . rand(100, 999);
-
-            $request->merge(['house_code' => $code]);
-
-            // Change default monitoring status based on configuration or request
-            $monitoringStatus = $request->has('skip_monitoring') && $request->skip_monitoring == 1 ? 'Approved' : 'Pending';
-            $status = $monitoringStatus == 'Approved' ? 'Active' : 'InActive';
-
-            $property = Property::create([
-                'property_name' => $request->property_name,
-                'property_phone' => $request->property_phone,
-                'house_code' => $request->house_code,
-                'branch_id' => $request->branch_id,
-                'zone' => $request->zone,
-                'house_type' => $request->house_type,
-                'house_rent' => $request->house_rent,
-                'latitude' => $request->latitude,
-                'longitude' => $request->longitude,
-                'monitoring_status' => $monitoringStatus,
-                'status' => $status,
-                'district_id' => $request->district_id,
-                'landlord_id' => $request->lanlord_id,
-                'document'  => $documentPath,
-                'image' => $path
-            ]);
-
-            DB::commit();
-
-
-        } catch (\Throwable $th) {
-            DB::rollBack();
-
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->errors()->first()
+            ], 422);
         }
+
+        // Check for duplicate
+        $exists = Property::where('property_name', $request->property_name)
+            ->where('property_phone', $request->property_phone)
+            ->exists();
+
+        if ($exists) {
+            return $this->conflictResponse(null, 'Property exists');
+        }
+
+        // Uploads
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->file('image')->getClientOriginalExtension();
+            $imagePath = $request->file('image')->storeAs('uploads', $imageName, 'public');
+        }
+
+        $documentPath = null;
+        if ($request->hasFile('document')) {
+            $documentName = time() . '.' . $request->file('document')->getClientOriginalExtension();
+            $documentPath = $request->file('document')->storeAs('uploads', $documentName, 'public');
+        }
+
+        // Generate house code
+        $code = 'HOUSE-' . strtoupper(Str::random(3)) . '-' . rand(100, 999);
+
+        $monitoringStatus = $request->boolean('skip_monitoring') ? 'Approved' : 'Pending';
+        $status = $monitoringStatus === 'Approved' ? 'Active' : 'InActive';
+
+        $property = Property::create([
+            'property_name' => $request->property_name,
+            'property_phone' => $request->property_phone,
+            'house_code' => $code,
+            'branch_id' => $request->branch_id,
+            'zone' => $request->zone,
+            'house_type' => $request->house_type,
+            'house_rent' => $request->house_rent,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'monitoring_status' => $monitoringStatus,
+            'status' => $status,
+            'district_id' => $request->user()->district->id,
+            'landlord_id' => $request->lanlord_id,
+            'image' => $imagePath,
+            'document' => $documentPath,
+        ]);
+
+        DB::commit();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Property created successfully.',
+            'data' => $property
+        ], 201);
+    } catch (\Throwable $th) {
+        DB::rollBack();
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Something went wrong.',
+            'error' => $th->getMessage()
+        ], 500);
     }
-
-
+}
 }

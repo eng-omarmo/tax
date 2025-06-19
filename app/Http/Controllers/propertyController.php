@@ -274,7 +274,6 @@ class propertyController extends Controller
             $updateData = $request->only([
                 'property_name',
                 'property_phone',
-
                 'branch',
                 'zone',
                 'house_type',

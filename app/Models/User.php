@@ -20,6 +20,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'district',
         'password',
         'phone',
         'role',
@@ -39,6 +40,10 @@ class User extends Authenticatable
         return $this->hasMany(LoginActivities::class);
     }
 
+    public function district()
+    {
+        return $this->belongsTo(district::class);
+    }
     /**
      * The attributes that should be hidden for serialization.
      *
