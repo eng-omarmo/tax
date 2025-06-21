@@ -63,7 +63,7 @@
                                         @foreach ($districts as $district)
                                             <option
                                                 value="{{ $district->id }}"
-                                                @if(old('district_id', $property->district_id ?? null) == $district->id) selected @endif
+                                                @if(old('district_id', $user->district_id ?? null) == $district->id) selected @endif
                                             >
                                                 {{ $district->name }}
                                             </option>
