@@ -115,5 +115,4 @@ class AuthController extends Controller
             'logged_in_at' => now(),
         ]);
     }
-
 }
