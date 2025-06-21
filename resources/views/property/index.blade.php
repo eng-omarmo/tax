@@ -92,6 +92,7 @@
 
                         <th scope="col">Monitoring Status</th>
                         <th scope="col">Status</th>
+                        <th scope="col">Registered By</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
@@ -124,6 +125,9 @@
                                     class="{{ $property->status == 'Available' ? 'bg-success-focus text-success-600' : 'bg-danger-focus text-danger-600' }} border px-24 py-4 radius-4 fw-medium text-sm">
                                     {{ ucfirst($property->status) }}
                                 </span>
+                            </td>
+                            <td>
+                                {{ $property->created_by }}
                             </td>
                             @if (Auth::user()->role == 'Admin')
                                 <td class="text-center">
