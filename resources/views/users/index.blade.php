@@ -22,8 +22,6 @@
                 class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center justify-content-between flex-wrap gap-3">
                 <!-- Filter Section (Search, Pagination, Status) -->
                 <div class="d-flex align-items-center gap-3 flex-wrap">
-
-
                     <div class="navbar-search">
                         <input type="text" class="bg-base h-40-px w-auto" name="search" placeholder="Search"
                             value="{{ request()->search }}">
