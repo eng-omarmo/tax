@@ -24,8 +24,8 @@ class UsersController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'phone' => 'nullable|string|max:18',
-            'district_id' => 'nullable',
             'status' => 'required|string',
+            'district_id' => 'nullable|string'
             // 'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate the image
         ]);
         // if ($request->hasFile('profile_image')) {
@@ -38,8 +38,6 @@ class UsersController extends Controller
         // } else {
         //     $imagePath = null;
         // }
-        //make this upper case
-
 
 
         User::create([

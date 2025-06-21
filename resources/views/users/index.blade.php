@@ -116,7 +116,7 @@
                             </td>
                             <td><span class="text-md mb-0 fw-normal text-secondary-light">{{ $user->email }}</span>
                             </td>
-                            <td>{{ $user->district->name }}</td>
+                            <td>{{ $user->district->name ?? "N/A"}}</td>
                             <td>{{ $user->phone }}</td>
                             <td class="text-center">
                                 <span
