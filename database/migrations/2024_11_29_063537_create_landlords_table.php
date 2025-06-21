@@ -16,6 +16,7 @@ class CreateLandlordsTable extends Migration
         Schema::create('landlords', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
+
             $table->string('name');
             $table->string('email')->unique();
             $table->string('phone_number')->nullable();
@@ -23,6 +24,7 @@ class CreateLandlordsTable extends Migration
             $table->string('profile_image')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
         });
     }
 

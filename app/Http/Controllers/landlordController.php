@@ -46,7 +46,7 @@ class landlordController extends Controller
             'phone_number' => $request->phone,
             'email' => $request->email,
             'profile_image' => $path,
-    'user_id' => auth()->user()->id
+            'user_id' => auth()->user()->id
 
         ]);
 
@@ -127,7 +127,7 @@ class landlordController extends Controller
             'phone_number' => $request->phone_number,
             'email' => $request->email,
             'profile_image' => $path,
-'user_id' => auth()->user()->id
+            'user_id' => auth()->user()->id
         ]);
 
 

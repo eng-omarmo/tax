@@ -78,10 +78,10 @@
                         </th>
                         <th scope="col">SNO</th>
                         <th scope="col">Image</th>
-
                         <th scope="col">Name</th>
                         <th scope="col">Email</th>
                         <th scope="col">Phone Number</th>
+                        <th scope="col">Register By</th>
                         <th scope="col" class="text-center">Action</th>
                     </tr>
                 </thead>
@@ -123,6 +123,7 @@
 
                             <td>{{ $landlord->email }}</td>
                             <td>{{ $landlord->phone_number }}</td>
+                            <td>{{$landlord->user->name ?? 'N/A'}}</td>
                             <td class="text-center">
                                 <div class="d-flex align-items-center gap-10 justify-content-center">
                                     <a href="{{ route('lanlord.edit', $landlord->id) }}"
