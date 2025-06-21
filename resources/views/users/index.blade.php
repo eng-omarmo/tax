@@ -118,12 +118,7 @@
                             </td>
                             <td>{{ $user->district->name ?? "N/A"}}</td>
                             <td>{{ $user->phone }}</td>
-                            <td class="text-center">
-                                <span
-                                    class="bg-success-focus text-success-600 border border-success-main px-24 py-4 radius-4 fw-medium text-sm">
-                                    {{ ucfirst($user->status) ?? $user->status }}
-                                </span>
-                            </td>
+                            <!-- In the action column, add this button after the delete button -->
                             <td class="text-center">
                                 <div class="d-flex align-items-center gap-10 justify-content-center">
                                     <a href="{{ route('user.edit', $user->id) }}"
@@ -134,6 +129,13 @@
                                     <a href="{{ route('user.delete', $user->id) }}"
                                         class="remove-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle">
                                         <iconify-icon icon="fluent:delete-24-regular" class="menu-icon"></iconify-icon>
+                                    </a>
+
+                                    <!-- New Details Button -->
+                                    <a href="{{ route('user.details', $user->id) }}"
+                                        class="bg-info-focus text-info-600 bg-hover-info-200 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle"
+                                        title="View User Details">
+                                        <iconify-icon icon="mdi:account-details" class="menu-icon"></iconify-icon>
                                     </a>
                                 </div>
                             </td>

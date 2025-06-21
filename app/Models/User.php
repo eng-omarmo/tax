@@ -41,8 +41,9 @@ class User extends Authenticatable
     }
     public function properties()
     {
-        return $this->hasMany(Property::class);
+        return $this->hasMany(Property::class, 'created_by');
     }
+
     public function district()
     {
         return $this->belongsTo(district::class);

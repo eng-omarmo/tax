@@ -118,4 +118,47 @@ class UsersController extends Controller
             return redirect()->route('user.index')->with('error', $th->getMessage());
         }
     }
+
+    /**
+     * Display detailed information about the user including activities.
+     *
+     * @param int $id
+     * @return \Illuminate\View\View
+     */
+    public function details($id)
+    {
+        // Find the user with related data
+        $user = User::with([
+            'loginActivities',
+            'properties' => function($query) {
+                $query->with(['district', 'branch', 'landlord', 'units', 'taxs']);
+            },
+            'landlords' => function($query) {
+                $query->with(['properties' => function($q) {
+                    $q->with(['units', 'taxs']);
+                }]);
+            },
+            'district'
+        ])->findOrFail($id);
+
+        // Get statistics
+        $stats = [
+            'total_properties' => $user->properties->count(),
+            'total_units' => $user->properties->sum(function($property) {
+                return $property->units->count();
+            }),
+            'total_landlords' => $user->landlords->count(),
+            'total_logins' => $user->loginActivities->count(),
+            'last_login' => $user->loginActivities->sortByDesc('logged_in_at')->first()?->logged_in_at,
+            'total_taxes' => $user->properties->sum(function($property) {
+                return $property->taxs->count();
+            }),
+        ];
+
+        // Get recent activities
+        $recentProperties = $user->properties()->latest()->take(5)->get();
+        $recentLogins = $user->loginActivities()->latest('logged_in_at')->take(5)->get();
+
+        return view('users.details', compact('user', 'stats', 'recentProperties', 'recentLogins'));
+    }
 }

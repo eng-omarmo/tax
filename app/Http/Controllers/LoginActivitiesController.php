@@ -19,8 +19,8 @@ class LoginActivitiesController extends Controller
     {
         $query = LoginActivities::with('user');
 
-        // Filter by user if user_id is provided
-        if ($request->has('user_id') && $request->user_id) {
+        // Add filter by user_id
+        if ($request->filled('user_id')) {
             $query->where('user_id', $request->user_id);
         }
 

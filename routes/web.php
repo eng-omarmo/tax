@@ -226,6 +226,8 @@ Route::prefix('receipt')->middleware(['auth.admin'])->group(function () {
 // Users
 Route::prefix('users')->middleware(['auth.admin'])->group(function () {
     Route::controller(UsersController::class)->group(function () {
+
+        Route::get('/details/{id}', 'details')->name('user.details');
         Route::get('/add-user', 'create')->name('user.create');
         Route::get('/users-grid', 'usersGrid')->name('usersGrid');
         Route::get('/users-list', 'index')->name('user.index');
