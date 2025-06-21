@@ -13,6 +13,7 @@ use App\Models\Transaction;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Container\Attributes\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -209,7 +210,8 @@ class propertyController extends Controller
                 'district_id' => $request->district_id,
                 'landlord_id' => $request->lanlord_id,
                 'document'  => $documentPath,
-                'image' => $path
+                'image' => $path,
+                'created_by' =>Auth()->user()->id
             ]);
 
             DB::commit();

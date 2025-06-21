@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use Exception;
 use App\Models\Property;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -9,7 +10,6 @@ use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Exception;
 use Illuminate\Support\Facades\Validator;
 
 class PropertyController extends Controller
@@ -64,8 +64,6 @@ class PropertyController extends Controller
             // Generate house code
             $code = 'HOUSE-' . strtoupper(Str::random(3)) . '-' . rand(100, 999);
 
-            $monitoringStatus = $request->boolean('skip_monitoring') ? 'Approved' : 'Pending';
-            $status = $monitoringStatus === 'Approved' ? 'Active' : 'InActive';
 
             $property = Property::create([
                 'property_name' => $request->property_name,
@@ -77,8 +75,8 @@ class PropertyController extends Controller
                 'house_rent' => $request->house_rent,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
-                'monitoring_status' => $monitoringStatus,
-                'status' => $status,
+                'monitoring_status' => 'Pending',
+                'status' => 'Inactive',
                 'district_id' => $request->user()->district->id,
                 'landlord_id' => $request->lanlord_id,
                 'image' => $imagePath,
@@ -92,4 +90,8 @@ class PropertyController extends Controller
             return $this->unprocessableResponse($e->getMessage());
         }
     }
+
+     /**
+     * Update the specified property.
+     */
 }

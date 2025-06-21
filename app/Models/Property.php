@@ -27,11 +27,17 @@ class Property extends Model
         'district_id',
         'landlord_id',
         'document',
-        'image'
+        'image',
+        'created_by'
+
     ];
     public function district()
     {
         return $this->belongsTo(District::class);
+    }
+
+    public function created_by(){
+        return $this->belongsTo(User::class);
     }
 
     public function branch()
