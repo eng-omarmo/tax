@@ -1,14 +1,12 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Unit;
 use App\Models\Property;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
 
 class UnitController extends Controller
 {
@@ -150,25 +148,5 @@ class UnitController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
-    {
-        try {
-            $unit = Unit::find($id);
 
-            if (!$unit) {
-                return $this->notFoundResponse(null, 'Unit not found');
-            }
-
-            // Check if unit has any active rents or transactions
-            if ($unit->currentRent || $unit->transactions()->count() > 0) {
-                return $this->conflictResponse(null, 'Cannot delete unit with active rents or transactions');
-            }
-
-            $unit->delete();
-
-            return $this->okResponse(null, 'Unit deleted successfully');
-        } catch (\Exception $e) {
-            return $this->errorResponse(null, 500, 'Failed to delete unit: ' . $e->getMessage());
-        }
-    }
 }
