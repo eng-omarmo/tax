@@ -100,7 +100,6 @@ class AuthController extends Controller
     public function trackLoginActivity(User $user, Request $request)
     {
         $agent = new Agent();
-
         $device = $agent->device();
         $platform = $agent->platform();
         $browser = $agent->browser();

@@ -1,53 +1,10 @@
 @extends('layout.layout')
-
+<?php
+$title = ' User Activities';
+$subTitle = 'User Activities';
+?>
 @section('content')
     <div class="card h-100 p-0 radius-12">
-        @if (session()->has('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session()->get('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-        <form method="GET" action="{{ route('user.index') }}" id="filterForm">
-            <div
-                class="card-header border-bottom bg-base py-16 px-24 d-flex align-items-center justify-content-between flex-wrap gap-3">
-                <!-- Filter Section (Search, Pagination, Status) -->
-                <div class="d-flex align-items-center gap-3 flex-wrap">
-
-
-                    <div class="navbar-search">
-                        <input type="text" class="bg-base h-40-px w-auto" name="search" placeholder="Search"
-                            value="{{ request()->search }}">
-                        <iconify-icon icon="ion:search-outline" class="icon"></iconify-icon>
-                    </div>
-
-                    <select name="status" class="form-select form-select-sm w-auto ps-12 py-6 radius-12 h-40-px">
-                        <option value="">Status</option>
-                        <option value="Active" {{ request()->status == 'Active' ? 'selected' : '' }}>Active</option>
-                        <option value="Inactive" {{ request()->status == 'Inactive' ? 'selected' : '' }}>Inactive</option>
-                    </select>
-
-                </div>
-
-                <div class="d-flex align-items-center gap-3 flex-wrap">
-                    <!-- Filter User (link to submit filter form) -->
-                    <a href="javascript:void(0);" id="filterLink"
-                        class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
-                        <iconify-icon icon="ic:baseline-filter-alt" class="icon text-xl line-height-1"></iconify-icon>
-                        Filter
-                    </a>
-
-                    <!-- Reset Filter (link to reset filter form) -->
-                    <a href="javascript:void(0);" id="resetLink"
-                        class="btn btn-primary text-sm btn-sm px-12 py-12 radius-4 d-flex align-items-center">
-                        <iconify-icon icon="ic:baseline-filter-alt-off" class="icon text-xl line-height-1"></iconify-icon>
-                        Reset
-                    </a>
-                </div>
-            </div>
-        </form>
-
-    </div>
 
     <div class="card-body p-24">
         <div class="table-responsive scroll-sm">
