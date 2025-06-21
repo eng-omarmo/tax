@@ -23,7 +23,6 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
-
             $validator = Validator::make($request->all(), [
                 'email' => 'required|email',
                 'password' => 'required|string',
@@ -94,6 +93,7 @@ class AuthController extends Controller
             return $this->unprocessableResponse('An error occurred: ' . $e->getMessage());
         }
     }
+
 
 
 

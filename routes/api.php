@@ -28,9 +28,10 @@ Route::prefix('otp')->controller(OtpController::class)->group(function () {
 Route::prefix('check')->controller(GlobalCheckController::class)->group(function () {
     Route::post('/email', 'checkEmail');
     Route::post('/phone', 'checkPhone');
-    Route::get('/districts/{district}', 'branch');
+
 });
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/branches', [GlobalCheckController::class, 'branch']);
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::prefix('landlord')->controller(LandlordController::class)->group(function () {

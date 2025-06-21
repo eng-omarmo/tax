@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\User;
 use App\Models\Branch;
-use App\Models\Tenant;
 use App\Models\District;
 use App\Models\Landlord;
 use Illuminate\Http\Request;
@@ -112,12 +111,10 @@ class GlobalCheckController extends Controller
  * @param District $district District model instance (route model binding)
  * @return JsonResponse
  */
-public function branch($district)
+public function branch()
 {
-    $branches = Branch::where('district_id', $district)
+    $branches = Branch::where('district_id', request()->user()->district_id)
         ->get();
-
-
     return $this->okResponse(
         $branches,
         'Branches fetched successfully'
