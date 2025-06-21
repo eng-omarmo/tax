@@ -6,13 +6,11 @@ use App\Models\Branch;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Svg\Document;
 
 class Property extends Model
 {
     use HasFactory;
 
-    // Define fillable attributes for the property table
     protected $fillable = [
         'property_name',
         'property_phone',
@@ -36,8 +34,9 @@ class Property extends Model
         return $this->belongsTo(District::class);
     }
 
-    public function created_by(){
-        return $this->belongsTo(User::class);
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function branch()
@@ -78,7 +77,7 @@ class Property extends Model
         $quarterlyTax = $monthlyTax * 3;
         $yearlyTax = $monthlyTax * 12;
 
-        $yearlyHouseRent=  $monthlyTax * 12;
+        $yearlyHouseRent =  $monthlyTax * 12;
 
         $data = [
             'quarterly_tax' => $quarterlyTax,

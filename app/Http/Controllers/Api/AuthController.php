@@ -105,13 +105,15 @@ class AuthController extends Controller
         $browser = $agent->browser();
         $user->loginActivities()->create([
             'user_id' => $user->id,
+            'ip_address' => $request->ip(),
             'device' => $device,
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
             'device_id' => $request->device_id,
+            'logged_in_at' => now(),
             'fcm_token' => $request->fcm_token,
             'device' =>  $platform . '' . $agent->platform(),
-            'logged_in_at' => now(),
+
         ]);
     }
 }

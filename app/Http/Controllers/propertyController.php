@@ -46,6 +46,7 @@ class propertyController extends Controller
             $query->where('monitoring_status', $request->monetering_status);
         }
 
+
         $properties = $query->orderby('id', 'desc')->paginate(10);
 
         return view('property.index', compact('properties', 'statuses', 'monitoringStatuses'));

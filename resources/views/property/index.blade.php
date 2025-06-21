@@ -127,7 +127,7 @@
                                 </span>
                             </td>
                             <td>
-                                {{ $property->created_by }}
+                                {{ $property->createdBy->name ?? 'N/A' }}
                             </td>
                             @if (Auth::user()->role == 'Admin')
                                 <td class="text-center">

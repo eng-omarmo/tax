@@ -25,6 +25,7 @@ class User extends Authenticatable
         'phone',
         'status',
         'profile_image',
+
     ];
 
 
@@ -38,11 +39,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(LoginActivities::class);
     }
-
+    public function properties()
+    {
+        return $this->hasMany(Property::class);
+    }
     public function district()
     {
         return $this->belongsTo(district::class);
     }
+
     /**
      * The attributes that should be hidden for serialization.
      *
