@@ -7,10 +7,6 @@
 
 @section('content')
 
-
-
-
-
         <div class="card h-100 p-0 radius-12">
             <div class="card-body p-24">
                 <div class="row justify-content-center">

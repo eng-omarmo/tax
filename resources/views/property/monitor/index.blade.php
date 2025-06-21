@@ -36,7 +36,9 @@
                         <th>House Type</th>
                         <th>Zone</th>
                         <th>Monitoring Status</th>
+
                         <th>Status</th>
+                        <th>Created By </th>
                         <th class="text-center">Action</th>
                     </tr>
                 </thead>
@@ -63,6 +65,7 @@
                                     {{ ucfirst($property->monitoring_status) }}
                                 </span>
                             </td>
+                            <td>{{ $property->created_by }}</td>
                             <td class="text-center">
                                 <span class="border px-24 py-4 radius-4 fw-medium text-sm
                                     {{ $property->status == 'Active' ? 'bg-success-focus text-success-600' : 'bg-danger-focus text-danger-600' }}">
