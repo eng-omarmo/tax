@@ -72,15 +72,8 @@
             <table class="table bordered-table sm-table mb-0">
                 <thead>
                     <tr>
-                        <th scope="col">
-                            <div class="d-flex align-items-center gap-10">
-                                <div class="form-check style-check d-flex align-items-center">
-                                    <input class="form-check-input radius-4 border input-form-dark" type="checkbox"
-                                        name="checkbox" id="selectAll">
-                                </div>
-                                S.L
-                            </div>
-                        </th>
+
+
                         <th scope="col">SNO</th>
                         <th scope="col">Name</th>
                         <th scope="col">Email</th>
@@ -93,16 +86,8 @@
                 <tbody>
                     @foreach ($users as $user)
                         <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-10">
-                                    <div class="form-check style-check d-flex align-items-center">
-                                        <input class="form-check-input radius-4 border border-neutral-400" type="checkbox"
-                                            name="checkbox">
-                                    </div>
-                                    {{ $loop->iteration }}
-                                </div>
-                            </td>
-                            <td>{{ $user->id }}</td>
+
+                            <td>{{ $loop->iteration }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
                                     <img src="{{ asset('assets/images/user-list/user-list' . $loop->iteration . '.png') }}"
@@ -118,6 +103,8 @@
                             </td>
                             <td>{{ $user->district->name ?? "N/A"}}</td>
                             <td>{{ $user->phone }}</td>
+
+                            <td>{{ $user->status }}</td>
                             <!-- In the action column, add this button after the delete button -->
                             <td class="text-center">
                                 <div class="d-flex align-items-center gap-10 justify-content-center">
