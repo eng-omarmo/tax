@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Landlord;
+use App\Models\Branch;
 use App\Models\Tenant;
+use App\Models\District;
+use App\Models\Landlord;
+use Illuminate\Http\Request;
 use App\Traits\ApiResponseTrait;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
 class GlobalCheckController extends Controller
@@ -103,4 +105,22 @@ class GlobalCheckController extends Controller
             return $this->errorResponse(null, 500, 'Failed to check phone: ' . $e->getMessage());
         }
     }
+
+  /**
+ * Get branches for a specific district
+ *
+ * @param District $district District model instance (route model binding)
+ * @return JsonResponse
+ */
+public function branch($district)
+{
+    $branches = Branch::where('district_id', $district)
+        ->get();
+
+
+    return $this->okResponse(
+        $branches,
+        'Branches fetched successfully'
+    );
+}
 }

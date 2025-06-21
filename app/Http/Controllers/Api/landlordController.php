@@ -63,6 +63,7 @@ class LandlordController extends Controller
                 'email' => $request->email,
                 'user_id' => $request->user()->id,
                 'profile_image' => $path,
+                'user_id' => $request->user()->id
             ]);
 
             return $this->createdResponse($landlord, 'Landlord created successfully.');

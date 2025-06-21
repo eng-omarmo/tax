@@ -119,8 +119,6 @@
                                     </div>
                                 </div>
                             </td>
-
-
                             <td>{{ $landlord->email }}</td>
                             <td>{{ $landlord->phone_number }}</td>
                             <td>{{$landlord->user->name ?? 'N/A'}}</td>
