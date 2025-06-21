@@ -81,6 +81,7 @@ class PropertyController extends Controller
                 'landlord_id' => $request->lanlord_id,
                 'image' => $imagePath,
                 'document' => $documentPath,
+                'create_by' => $request->user()->id
             ]);
 
             DB::commit();
