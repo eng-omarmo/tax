@@ -12,7 +12,11 @@ use App\Models\Property;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Services\TimeService;
-
+use Barryvdh\DomPDF\Facade\Pdf;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 class ReportController extends Controller
 {
     /**
@@ -537,4 +541,335 @@ class ReportController extends Controller
 
         return view('reports.quater', compact('quarterSummaries', 'year'));
     }
+
+
+    // ... existing code ...
+
+/**
+ * Export today's report as PDF
+ */
+public function exportTodayReportPdf()
+{
+    $today = Carbon::today();
+
+    // Get today's registered properties
+    $properties = Property::whereDate('created_at', $today)->get();
+
+    // Get today's unpaid units
+    $unpaidUnits = Invoice::with('unit')->where('payment_status', 'Pending')->whereDate('created_at', $today)->get();
+
+    // Get today's paid units
+    $paidUnits = Invoice::with('unit')
+        ->where('payment_status', 'Paid')
+        ->whereDate('updated_at', $today)
+        ->get();
+
+    // Get today's registered landlords
+    $landlords = Landlord::whereDate('created_at', $today)->get();
+
+    $payments = Payment::with('invoice')
+        ->where('status', 'Completed')
+        ->whereDate('updated_at', $today)->get();
+
+    $pdf = Pdf::loadView('reports.today_report_pdf', compact('properties', 'unpaidUnits', 'paidUnits', 'landlords', 'payments'));
+    return $pdf->download('Today_Activity_Report.pdf');
+}
+
+/**
+ * Export today's report as Excel
+ */
+public function exportTodayReportExcel()
+{
+    $today = Carbon::today();
+
+    // Create new Spreadsheet object
+    $spreadsheet = new Spreadsheet();
+
+    // Set document properties
+    $spreadsheet
+        ->getProperties()
+        ->setCreator('Tax Management System')
+        ->setLastModifiedBy('Tax Management System')
+        ->setTitle('Today\'s Activity Report')
+        ->setSubject('Daily Activity Report')
+        ->setDescription('Today\'s Activity Report for ' . $today->format('M d, Y'));
+
+    // Create multiple worksheets for different sections
+    $propertiesSheet = $spreadsheet->getActiveSheet();
+    $propertiesSheet->setTitle('Properties');
+    $invoicesSheet = $spreadsheet->createSheet();
+    $invoicesSheet->setTitle('Invoices');
+    $landlordsSheet = $spreadsheet->createSheet();
+    $landlordsSheet->setTitle('Landlords');
+    $paymentsSheet = $spreadsheet->createSheet();
+    $paymentsSheet->setTitle('Payments');
+
+    // PROPERTIES SHEET
+    $this->buildPropertiesSheet($propertiesSheet, $today);
+
+    // INVOICES SHEET
+    $this->buildInvoicesSheet($invoicesSheet, $today);
+
+    // LANDLORDS SHEET
+    $this->buildLandlordsSheet($landlordsSheet, $today);
+
+    // PAYMENTS SHEET
+    $this->buildPaymentsSheet($paymentsSheet, $today);
+
+    // Create writer and output file
+    $writer = new Xlsx($spreadsheet);
+    $filename = 'Today_Activity_Report_' . $today->format('Y-m-d') . '.xlsx';
+
+    // Set headers for download
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment;filename="' . $filename . '"');
+    header('Cache-Control: max-age=0');
+
+    $writer->save('php://output');
+    exit;
+}
+
+/**
+ * Build Properties worksheet
+ */
+private function buildPropertiesSheet($sheet, $today)
+{
+    // Get today's registered properties
+    $properties = Property::whereDate('created_at', $today)->get();
+
+    // Add header
+    $sheet->setCellValue('A1', 'TODAY\'S REGISTERED PROPERTIES');
+    $sheet->setCellValue('A2', $today->format('F d, Y'));
+    $sheet->mergeCells('A1:F1');
+    $sheet->mergeCells('A2:F2');
+    $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+    $sheet->getStyle('A2')->getFont()->setBold(true)->setSize(12);
+    $sheet->getStyle('A1:A2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+    // Add property table header
+    $sheet->setCellValue('A4', '#');
+    $sheet->setCellValue('B4', 'Property Name');
+    $sheet->setCellValue('C4', 'House Code');
+    $sheet->setCellValue('D4', 'Phone');
+    $sheet->setCellValue('E4', 'Branch');
+    $sheet->setCellValue('F4', 'Zone');
+    $sheet->getStyle('A4:F4')->getFont()->setBold(true);
+    $sheet->getStyle('A4:F4')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('F2F2F2');
+
+    // Add property data
+    $row = 5;
+    foreach ($properties as $index => $property) {
+        $sheet->setCellValue('A' . $row, $index + 1);
+        $sheet->setCellValue('B' . $row, $property->property_name);
+        $sheet->setCellValue('C' . $row, $property->house_code ?? '-');
+        $sheet->setCellValue('D' . $row, $property->property_phone);
+        $sheet->setCellValue('E' . $row, $property->branch->name ?? '-');
+        $sheet->setCellValue('F' . $row, $property->zone ?? '-');
+        $row++;
+    }
+
+    // If no properties, add a message
+    if ($properties->isEmpty()) {
+        $sheet->setCellValue('A5', 'No properties registered today');
+        $sheet->mergeCells('A5:F5');
+        $sheet->getStyle('A5')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+    }
+
+    // Auto-size columns
+    foreach (range('A', 'F') as $col) {
+        $sheet->getColumnDimension($col)->setAutoSize(true);
+    }
+}
+
+/**
+ * Build Invoices worksheet
+ */
+private function buildInvoicesSheet($sheet, $today)
+{
+    // Get today's unpaid and paid units
+    $unpaidUnits = Invoice::with('unit')->where('payment_status', 'Pending')->whereDate('created_at', $today)->get();
+    $paidUnits = Invoice::with('unit')->where('payment_status', 'Paid')->whereDate('updated_at', $today)->get();
+
+    // Add header
+    $sheet->setCellValue('A1', 'TODAY\'S INVOICE ACTIVITY');
+    $sheet->setCellValue('A2', $today->format('F d, Y'));
+    $sheet->mergeCells('A1:D1');
+    $sheet->mergeCells('A2:D2');
+    $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+    $sheet->getStyle('A2')->getFont()->setBold(true)->setSize(12);
+    $sheet->getStyle('A1:A2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+    // UNPAID INVOICES SECTION
+    $sheet->setCellValue('A4', 'GENERATED INVOICES TODAY');
+    $sheet->mergeCells('A4:D4');
+    $sheet->getStyle('A4')->getFont()->setBold(true);
+    $sheet->getStyle('A4')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFCCCC');
+
+    // Add unpaid units table header
+    $sheet->setCellValue('A5', '#');
+    $sheet->setCellValue('B5', 'Invoice Number');
+    $sheet->setCellValue('C5', 'Property');
+    $sheet->setCellValue('D5', 'Status');
+    $sheet->getStyle('A5:D5')->getFont()->setBold(true);
+    $sheet->getStyle('A5:D5')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('F2F2F2');
+
+    // Add unpaid units data
+    $row = 6;
+    foreach ($unpaidUnits as $index => $inv) {
+        $sheet->setCellValue('A' . $row, $index + 1);
+        $sheet->setCellValue('B' . $row, $inv->invoice_number);
+        $sheet->setCellValue('C' . $row, $inv->unit->property->property_name ?? '-');
+        $sheet->setCellValue('D' . $row, 'Unpaid');
+        $row++;
+    }
+
+    // If no unpaid units, add a message
+    if ($unpaidUnits->isEmpty()) {
+        $sheet->setCellValue('A6', 'No Invoice generated today');
+        $sheet->mergeCells('A6:D6');
+        $sheet->getStyle('A6')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $row++;
+    }
+
+    // PAID INVOICES SECTION
+    $row += 2; // Add some space
+    $sheet->setCellValue('A' . $row, 'PAID INVOICES TODAY');
+    $sheet->mergeCells('A' . $row . ':D' . $row);
+    $sheet->getStyle('A' . $row)->getFont()->setBold(true);
+    $sheet->getStyle('A' . $row)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('CCFFCC');
+    $row++;
+
+    // Add paid units table header
+    $sheet->setCellValue('A' . $row, '#');
+    $sheet->setCellValue('B' . $row, 'Invoice Number');
+    $sheet->setCellValue('C' . $row, 'Property');
+    $sheet->setCellValue('D' . $row, 'Status');
+    $sheet->getStyle('A' . $row . ':D' . $row)->getFont()->setBold(true);
+    $sheet->getStyle('A' . $row . ':D' . $row)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('F2F2F2');
+    $row++;
+
+    // Add paid units data
+    $startRow = $row;
+    foreach ($paidUnits as $index => $inv) {
+        $sheet->setCellValue('A' . $row, $index + 1);
+        $sheet->setCellValue('B' . $row, $inv->invoice_number);
+        $sheet->setCellValue('C' . $row, $inv->unit->property->property_name ?? '-');
+        $sheet->setCellValue('D' . $row, 'Paid');
+        $row++;
+    }
+
+    // If no paid units, add a message
+    if ($paidUnits->isEmpty()) {
+        $sheet->setCellValue('A' . $startRow, 'No paid units recorded today');
+        $sheet->mergeCells('A' . $startRow . ':D' . $startRow);
+        $sheet->getStyle('A' . $startRow)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+    }
+
+    // Auto-size columns
+    foreach (range('A', 'D') as $col) {
+        $sheet->getColumnDimension($col)->setAutoSize(true);
+    }
+}
+
+/**
+ * Build Landlords worksheet
+ */
+private function buildLandlordsSheet($sheet, $today)
+{
+    // Get today's registered landlords
+    $landlords = Landlord::whereDate('created_at', $today)->get();
+
+    // Add header
+    $sheet->setCellValue('A1', 'TODAY\'S REGISTERED LANDLORDS');
+    $sheet->setCellValue('A2', $today->format('F d, Y'));
+    $sheet->mergeCells('A1:E1');
+    $sheet->mergeCells('A2:E2');
+    $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+    $sheet->getStyle('A2')->getFont()->setBold(true)->setSize(12);
+    $sheet->getStyle('A1:A2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+    // Add landlords table header
+    $sheet->setCellValue('A4', '#');
+    $sheet->setCellValue('B4', 'Name');
+    $sheet->setCellValue('C4', 'Phone');
+    $sheet->setCellValue('D4', 'Email');
+    $sheet->setCellValue('E4', 'Registration Date');
+    $sheet->getStyle('A4:E4')->getFont()->setBold(true);
+    $sheet->getStyle('A4:E4')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('F2F2F2');
+
+    // Add landlords data
+    $row = 5;
+    foreach ($landlords as $index => $landlord) {
+        $sheet->setCellValue('A' . $row, $index + 1);
+        $sheet->setCellValue('B' . $row, $landlord->name);
+        $sheet->setCellValue('C' . $row, $landlord->phone);
+        $sheet->setCellValue('D' . $row, $landlord->email);
+        $sheet->setCellValue('E' . $row, $landlord->created_at->format('M d, Y'));
+        $row++;
+    }
+
+    // If no landlords, add a message
+    if ($landlords->isEmpty()) {
+        $sheet->setCellValue('A5', 'No new landlords registered today');
+        $sheet->mergeCells('A5:E5');
+        $sheet->getStyle('A5')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+    }
+
+    // Auto-size columns
+    foreach (range('A', 'E') as $col) {
+        $sheet->getColumnDimension($col)->setAutoSize(true);
+    }
+}
+
+/**
+ * Build Payments worksheet
+ */
+private function buildPaymentsSheet($sheet, $today)
+{
+    // Get today's payments
+    $payments = Payment::with('invoice')
+        ->where('status', 'Completed')
+        ->whereDate('updated_at', $today)->get();
+
+    // Add header
+    $sheet->setCellValue('A1', 'TODAY\'S PAYMENTS');
+    $sheet->setCellValue('A2', $today->format('F d, Y'));
+    $sheet->mergeCells('A1:E1');
+    $sheet->mergeCells('A2:E2');
+    $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+    $sheet->getStyle('A2')->getFont()->setBold(true)->setSize(12);
+    $sheet->getStyle('A1:A2')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+    // Add payments table header
+    $sheet->setCellValue('A4', '#');
+    $sheet->setCellValue('B4', 'Invoice');
+    $sheet->setCellValue('C4', 'Amount');
+    $sheet->setCellValue('D4', 'Reference');
+    $sheet->setCellValue('E4', 'Completed Date');
+    $sheet->getStyle('A4:E4')->getFont()->setBold(true);
+    $sheet->getStyle('A4:E4')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('F2F2F2');
+
+    // Add payments data
+    $row = 5;
+    foreach ($payments as $index => $payment) {
+        $sheet->setCellValue('A' . $row, $index + 1);
+        $sheet->setCellValue('B' . $row, $payment->invoice_number);
+        $sheet->setCellValue('C' . $row, $payment->amount);
+        $sheet->setCellValue('D' . $row, $payment->reference);
+        $sheet->setCellValue('E' . $row, $payment->payment_date->format('M d, Y'));
+        $row++;
+    }
+
+    // If no payments, add a message
+    if ($payments->isEmpty()) {
+        $sheet->setCellValue('A5', 'No new Payment registered today');
+        $sheet->mergeCells('A5:E5');
+        $sheet->getStyle('A5')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+    }
+
+    // Auto-size columns
+    foreach (range('A', 'E') as $col) {
+        $sheet->getColumnDimension($col)->setAutoSize(true);
+    }
+}
 }

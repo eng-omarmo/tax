@@ -65,10 +65,11 @@
 
                     @foreach ($stats as $stat)
                         <div class="border rounded shadow-sm d-flex align-items-center p-3 bg-white text-{{ $stat['color'] }} gap-3"
-                             style="min-width: 160px;">
+                            style="min-width: 160px;">
                             <div class="bg-{{ $stat['color'] }}-subtle rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width: 40px; height: 40px;">
-                                <iconify-icon icon="{{ $stat['icon'] }}" class="fs-5 text-{{ $stat['color'] }}"></iconify-icon>
+                                style="width: 40px; height: 40px;">
+                                <iconify-icon icon="{{ $stat['icon'] }}"
+                                    class="fs-5 text-{{ $stat['color'] }}"></iconify-icon>
                             </div>
                             <div>
                                 <div class="fw-bold fs-6 mb-0">{{ $stat['value'] }}</div>
@@ -192,7 +193,7 @@
                                                     <tr>
                                                         <td colspan="4" class="text-center py-4 text-muted">
                                                             <i class="bi bi-check-circle text-muted me-2"></i>
-                                                           No Invoice generated today
+                                                            No Invoice generated today
                                                         </td>
                                                     </tr>
                                                 @endforelse
@@ -334,14 +335,17 @@
                 </div>
             </div>
         </div>
-
+        <!-- Replace the existing buttons in the card-footer section -->
         <div class="card-footer bg-light d-flex justify-content-between align-items-center">
             <small class="text-muted">Report generated on {{ now()->format('M d, Y \a\t h:i A') }}</small>
             <div>
-                <button class="btn btn-sm btn-outline-primary me-2">
+                <a href="{{ route('reports.today.pdf') }}" class="btn btn-sm btn-outline-primary me-2">
                     <i class="bi bi-download me-1"></i> Export PDF
-                </button>
-                <button class="btn btn-sm btn-outline-secondary">
+                </a>
+                <a href="{{ route('reports.today.excel') }}" class="btn btn-sm btn-outline-success me-2">
+                    <i class="bi bi-file-excel me-1"></i> Export Excel
+                </a>
+                <button class="btn btn-sm btn-outline-secondary" onclick="window.print()">
                     <i class="bi bi-printer me-1"></i> Print
                 </button>
             </div>

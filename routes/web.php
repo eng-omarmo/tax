@@ -263,6 +263,9 @@ Route::middleware(['auth.admin'])->prefix('reports')->name('reports.')->group(fu
     Route::get('/quaterly', [ReportController::class, 'quaterly'])->name('quaterly.income');
 
     Route::get('/income/district', [ReportController::class, 'incomeByDistrictReport'])->name('district.income');
+    // Add these routes with your other report routes
+    Route::get('/reports/today/pdf', [ReportController::class, 'exportTodayReportPdf'])->name('today.pdf');
+    Route::get('/reports/today/excel', [ReportController::class, 'exportTodayReportExcel'])->name('today.excel');
 });
 
 // Add these routes with your other route imports
