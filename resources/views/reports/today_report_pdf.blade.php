@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,11 +11,13 @@
             margin: 0;
             padding: 0;
         }
+
         h1 {
             text-align: center;
             font-size: 18px;
             margin-bottom: 10px;
         }
+
         h2 {
             font-size: 14px;
             margin-top: 20px;
@@ -22,57 +25,72 @@
             border-bottom: 1px solid #ddd;
             padding-bottom: 5px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 10px 0;
         }
-        table, th, td {
+
+        table,
+        th,
+        td {
             border: 1px solid black;
         }
-        th, td {
+
+        th,
+        td {
             padding: 4px 6px;
             text-align: left;
             font-size: 10px;
         }
+
         th {
             background-color: #f2f2f2;
         }
+
         .report-date {
             text-align: right;
             font-size: 10px;
             margin-bottom: 20px;
         }
+
         .stats-container {
             display: flex;
             justify-content: space-between;
             margin-bottom: 20px;
         }
+
         .stat-box {
             border: 1px solid #ddd;
             padding: 10px;
             text-align: center;
             width: 18%;
         }
+
         .stat-value {
             font-size: 16px;
             font-weight: bold;
         }
+
         .stat-label {
             font-size: 10px;
             color: #666;
         }
+
         @media print {
             @page {
                 size: A4;
                 margin: 10mm;
             }
+
             tr {
                 page-break-inside: avoid;
             }
         }
     </style>
 </head>
+
 <body>
     <h1>Today's Activity Report</h1>
     <div class="report-date">Report generated on {{ now()->format('M d, Y \a\t h:i A') }}</div>
@@ -221,4 +239,5 @@
         </tbody>
     </table>
 </body>
+
 </html>
