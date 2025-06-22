@@ -101,8 +101,14 @@
                             </td>
                             <td>{{ $user->district->name ?? "N/A"}}</td>
                             <td>{{ $user->phone }}</td>
+                            <td>
+                                @if ($user->status === 'active')
+                                    <span class="badge bg-success">Active</span>
+                                @else
+                                    <span class="badge bg-danger">Inactive</span>
+                                @endif
+                            </td>
 
-                            <td>{{ $user->status }}</td>
                             <!-- In the action column, add this button after the delete button -->
                             <td class="text-center">
                                 <div class="d-flex align-items-center gap-10 justify-content-center">
