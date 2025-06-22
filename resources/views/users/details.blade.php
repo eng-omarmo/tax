@@ -68,7 +68,10 @@
                         <div class="col-md-4 mb-3">
                             <div class="card bg-secondary-focus text-secondary-600 radius-12">
                                 <div class="card-body text-center">
-                                    <h3 class="fw-bold">{{ $stats['last_login'] ??  'Never' }}</h3>
+                                    <h3 class="fw-bold">
+                                        {{ isset($stats['last_login']) ? \Carbon\Carbon::parse($stats['last_login'])->diffForHumans() : 'Never' }}
+                                    </h3>
+
                                     <h7 class="mb-0">Last Login</h7>
                                 </div>
                             </div>

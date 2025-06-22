@@ -30,7 +30,6 @@ Route::prefix('v1')->group(function () {
     Route::prefix('check')->controller(GlobalCheckController::class)->group(function () {
         Route::post('/email', 'checkEmail');
         Route::post('/phone', 'checkPhone');
-
     });
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/branches', [GlobalCheckController::class, 'branch']);
