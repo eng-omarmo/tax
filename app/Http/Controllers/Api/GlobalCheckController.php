@@ -54,7 +54,6 @@ class GlobalCheckController extends Controller
                 'exists' => $exists,
                 'found_in' => $foundIn
             ], $exists ? 'Email exists in the system' : 'Email does not exist in the system');
-
         } catch (\Exception $e) {
             return $this->errorResponse(null, 500, 'Failed to check email: ' . $e->getMessage());
         }
@@ -99,25 +98,24 @@ class GlobalCheckController extends Controller
                 'exists' => $exists,
                 'found_in' => $foundIn
             ], $exists ? 'Phone number exists in the system' : 'Phone number does not exist in the system');
-
         } catch (\Exception $e) {
             return $this->errorResponse(null, 500, 'Failed to check phone: ' . $e->getMessage());
         }
     }
 
-  /**
- * Get branches for a specific district
- *
- * @param District $district District model instance (route model binding)
- * @return JsonResponse
- */
-public function branch()
-{
-    $branches = Branch::where('district_id', request()->user()->district_id)
-        ->get();
-    return $this->okResponse(
-        $branches,
-        'Branches fetched successfully'
-    );
-}
+    /**
+     * Get branches for a specific district
+     *
+     * @param District $district District model instance (route model binding)
+     * @return JsonResponse
+     */
+    public function branch()
+    {
+        $branches = Branch::where('district_id', request()->user()->district_id)
+            ->get();
+        return $this->okResponse(
+            $branches,
+            'Branches fetched successfully'
+        );
+    }
 }

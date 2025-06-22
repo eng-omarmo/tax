@@ -143,10 +143,4 @@ class UnitController extends Controller
         }
     }
 
-    /**
-     * Remove the specified unit from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
-     */
 }
