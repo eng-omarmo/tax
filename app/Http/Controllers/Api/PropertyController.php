@@ -72,7 +72,6 @@ class PropertyController extends Controller
                 'branch_id' => $request->branch_id,
                 'zone' => $request->zone,
                 'house_type' => $request->house_type,
-                'house_rent' => $request->house_rent,
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
                 'monitoring_status' => 'Pending',

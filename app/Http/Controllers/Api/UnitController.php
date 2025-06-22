@@ -21,6 +21,7 @@ class UnitController extends Controller
      */
     public function store(Request $request)
     {
+    
         try {
             // Validate the request
             $validator = Validator::make($request->all(), [
@@ -34,9 +35,8 @@ class UnitController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return $this->unprocessableResponse($validator->errors(), 'Validation failed');
+                return $this->badRequestResponse(null, $validator->errors()->first());
             }
-
             // Check if property exists
             $property = Property::find($request->property_id);
             if (!$property) {
