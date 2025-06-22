@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Unit;
@@ -64,7 +65,7 @@ class UnitController extends Controller
 
             return $this->createdResponse($unit, 'Unit created successfully');
         } catch (\Exception $e) {
-            return $this->errorResponse(null, 500, 'Failed to create unit: ' . $e->getMessage());
+            return $this->unprocessableResponse(null,'Failed to create unit: ' . $e->getMessage());
         }
     }
 
@@ -85,7 +86,7 @@ class UnitController extends Controller
 
             return $this->okResponse($unit, 'Unit retrieved successfully');
         } catch (\Exception $e) {
-            return $this->errorResponse(null, 500, 'Failed to retrieve unit: ' . $e->getMessage());
+            return $this->unprocessableResponse(null,'Failed to retrieve unit: ' . $e->getMessage());
         }
     }
 
@@ -138,7 +139,7 @@ class UnitController extends Controller
 
             return $this->okResponse($unit, 'Unit updated successfully');
         } catch (\Exception $e) {
-            return $this->errorResponse(null, 500, 'Failed to update unit: ' . $e->getMessage());
+            return $this->unprocessableResponse(null,'Failed to update unit: ' . $e->getMessage());
         }
     }
 
@@ -148,5 +149,4 @@ class UnitController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
-
 }

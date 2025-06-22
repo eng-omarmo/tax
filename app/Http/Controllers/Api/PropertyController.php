@@ -91,8 +91,4 @@ class PropertyController extends Controller
             return $this->unprocessableResponse($e->getMessage());
         }
     }
-
-    /**
-     * Update the specified property.
-     */
 }
