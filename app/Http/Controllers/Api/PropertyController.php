@@ -47,7 +47,7 @@ class PropertyController extends Controller
                 return $this->conflictResponse(null, 'Property exists');
             }
             $phoneExists = Property::where('property_phone', $request->property_phone)
-            ->exists();
+                ->exists();
             if ($phoneExists) {
                 return $this->conflictResponse(null, 'Property phone exists');
             }
@@ -66,7 +66,6 @@ class PropertyController extends Controller
 
             // Generate house code
             $code = 'HOUSE-' . strtoupper(Str::random(3)) . '-' . rand(100, 999);
-
 
             $property = Property::create([
                 'property_name' => $request->property_name,
