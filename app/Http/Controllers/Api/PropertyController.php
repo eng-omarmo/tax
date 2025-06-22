@@ -19,6 +19,7 @@ class PropertyController extends Controller
 
     public function store(Request $request): JsonResponse
     {
+
         try {
             DB::beginTransaction();
 
@@ -41,13 +42,15 @@ class PropertyController extends Controller
 
             // Check for duplicate
             $exists = Property::where('property_name', $request->property_name)
-                ->where('property_phone', $request->property_phone)
                 ->exists();
-
             if ($exists) {
                 return $this->conflictResponse(null, 'Property exists');
             }
-
+            $phoneExists = Property::where('property_phone', $request->property_phone)
+            ->exists();
+            if ($phoneExists) {
+                return $this->conflictResponse(null, 'Property phone exists');
+            }
             // Uploads
             $imagePath = null;
             if ($request->hasFile('image')) {
@@ -80,7 +83,7 @@ class PropertyController extends Controller
                 'landlord_id' => $request->lanlord_id,
                 'image' => $imagePath,
                 'document' => $documentPath,
-                'create_by' => $request->user()->id
+                'created_by' => $request->user()->id
             ]);
 
             DB::commit();
