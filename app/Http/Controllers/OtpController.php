@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Otp;
-use App\Models\User;
 use App\Models\LoginActivities;
 use App\Services\OtpService;
 use Illuminate\Http\Request;
