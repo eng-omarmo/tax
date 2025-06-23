@@ -33,8 +33,7 @@ class AuthController extends Controller
             if ($validator->fails()) {
                 return $this->okResponse(null, $validator->errors()->first());
             }
-
-
+ 
             $user = User::where('email', $request->email)->first();
 
             if (!$user || !Hash::check($request->password, $user->password)) {
