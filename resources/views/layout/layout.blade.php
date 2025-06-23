@@ -5,6 +5,11 @@
 <x-head />
 
 <body>
+    <!-- Page Loader -->
+    <div id="page-loader">
+        <div class="spinner"></div>
+    </div>
+
     <!-- ..::  header area start ::.. -->
     <x-sidebar />
     <!-- ..::  header area end ::.. -->

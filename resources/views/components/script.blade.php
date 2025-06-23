@@ -1,4 +1,4 @@
-    <!-- jQuery library js -->
+<!-- jQuery library js -->
     <script src="{{ asset('assets/js/lib/jquery-3.7.1.min.js') }}"></script>
     <!-- Bootstrap js -->
     <script src="{{ asset('assets/js/lib/bootstrap.bundle.min.js') }}"></script>
@@ -28,3 +28,28 @@
     <script src="{{ asset('assets/js/app.js') }}"></script>
 
     <?php echo (isset($script) ? $script   : '')?>
+
+    <!-- Page Loader Script -->
+    <script>
+        $(document).ready(function() {
+            // Hide loader when page is fully loaded
+            $(window).on('load', function() {
+                $('#page-loader').removeClass('active');
+            });
+
+            // Show loader when clicking on links that navigate to new pages
+            $(document).on('click', 'a:not([href^="#"]):not([href^="javascript:"]):not([target="_blank"])', function() {
+                $('#page-loader').addClass('active');
+            });
+
+            // Show loader when submitting forms
+            $(document).on('submit', 'form', function() {
+                $('#page-loader').addClass('active');
+            });
+
+            // Handle browser back/forward buttons
+            $(window).on('beforeunload', function() {
+                $('#page-loader').addClass('active');
+            });
+        });
+    </script>
