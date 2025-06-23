@@ -46,7 +46,7 @@ class User extends Authenticatable
 
     public function district()
     {
-        return $this->belongsTo(district::class);
+        return $this->belongsTo(District::class);
     }
 
     /**
