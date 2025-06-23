@@ -14,4 +14,10 @@ class District extends Model
     protected $fillable = [
         'name',
     ];
+
+    public function User()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }
