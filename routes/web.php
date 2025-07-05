@@ -8,7 +8,7 @@ use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\landlordController;
 use App\Http\Controllers\monitoringContoller;
-use App\Http\Controllers\NotificationController;  // Add this line at the top
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\paymentController;
 use App\Http\Controllers\propertyController;
@@ -21,16 +21,15 @@ use App\Http\Controllers\tenantController;
 use App\Http\Controllers\unitController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoginActivitiesController;
 
 Route::controller(AuthenticationController::class)->group(function () {
     Route::get('/', 'signin')->name('signin');
     Route::post('/', 'login')->name('signin.handler');
     Route::post('/logout', 'logout')->name('logout');
 });
-// Add this with your other route imports
-use App\Http\Controllers\LoginActivitiesController;
 
-// Add this with your other route groups
+
 Route::controller(LoginActivitiesController::class)->prefix('login-activities')->middleware(['auth.admin'])->group(function () {
     Route::get('/', 'index')->name('login.activities.index');
 });
@@ -206,7 +205,7 @@ Route::prefix('invoice')->middleware(['auth.admin'])->group(function () {
         Route::get('/create', 'create')->name('invoice.create');
         Route::get('/invoice-edit', 'invoiceEdit')->name('invoiceEdit');
         Route::get('/invoice-list', 'invoiceList')->name('invoiceList');
-        Route::get('/paid-invoice-list', 'paidInvoiceList')->name('invoice.paid');  // New route for paid invoices
+        Route::get('/paid-invoice-list', 'paidInvoiceList')->name('invoice.paid');
         Route::post('/generate', 'generateInvoice')->name('invoice.generate');
         Route::get('/invoice-preview', 'invoicePreview')->name('invoicePreview');
         Route::post('/q-1', 'quarter1')->name('invoice.quarter1');
